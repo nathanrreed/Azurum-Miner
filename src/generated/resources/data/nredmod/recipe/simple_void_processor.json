@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "nredmod:azurum"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "P": {
+      "item": "minecraft:ender_pearl"
+    }
+  },
+  "pattern": [
+    " C ",
+    "GPG",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:simple_void_processor"
+  }
+}

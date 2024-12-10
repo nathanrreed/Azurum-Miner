@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    },
+    {
+      "item": "nredmod:palestium_nugget"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:palestium_ingot"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "nredmod:infuser_recipe",
+  "catalyst": [],
+  "fluid_stack": {
+    "amount": 250,
+    "id": "nredmod:ender_essence"
+  },
+  "ingredient": {
+    "item": "minecraft:stone_bricks"
+  },
+  "power": 5000,
+  "processingTime": 20,
+  "result": {
+    "count": 1,
+    "id": "minecraft:end_stone_bricks"
+  }
+}

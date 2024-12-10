@@ -1,0 +1,19 @@
+{
+  "type": "nredmod:infuser_recipe",
+  "catalyst": {
+    "item": "minecraft:diamond"
+  },
+  "fluid_stack": {
+    "amount": 1000,
+    "id": "nredmod:nether_essence"
+  },
+  "ingredient": {
+    "item": "minecraft:blaze_powder"
+  },
+  "power": 5000,
+  "processingTime": 200,
+  "result": {
+    "count": 1,
+    "id": "nredmod:nether_diamond"
+  }
+}

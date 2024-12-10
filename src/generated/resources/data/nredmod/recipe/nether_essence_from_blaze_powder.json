@@ -1,0 +1,12 @@
+{
+  "type": "nredmod:liquifier_recipe",
+  "ingredient": {
+    "item": "minecraft:blaze_powder"
+  },
+  "power": 5000,
+  "processingTime": 20,
+  "result": {
+    "amount": 125,
+    "id": "nredmod:nether_essence"
+  }
+}

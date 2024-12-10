@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.25,
+  "group": "galibium",
+  "ingredient": {
+    "item": "nredmod:raw_galibium"
+  },
+  "result": {
+    "count": 1,
+    "id": "nredmod:galibium_ingot"
+  }
+}

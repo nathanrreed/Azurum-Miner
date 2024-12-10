@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "nredmod:block/block.nredmod.ender_essence"
+    }
+  }
+}

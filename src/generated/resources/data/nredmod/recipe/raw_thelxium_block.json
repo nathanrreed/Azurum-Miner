@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    },
+    {
+      "item": "nredmod:raw_thelxium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:raw_thelxium_block"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "nredmod:liquifier_recipe",
+  "ingredient": {
+    "tag": "nredmod:miner_ore_tier4_tag"
+  },
+  "power": 5000,
+  "processingTime": 25,
+  "result": {
+    "amount": 100,
+    "id": "nredmod:molten_ore"
+  }
+}

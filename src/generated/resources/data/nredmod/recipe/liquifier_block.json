@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:anvil"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    },
+    "G": {
+      "item": "minecraft:tinted_glass"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "P": {
+      "item": "nredmod:simple_void_processor"
+    }
+  },
+  "pattern": [
+    "OAO",
+    "GFG",
+    "OPO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:liquifier_block"
+  }
+}

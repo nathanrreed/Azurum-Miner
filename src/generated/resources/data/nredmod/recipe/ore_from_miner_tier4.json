@@ -1,0 +1,7 @@
+{
+  "type": "nredmod:miner_recipe",
+  "result": {
+    "tag": "nredmod:miner_ore_tier4_tag"
+  },
+  "tier": 4
+}

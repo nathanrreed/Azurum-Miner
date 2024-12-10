@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "nredmod:block/conglomerate_of_ore_block"
+  }
+}

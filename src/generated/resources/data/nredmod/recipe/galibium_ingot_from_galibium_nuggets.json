@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    },
+    {
+      "item": "nredmod:galibium_nugget"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:galibium_ingot"
+  }
+}
