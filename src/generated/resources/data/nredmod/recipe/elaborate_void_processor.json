@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "G": {
+      "item": "nredmod:thelxium_gear"
+    },
+    "L": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "P": {
+      "item": "nredmod:void_processor"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "RLR",
+    "PGP",
+    "GDG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:elaborate_void_processor"
+  }
+}

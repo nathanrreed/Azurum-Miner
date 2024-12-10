@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_palestium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "nredmod:raw_palestium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "nredmod:palestium_ingot__from_blasting_raw_palestium"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_palestium"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "nredmod:palestium_ingot__from_blasting_raw_palestium"
+    ]
+  }
+}

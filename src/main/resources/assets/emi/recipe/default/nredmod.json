@@ -1,0 +1,25 @@
+{
+    "added": [
+        "nredmod:thelxium_block",
+        "nredmod:galibium_ingot__from_smelting_galibium_ore",
+        "nredmod:galibium_gear",
+        "nredmod:simple_void_processor",
+        "nredmod:void_processor",
+        "nredmod:complex_void_processor",
+        "nredmod:azurum_gear",
+        "nredmod:miner_block_tier_2",
+        "nredmod:infuser_block",
+        "nredmod:palestium_block",
+        "nredmod:liquifier_block",
+        "nredmod:azurum_block",
+        "nredmod:palestium_ingot__from_smelting_palestium_ore",
+        "nredmod:palestium_gear",
+        "nredmod:miner_block_tier_1",
+        "nredmod:galibium_block",
+        "nredmod:thelxium_ingot__from_smelting_thelxium_ore",
+        "nredmod:thelxium_gear"
+    ],
+    "tags": {},
+    "resolutions": {},
+    "disabled": []
+}

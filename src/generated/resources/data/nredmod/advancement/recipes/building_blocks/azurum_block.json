@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_azurum": {
+      "conditions": {
+        "items": [
+          {
+            "items": "nredmod:azurum"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "nredmod:azurum_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_azurum"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "nredmod:azurum_block"
+    ]
+  }
+}

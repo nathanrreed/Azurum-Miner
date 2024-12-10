@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    },
+    {
+      "item": "nredmod:azurum"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "nredmod:azurum_block"
+  }
+}

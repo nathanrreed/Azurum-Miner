@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "nredmod:thelxium_gear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_thelxium_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "nredmod:thelxium_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_thelxium_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "nredmod:thelxium_gear"
+    ]
+  }
+}

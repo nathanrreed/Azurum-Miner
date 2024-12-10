@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "nredmod:block/azurum_block"
+    }
+  }
+}

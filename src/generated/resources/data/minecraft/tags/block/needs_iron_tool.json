@@ -1,0 +1,21 @@
+{
+  "values": [
+    "nredmod:azurum_block",
+    "nredmod:raw_azurum_block",
+    "nredmod:thelxium_block",
+    "nredmod:raw_thelxium_block",
+    "nredmod:galibium_block",
+    "nredmod:raw_galibium_block",
+    "nredmod:palestium_block",
+    "nredmod:raw_palestium_block",
+    "nredmod:miner_block_tier_1",
+    "nredmod:miner_block_tier_2",
+    "nredmod:miner_block_tier_3",
+    "nredmod:miner_block_tier_4",
+    "nredmod:miner_block_tier_5",
+    "nredmod:conglomerate_of_ore",
+    "nredmod:conglomerate_of_ore_block",
+    "nredmod:infuser_block",
+    "nredmod:liquifier_block"
+  ]
+}

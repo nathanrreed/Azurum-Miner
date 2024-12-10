@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.25,
+  "group": "azurum",
+  "ingredient": {
+    "item": "nredmod:azurum_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "nredmod:azurum"
+  }
+}
