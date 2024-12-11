@@ -1,7 +1,7 @@
 {
   "values": [
-    "nredmod:nether_essence_bucket",
-    "nredmod:ender_essence_bucket",
-    "nredmod:molten_ore_bucket"
+    "azurum_miner:nether_essence_bucket",
+    "azurum_miner:ender_essence_bucket",
+    "azurum_miner:molten_ore_bucket"
   ]
 }
