@@ -34,6 +34,6 @@ object DataGenerators {
         generator.addProvider(event.includeServer(), ModRecipeProvider(packOutput, lookupProvider))
         generator.addProvider(event.includeClient(), ModItemModelProvider(packOutput, existingFileHelper))
         generator.addProvider(event.includeClient(), ModBlockStateProvider(packOutput, existingFileHelper))
-        generator.getPackOutput()
+        generator.addProvider(event.includeServer(), ModDatapackProvider(packOutput, lookupProvider))
     }
 }

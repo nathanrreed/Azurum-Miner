@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "azurum_miner:azurum_gear"
+    },
+    "G": {
+      "item": "azurum_miner:galibium_gear"
+    },
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "P": {
+      "item": "azurum_miner:simple_void_processor"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "S": {
+      "item": "minecraft:glowstone_dust"
+    }
+  },
+  "pattern": [
+    "SLS",
+    "RPR",
+    "GAG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:void_processor"
+  }
+}

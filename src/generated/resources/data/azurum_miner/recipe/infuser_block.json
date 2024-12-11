@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "azurum_miner:azurum_block"
+    },
+    "C": {
+      "item": "minecraft:copper_block"
+    },
+    "P": {
+      "item": "azurum_miner:simple_void_processor"
+    }
+  },
+  "pattern": [
+    " P ",
+    " B ",
+    "CPC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:infuser_block"
+  }
+}

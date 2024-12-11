@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_palestium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:raw_palestium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:raw_palestium_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_palestium"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:raw_palestium_block"
+    ]
+  }
+}

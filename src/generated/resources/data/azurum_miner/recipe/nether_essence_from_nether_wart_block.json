@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:liquifier_recipe",
+  "ingredient": {
+    "item": "minecraft:nether_wart_block"
+  },
+  "power": 5000,
+  "processingTime": 20,
+  "result": {
+    "amount": 180,
+    "id": "azurum_miner:nether_essence"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "azurum_miner:item/conglomerate_of_ore_shard"
+  }
+}

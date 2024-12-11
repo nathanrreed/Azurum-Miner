@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.25,
+  "group": "thelxium",
+  "ingredient": {
+    "item": "azurum_miner:thelxium_deepslate_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:thelxium_ingot"
+  }
+}

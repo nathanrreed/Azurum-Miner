@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    },
+    {
+      "item": "azurum_miner:thelxium_nugget"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:thelxium_ingot"
+  }
+}

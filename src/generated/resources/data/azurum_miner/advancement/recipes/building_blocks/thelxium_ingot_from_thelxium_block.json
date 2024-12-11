@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:thelxium_ingot_from_thelxium_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_thelxium_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:thelxium_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_thelxium_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:thelxium_ingot_from_thelxium_block"
+    ]
+  }
+}

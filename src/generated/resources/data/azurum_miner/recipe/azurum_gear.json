@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "azurum_miner:azurum_block"
+    },
+    "I": {
+      "item": "azurum_miner:azurum_ingot"
+    }
+  },
+  "pattern": [
+    " I ",
+    "IBI",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:azurum_gear"
+  }
+}

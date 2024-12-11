@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_conglomerate_of_ore_shard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:conglomerate_of_ore_shard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:conglomerate_of_ore_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_conglomerate_of_ore_shard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:conglomerate_of_ore_block"
+    ]
+  }
+}

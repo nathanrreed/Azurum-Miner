@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_simple_void_processor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:simple_void_processor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:void_processor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_simple_void_processor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:void_processor"
+    ]
+  }
+}

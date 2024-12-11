@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "azurum_miner:item/palestium_nugget"
+  }
+}
