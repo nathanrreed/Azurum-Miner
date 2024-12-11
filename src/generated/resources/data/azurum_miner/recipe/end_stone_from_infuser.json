@@ -1,0 +1,17 @@
+{
+  "type": "azurum_miner:infuser_recipe",
+  "catalyst": [],
+  "fluid_stack": {
+    "amount": 250,
+    "id": "azurum_miner:ender_essence"
+  },
+  "ingredient": {
+    "item": "minecraft:stone"
+  },
+  "power": 5000,
+  "processingTime": 20,
+  "result": {
+    "count": 1,
+    "id": "minecraft:end_stone"
+  }
+}

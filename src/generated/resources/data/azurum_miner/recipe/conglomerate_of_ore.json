@@ -1,0 +1,19 @@
+{
+  "type": "azurum_miner:infuser_recipe",
+  "catalyst": {
+    "item": "minecraft:stone"
+  },
+  "fluid_stack": {
+    "amount": 1000,
+    "id": "azurum_miner:molten_ore"
+  },
+  "ingredient": {
+    "item": "azurum_miner:azurum_nugget"
+  },
+  "power": 5000,
+  "processingTime": 200,
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:conglomerate_of_ore"
+  }
+}

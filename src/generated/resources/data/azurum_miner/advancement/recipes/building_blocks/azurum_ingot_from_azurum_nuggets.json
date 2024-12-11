@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_azurum_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:azurum_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:azurum_ingot_from_azurum_nuggets"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_azurum_nugget"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:azurum_ingot_from_azurum_nuggets"
+    ]
+  }
+}

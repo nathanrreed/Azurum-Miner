@@ -1,0 +1,17 @@
+{
+  "type": "azurum_miner:infuser_recipe",
+  "catalyst": [],
+  "fluid_stack": {
+    "amount": 500,
+    "id": "azurum_miner:nether_essence"
+  },
+  "ingredient": {
+    "item": "minecraft:ender_pearl"
+  },
+  "power": 5000,
+  "processingTime": 200,
+  "result": {
+    "count": 1,
+    "id": "minecraft:ender_eye"
+  }
+}

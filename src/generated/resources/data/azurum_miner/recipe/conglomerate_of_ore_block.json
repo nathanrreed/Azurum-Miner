@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    },
+    {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:conglomerate_of_ore_block"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    },
+    {
+      "item": "azurum_miner:raw_galibium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:raw_galibium_block"
+  }
+}

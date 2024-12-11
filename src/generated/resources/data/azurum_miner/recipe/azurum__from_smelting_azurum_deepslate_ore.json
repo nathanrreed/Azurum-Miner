@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.25,
+  "group": "azurum",
+  "ingredient": {
+    "item": "azurum_miner:azurum_deepslate_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:azurum"
+  }
+}

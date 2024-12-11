@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_palestium_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:palestium_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:palestium_ingot__from_blasting_palestium_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_palestium_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:palestium_ingot__from_blasting_palestium_ore"
+    ]
+  }
+}

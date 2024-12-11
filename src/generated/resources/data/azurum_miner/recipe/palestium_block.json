@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    },
+    {
+      "item": "azurum_miner:palestium_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:palestium_block"
+  }
+}

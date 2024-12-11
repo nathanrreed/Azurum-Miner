@@ -1,0 +1,17 @@
+{
+  "type": "azurum_miner:liquifier_recipe",
+  "ingredient": [
+    {
+      "item": "minecraft:end_rod"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "power": 5000,
+  "processingTime": 20,
+  "result": {
+    "amount": 50,
+    "id": "azurum_miner:ender_essence"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "azurum_miner:block/block.azurum_miner.nether_essence"
+    }
+  }
+}

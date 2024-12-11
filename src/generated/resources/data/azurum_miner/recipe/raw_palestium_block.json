@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    },
+    {
+      "item": "azurum_miner:raw_palestium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:raw_palestium_block"
+  }
+}
