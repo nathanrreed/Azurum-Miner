@@ -1,8 +1,8 @@
 {
   "values": [
-    "nredmod:raw_azurum",
-    "nredmod:raw_thelxium",
-    "nredmod:raw_galibium",
-    "nredmod:raw_palestium"
+    "azurum_miner:raw_azurum",
+    "azurum_miner:raw_thelxium",
+    "azurum_miner:raw_galibium",
+    "azurum_miner:raw_palestium"
   ]
 }

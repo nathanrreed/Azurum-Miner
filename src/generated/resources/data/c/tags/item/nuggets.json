@@ -1,8 +1,8 @@
 {
   "values": [
-    "nredmod:azurum_nugget",
-    "nredmod:thelxium_nugget",
-    "nredmod:galibium_nugget",
-    "nredmod:palestium_nugget"
+    "azurum_miner:azurum_nugget",
+    "azurum_miner:thelxium_nugget",
+    "azurum_miner:galibium_nugget",
+    "azurum_miner:palestium_nugget"
   ]
 }

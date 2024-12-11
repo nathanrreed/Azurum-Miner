@@ -1,0 +1,25 @@
+{
+    "added": [
+        "azurum_miner:thelxium_block",
+        "azurum_miner:galibium_ingot__from_smelting_galibium_ore",
+        "azurum_miner:galibium_gear",
+        "azurum_miner:simple_void_processor",
+        "azurum_miner:void_processor",
+        "azurum_miner:complex_void_processor",
+        "azurum_miner:azurum_gear",
+        "azurum_miner:miner_block_tier_2",
+        "azurum_miner:infuser_block",
+        "azurum_miner:palestium_block",
+        "azurum_miner:liquifier_block",
+        "azurum_miner:azurum_block",
+        "azurum_miner:palestium_ingot__from_smelting_palestium_ore",
+        "azurum_miner:palestium_gear",
+        "azurum_miner:miner_block_tier_1",
+        "azurum_miner:galibium_block",
+        "azurum_miner:thelxium_ingot__from_smelting_thelxium_ore",
+        "azurum_miner:thelxium_gear"
+    ],
+    "tags": {},
+    "resolutions": {},
+    "disabled": []
+}

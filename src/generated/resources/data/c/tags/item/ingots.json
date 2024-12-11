@@ -1,8 +1,8 @@
 {
   "values": [
-    "nredmod:azurum_ingot",
-    "nredmod:thelxium_ingot",
-    "nredmod:galibium_ingot",
-    "nredmod:palestium_ingot"
+    "azurum_miner:azurum_ingot",
+    "azurum_miner:thelxium_ingot",
+    "azurum_miner:galibium_ingot",
+    "azurum_miner:palestium_ingot"
   ]
 }

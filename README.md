@@ -1,4 +1,4 @@
-# NredMod
+# Azurum Miner
 
 
 Build using [KotlinForForge](https://github.com/thedarkcolour/KotlinForForge) for Minecraft 1.21.1
