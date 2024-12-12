@@ -199,6 +199,8 @@ object AzurumMiner {
         for (fluid in FluidHelper.FLUIDS) {
             event.registerFluidType(fluid.client, fluid.type)
         }
+
+        event.registerFluidType(ModFluids.snow_client, ModFluids.snow_type)
     }
 
     @SubscribeEvent

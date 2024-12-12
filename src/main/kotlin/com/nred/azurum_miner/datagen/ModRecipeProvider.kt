@@ -1,11 +1,5 @@
 package com.nred.azurum_miner.datagen
 
-import com.nred.azurum_miner.item.ModItems
-import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
-import com.nred.azurum_miner.item.ModItems.ELABORATE_VOID_PROCESSOR
-import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
-import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
-import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
@@ -14,6 +8,16 @@ import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier2Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier3Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier4Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
+import com.nred.azurum_miner.fluid.ModFluids
+import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
+import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
+import com.nred.azurum_miner.item.ModItems.DIMENSIONAL_MATRIX
+import com.nred.azurum_miner.item.ModItems.ELABORATE_VOID_PROCESSOR
+import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
+import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
+import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
+import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
+import com.nred.azurum_miner.item.ModItems.VOID_PROCESSOR
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.recipe.InfuserRecipeBuilder
 import com.nred.azurum_miner.recipe.LiquifierRecipeBuilder
@@ -31,6 +35,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items.*
 import net.minecraft.world.item.crafting.*
 import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.common.Tags
 import net.neoforged.neoforge.common.conditions.IConditionBuilder
 import net.neoforged.neoforge.fluids.FluidStack
@@ -54,9 +59,9 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
     }
 
     private fun oreSmelting(recipeOutput: RecipeOutput, pIngredents: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, blast: Boolean) {
-        smelting(recipeOutput, RecipeSerializer.SMELTING_RECIPE, ::SmeltingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime, pGroup, "_from_smelting")
+        smelting(recipeOutput, RecipeSerializer.SMELTING_RECIPE, ::SmeltingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime, pGroup, "from_smelting")
         if (blast) {
-            smelting(recipeOutput, RecipeSerializer.BLASTING_RECIPE, ::BlastingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime / 2, pGroup, "_from_blasting")
+            smelting(recipeOutput, RecipeSerializer.BLASTING_RECIPE, ::BlastingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime / 2, pGroup, "from_blasting")
         }
     }
 
@@ -69,9 +74,6 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             }
 
             if (ore.isOre) {
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.raw_block!!, 1).requires(ore.raw!!, 9).unlockedBy(getHasName(ore.raw!!), has(ore.raw!!)).save(recipeOutput)
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.raw!!, 9).requires(ore.raw_block!!, 1).unlockedBy(getHasName(ore.raw_block!!), has(ore.raw_block!!)).save(recipeOutput)
-
                 ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.ingot!!, 1).requires(ore.nugget!!, 9).unlockedBy(getHasName(ore.nugget!!), has(ore.nugget!!)).save(recipeOutput, AzurumMiner.ID + ":" + ore.ore_name + "_ingot_from_" + ore.ore_name + "_nuggets")
                 ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.nugget!!, 9).requires(ore.ingot!!, 1).unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
             }
@@ -80,6 +82,11 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
                 ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.block, 1).requires(ore.gem!!, 9).unlockedBy(getHasName(ore.gem!!), has(ore.gem!!)).save(recipeOutput)
                 ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.gem!!, 9).requires(ore.block, 1).unlockedBy(getHasName(ore.block), has(ore.block)).save(recipeOutput)
                 oreSmelting(recipeOutput, listOf(ore.ore, ore.deepslate_ore), RecipeCategory.MISC, ore.gem!!, 0.25f, 200, ore.ore_name, true)
+            }
+
+            if (ore.isOre && !ore.isGem) {
+                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.raw_block!!, 1).requires(ore.raw!!, 9).unlockedBy(getHasName(ore.raw!!), has(ore.raw!!)).save(recipeOutput)
+                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.raw!!, 9).requires(ore.raw_block!!, 1).unlockedBy(getHasName(ore.raw_block!!), has(ore.raw_block!!)).save(recipeOutput)
             }
         }
 
@@ -116,13 +123,22 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         InfuserRecipeBuilder(ItemStack(SOUL_CAMPFIRE, 1), Ingredient.of(CAMPFIRE), Ingredient.EMPTY, FluidStack(FLUIDS["nether_essence"].still.get(), 200), 5000, 40).save(recipeOutput, AzurumMiner.ID + ":soul_campfire_from_infuser")
         InfuserRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE.asItem(), 1), Ingredient.of(ORES["azurum"].nugget), Ingredient.of(STONE), FluidStack(FLUIDS["molten_ore"].still.get(), 1000), 5000, 200).save(recipeOutput)
 
+
+        InfuserRecipeBuilder(ItemStack(BLUE_ICE.asItem(), 1), Ingredient.of(PACKED_ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(PACKED_ICE.asItem(), 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
+
+
+        // TODO THINK ABOUT
+        InfuserRecipeBuilder(ItemStack(DIMENSIONAL_MATRIX.asItem(), 1), Ingredient.of(CRYING_OBSIDIAN), Ingredient.of(CRYING_OBSIDIAN), FluidStack(Fluids.LAVA, 1000), 50000, 2000).save(recipeOutput)
+
         MinerRecipeBuilder(Ingredient.of(oreTier1Tag), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
         MinerRecipeBuilder(Ingredient.of(oreTier2Tag), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
         MinerRecipeBuilder(Ingredient.of(oreTier3Tag), 3).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier3")
         MinerRecipeBuilder(Ingredient.of(oreTier4Tag), 4).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier4")
         MinerRecipeBuilder(Ingredient.of(oreTier5Tag), 5).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier5")
 
-        for (ore in listOf("azurum", "galibium", "palestium", "thelxium").map { ORES[it] }) {
+        for (ore in listOf("azurum", "galibium", "thelxium", "palestium").map { ORES[it] }) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ore.gear!!).pattern(" I ").pattern("IBI").pattern(" I ")
                 .define('I', ore.ingot!!).define('B', ore.block)
                 .unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
@@ -132,15 +148,19 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('C', ORES["azurum"].gem!!).define('G', GLASS).define('P', ENDER_PEARL)
             .unlockedBy(getHasName(ORES["azurum"].gem!!), has(ORES["azurum"].gem!!)).save(recipeOutput)
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.VOID_PROCESSOR).pattern("SLS").pattern("RPR").pattern("GAG")
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EMPTY_DIMENSIONAL_MATRIX).pattern("AEA").pattern("NPN").pattern("AEA")
+            .define('P', ENDER_EYE).define('A', ORES["azurum"].nugget!!).define('N', NETHER_DIAMOND).define('E', ENDER_DIAMOND)
+            .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, VOID_PROCESSOR).pattern("SLS").pattern("RPR").pattern("GAG")
             .define('G', ORES["galibium"].gear!!).define('P', SIMPLE_VOID_PROCESSOR).define('A', ORES["azurum"].gear!!).define('R', REDSTONE).define('L', LAPIS_LAZULI).define('S', GLOWSTONE_DUST)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ELABORATE_VOID_PROCESSOR).pattern("RLR").pattern("PGP").pattern("GDG")
-            .define('G', ORES["thelxium"].gear!!).define('P', ModItems.VOID_PROCESSOR).define('D', DIAMOND).define('L', REDSTONE_LAMP).define('R', REDSTONE)
+            .define('G', ORES["thelxium"].gear!!).define('P', VOID_PROCESSOR).define('D', DIAMOND).define('L', REDSTONE_LAMP).define('R', REDSTONE)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.COMPLEX_VOID_PROCESSOR).pattern("FGF").pattern("DCD").pattern("PGP")
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, COMPLEX_VOID_PROCESSOR).pattern("FGF").pattern("DCD").pattern("PGP")
             .define('G', ORES["palestium"].gear!!).define('P', ELABORATE_VOID_PROCESSOR).define('F', ORES["thelxium"].gear!!).define('C', CRAFTER).define('D', CONGLOMERATE_OF_ORE_SHARD)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
@@ -157,8 +177,21 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
         ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[1], 1, 4).pattern("IPI").pattern("DMD").pattern("IPI")
-            .define('I', IRON_BLOCK).define('D', ENDER_DIAMOND).define('P', SIMPLE_VOID_PROCESSOR).define('M', ModMachines.MINER_BLOCK_TIERS[0])
+            .define('I', IRON_BLOCK).define('D', NETHER_DIAMOND).define('P', SIMPLE_VOID_PROCESSOR).define('M', ModMachines.MINER_BLOCK_TIERS[0])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[0]), has(ModMachines.MINER_BLOCK_TIERS[0])).save(recipeOutput)
+
+        // TODO FIX
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[2], 1, 4).pattern("IGI").pattern("DMD").pattern("IPI")
+            .define('I', IRON_BLOCK).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
+            .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[1]), has(ModMachines.MINER_BLOCK_TIERS[1])).save(recipeOutput)
+
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GSG").pattern("DMD").pattern("GPG")
+            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', ENDER_DIAMOND).define('P', ELABORATE_VOID_PROCESSOR).define('G', ORES["thelxium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[2])
+            .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[2]), has(ModMachines.MINER_BLOCK_TIERS[2])).save(recipeOutput)
+
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[4], 1, 4).pattern("BPB").pattern("DMD").pattern("GPG")
+            .define('B', CONGLOMERATE_OF_ORE_BLOCK).define('D', ENDER_DIAMOND).define('P', COMPLEX_VOID_PROCESSOR).define('G', ORES["palestium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[3])
+            .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[3]), has(ModMachines.MINER_BLOCK_TIERS[3])).save(recipeOutput)
 
 
         // primal ore shard made for conglomerate of ore maybe need drill block or multiblock
