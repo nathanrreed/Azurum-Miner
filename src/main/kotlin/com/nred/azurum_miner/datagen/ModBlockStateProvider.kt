@@ -30,7 +30,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             blockWithItem(ore.deepslate_ore)
             blockWithItem(ore.block)
 
-            if (ore.isOre) {
+            if (ore.isOre && !ore.isGem) {
                 blockWithItem(ore.raw_block!!)
             }
         }

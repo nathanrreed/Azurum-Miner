@@ -1,7 +1,7 @@
 package com.nred.azurum_miner.util
 
-import com.nred.azurum_miner.item.ModItems.ITEMS
 import com.nred.azurum_miner.block.ModBlocks.BLOCKS
+import com.nred.azurum_miner.item.ModItems.ITEMS
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
@@ -52,25 +52,28 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
         this.ore_name = name
         this.ore = Helpers.registerBlock(name + "_ore", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
         this.deepslate_ore = Helpers.registerBlock(name + "_deepslate_ore", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
-        this.ore_tag = ItemTags.create(Tags.Items.ORES.location.withSuffix("/" + name))
+        this.ore_tag = ItemTags.create(Tags.Items.ORES.location.withSuffix("/$name"))
         this.block = Helpers.registerBlock(name + "_block", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
-        this.block_tag = ItemTags.create(Tags.Items.STORAGE_BLOCKS.location.withSuffix("/" + name))
+        this.block_tag = ItemTags.create(Tags.Items.STORAGE_BLOCKS.location.withSuffix("/$name"))
 
         if (isOre) {
             this.ingot = ITEMS.register(name + "_ingot") { -> Item(Properties()) }
             this.gear = ITEMS.register(name + "_gear") { -> Item(Properties()) }
-            this.ingot_tag = ItemTags.create(Tags.Items.INGOTS.location.withSuffix("/" + name))
+            this.ingot_tag = ItemTags.create(Tags.Items.INGOTS.location.withSuffix("/$name"))
             this.nugget = ITEMS.register(name + "_nugget") { -> Item(Properties()) }
-            this.nugget_tag = ItemTags.create(Tags.Items.NUGGETS.location.withSuffix("/" + name))
-            this.raw = ITEMS.register("raw_$name") { -> Item(Properties()) }
-            this.raw_tag = ItemTags.create(Tags.Items.RAW_MATERIALS.location.withSuffix("/" + name))
-            this.raw_block = Helpers.registerBlock("raw_" + name + "_block", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
-            this.raw_block_tag = ItemTags.create(Tags.Items.STORAGE_BLOCKS.location.withSuffix("/raw_" + name + "_block"))
+            this.nugget_tag = ItemTags.create(Tags.Items.NUGGETS.location.withSuffix("/$name"))
         }
 
         if (isGem) {
             this.gem = ITEMS.register(name) { -> Item(Properties()) }
-            this.gem_tag = ItemTags.create(Tags.Items.GEMS.location.withSuffix("/" + name))
+            this.gem_tag = ItemTags.create(Tags.Items.GEMS.location.withSuffix("/$name"))
+        }
+
+        if (isOre && !isGem) {
+            this.raw = ITEMS.register("raw_$name") { -> Item(Properties()) }
+            this.raw_tag = ItemTags.create(Tags.Items.RAW_MATERIALS.location.withSuffix("/$name"))
+            this.raw_block = Helpers.registerBlock("raw_" + name + "_block", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
+            this.raw_block_tag = ItemTags.create(Tags.Items.STORAGE_BLOCKS.location.withSuffix("/raw_" + name + "_block"))
         }
     }
 
@@ -81,30 +84,37 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
             tag(Tags.Items.ORES_IN_GROUND_STONE).add(ore.ore.asItem())
             tag(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(ore.deepslate_ore.asItem())
             tag(ore.block_tag).add(ore.block.asItem())
+            tag(ore.ore_tag).add(ore.ore.asItem(), ore.deepslate_ore.asItem())
 
             if (ore.isOre) {
                 tag(Tags.Items.INGOTS).add(ore.ingot!!.get())
                 tag(Tags.Items.NUGGETS).add(ore.nugget!!.get())
-                tag(Tags.Items.RAW_MATERIALS).add(ore.raw!!.get())
-                tag(Tags.Items.STORAGE_BLOCKS).add(ore.block.asItem(), ore.raw_block!!.asItem())
-
-                tag(ore.ore_tag).add(ore.ore.asItem(), ore.deepslate_ore.asItem())
                 tag(ore.ingot_tag!!).add(ore.ingot!!.get())
                 tag(ore.nugget_tag!!).add(ore.nugget!!.get())
-                tag(ore.raw_tag!!).add(ore.raw!!.get())
-                tag(ore.raw_block_tag!!).add(ore.raw_block!!.asItem())
             }
 
             if (ore.isGem) {
                 tag(Tags.Items.GEMS).add(ore.gem!!.get())
                 tag(ore.gem_tag!!).add(ore.gem!!.get())
             }
+
+            if (ore.isOre && !ore.isGem) {
+                tag(Tags.Items.RAW_MATERIALS).add(ore.raw!!.get())
+                tag(Tags.Items.STORAGE_BLOCKS).add(ore.block.asItem(), ore.raw_block!!.asItem())
+                tag(ore.raw_tag!!).add(ore.raw!!.get())
+                tag(ore.raw_block_tag!!).add(ore.raw_block!!.asItem())
+            }
         }
 
         fun setBlockTags(tag: (TagKey<Block>) -> IntrinsicHolderTagsProvider.IntrinsicTagAppender<Block>, ore: Ore) {
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.ore.get(), ore.deepslate_ore.get(), ore.block.get(), ore.raw_block!!.get())
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.ore.get(), ore.deepslate_ore.get(), ore.block.get())
             tag(BlockTags.NEEDS_DIAMOND_TOOL).add(ore.ore.get(), ore.deepslate_ore.get())
-            tag(BlockTags.NEEDS_IRON_TOOL).add(ore.block.get(), ore.raw_block!!.get())
+            tag(BlockTags.NEEDS_IRON_TOOL).add(ore.block.get())
+
+            if (ore.isOre && !ore.isGem){
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.raw_block!!.get())
+                tag(BlockTags.NEEDS_IRON_TOOL).add(ore.raw_block!!.get())
+            }
         }
     }
 }

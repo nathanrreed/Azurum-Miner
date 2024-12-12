@@ -14,7 +14,7 @@ object ModCreativeModTabs {
     val CREATIVE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, AzurumMiner.ID)
 
     //.withTabsBefore(ResourceLocation.fromNamespaceAndPath(AzurumMod.ID, "azurum_miner_items_tab"))
-    val MOD_TAB: DeferredHolder<CreativeModeTab, CreativeModeTab> = CREATIVE_TABS.register("azurum_miner_items_tab", { -> CreativeModeTab.builder().icon({ -> ItemStack(ModMachines.MINER_BLOCK_TIERS[0].asItem()) }).title(Component.translatable("creativetab.azurum_miner.azurum_miner_items_tab")).build() })
+    val MOD_TAB: DeferredHolder<CreativeModeTab, CreativeModeTab> = CREATIVE_TABS.register("azurum_miner_items_tab", { -> CreativeModeTab.builder().icon({ -> ItemStack(ModMachines.MINER_BLOCK_TIERS[0].asItem()) }).title(Component.translatable("creative_tab.azurum_miner.azurum_miner_items_tab")).build() })
 
     fun register(eventBus: IEventBus) {
         CREATIVE_TABS.register(eventBus)

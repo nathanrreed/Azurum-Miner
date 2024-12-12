@@ -66,7 +66,7 @@ class ModBlockLootTableProvider(registries: HolderLookup.Provider) :
 
             dropSelf(ore.block.get())
 
-            if (ore.isOre) {
+            if (ore.isOre && !ore.isGem) {
                 dropSelf(ore.raw_block!!.get())
             }
         }

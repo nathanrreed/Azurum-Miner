@@ -1,0 +1,17 @@
+{
+  "type": "azurum_miner:infuser_recipe",
+  "catalyst": [],
+  "fluid_stack": {
+    "amount": 1000,
+    "id": "azurum_miner:snow"
+  },
+  "ingredient": {
+    "item": "minecraft:packed_ice"
+  },
+  "power": 50000,
+  "processingTime": 2000,
+  "result": {
+    "count": 1,
+    "id": "minecraft:blue_ice"
+  }
+}

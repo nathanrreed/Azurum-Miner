@@ -1,0 +1,31 @@
+{
+  "type": "azurum_miner:crafting_shaped_transform",
+  "category": "misc",
+  "index": 4,
+  "key": {
+    "D": {
+      "item": "azurum_miner:ender_diamond"
+    },
+    "G": {
+      "item": "azurum_miner:thelxium_gear"
+    },
+    "M": {
+      "item": "azurum_miner:miner_block_tier_3"
+    },
+    "P": {
+      "item": "azurum_miner:elaborate_void_processor"
+    },
+    "S": {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
+    }
+  },
+  "pattern": [
+    "GSG",
+    "DMD",
+    "GPG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:miner_block_tier_4"
+  }
+}

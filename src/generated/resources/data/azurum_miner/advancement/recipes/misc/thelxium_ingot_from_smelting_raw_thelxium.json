@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_thelxium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:raw_thelxium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:thelxium_ingot_from_smelting_raw_thelxium"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_thelxium"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:thelxium_ingot_from_smelting_raw_thelxium"
+    ]
+  }
+}
