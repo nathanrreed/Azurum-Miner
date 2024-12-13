@@ -24,7 +24,7 @@ class EmiInfuserRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output
     init {
         this.inputs.addAll(inputs)
         this.outputs.add(output)
-        this.catalysts.add(EmiIngredient.of(Ingredient.of(ModMachines.LIQUIFIER)))
+        this.catalysts.add(EmiIngredient.of(Ingredient.of(ModMachines.INFUSER)))
     }
 
     override fun addWidgets(widgets: WidgetHolder) {

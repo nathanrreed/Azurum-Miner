@@ -2,7 +2,7 @@ package com.nred.azurum_miner.compat.emi
 
 import com.nred.azurum_miner.compat.emi.EmiPlugin.Companion.LIQUIFIER_CATEGORY
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion
+import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.energy

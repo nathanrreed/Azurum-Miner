@@ -6,6 +6,7 @@ import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier2Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier3Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier4Tag
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
+import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
@@ -32,6 +33,7 @@ import mezz.jei.api.registration.*
 import mezz.jei.api.runtime.IJeiRuntime
 import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.crafting.*
@@ -115,6 +117,8 @@ class JEIPlugin : IModPlugin {
 
         val crafting = RecipeType(BuiltInRegistries.RECIPE_TYPE.getKey(net.minecraft.world.item.crafting.RecipeType.CRAFTING)!!, RecipeHolder::class.java)
         registration.addRecipes(crafting, recipeManager.getAllRecipesFor(SHAPED_RECIPE_TRANSFORM_TYPE.get()).toList())
+
+        registration.addIngredientInfo(ModItems.DIMENSIONAL_MATRIX, Component.translatable("jei.info.azurum_miner.dimensional_matrix"))
     }
 
     override fun onRuntimeAvailable(jeiRuntime: IJeiRuntime) {

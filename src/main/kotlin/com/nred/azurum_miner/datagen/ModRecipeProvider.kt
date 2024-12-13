@@ -11,7 +11,6 @@ import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
-import com.nred.azurum_miner.item.ModItems.DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ELABORATE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
@@ -44,9 +43,9 @@ import java.util.concurrent.CompletableFuture
 class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>) : RecipeProvider(output, registries), IConditionBuilder {
 
     fun <T : AbstractCookingRecipe> smelting(
-        recipeOutput: RecipeOutput, pSmeltingSerializer: RecipeSerializer<T>, factory: AbstractCookingRecipe.Factory<T>, pIngredents: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, pRecipeName: String
+        recipeOutput: RecipeOutput, pSmeltingSerializer: RecipeSerializer<T>, factory: AbstractCookingRecipe.Factory<T>, ingredients: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, pRecipeName: String
     ) {
-        for (itemLike in pIngredents) {
+        for (itemLike in ingredients) {
             SimpleCookingRecipeBuilder.generic(
                 Ingredient.of(itemLike), pCategory, pResult, pExp, pSmeltTime, pSmeltingSerializer, factory
             ).group(pGroup)
@@ -58,10 +57,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         }
     }
 
-    private fun oreSmelting(recipeOutput: RecipeOutput, pIngredents: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, blast: Boolean) {
-        smelting(recipeOutput, RecipeSerializer.SMELTING_RECIPE, ::SmeltingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime, pGroup, "from_smelting")
+    private fun oreSmelting(recipeOutput: RecipeOutput, ingredients: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, blast: Boolean) {
+        smelting(recipeOutput, RecipeSerializer.SMELTING_RECIPE, ::SmeltingRecipe, ingredients, pCategory, pResult, pExp, pSmeltTime, pGroup, "from_smelting")
         if (blast) {
-            smelting(recipeOutput, RecipeSerializer.BLASTING_RECIPE, ::BlastingRecipe, pIngredents, pCategory, pResult, pExp, pSmeltTime / 2, pGroup, "from_blasting")
+            smelting(recipeOutput, RecipeSerializer.BLASTING_RECIPE, ::BlastingRecipe, ingredients, pCategory, pResult, pExp, pSmeltTime / 2, pGroup, "from_blasting")
         }
     }
 
@@ -108,7 +107,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         LiquifierRecipeBuilder(FluidStack(FLUIDS["ender_essence"].still, 150), Ingredient.of(ENDER_EYE), 5000, 20).unlockedBy(getHasName(ENDER_EYE), has(ENDER_EYE)).save(recipeOutput, AzurumMiner.ID + ":ender_essence_from_ender_eye")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["ender_essence"].still, 1000), Ingredient.of(END_CRYSTAL), 5000, 20).unlockedBy(getHasName(END_CRYSTAL), has(END_CRYSTAL)).save(recipeOutput, AzurumMiner.ID + ":ender_essence_from_end_crystal")
 
-        InfuserRecipeBuilder(ItemStack(ORES["azurum"].ingot!!.asItem(), 1), Ingredient.of(ORES["azurum"].gem), Ingredient.of(IRON_INGOT), FluidStack(FLUIDS["ender_essence"].still.get(), 1000), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":azurum_ingot_from_infuser")
+        InfuserRecipeBuilder(ItemStack(ORES["azurum"].ingot!!.asItem(), 1), Ingredient.of(ORES["azurum"].gem), Ingredient.of(IRON_INGOT), FluidStack(Fluids.LAVA, 1000), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":azurum_ingot_from_infuser")
+        InfuserRecipeBuilder(ItemStack(OBSIDIAN, 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(Fluids.LAVA, 1000), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":obsidian_from_infuser")
+        InfuserRecipeBuilder(ItemStack(OBSIDIAN, 9), Ingredient.of(ICE), Ingredient.of(BLUE_ICE), FluidStack(Fluids.LAVA, 1000), 10000, 600).save(recipeOutput, AzurumMiner.ID + ":multi_obsidian_from_infuser")
+
         InfuserRecipeBuilder(ItemStack(NETHER_DIAMOND.asItem(), 1), Ingredient.of(BLAZE_POWDER), Ingredient.of(DIAMOND), FluidStack(FLUIDS["nether_essence"].still.get(), 1000), 5000, 200).save(recipeOutput)
         InfuserRecipeBuilder(ItemStack(ENDER_DIAMOND.asItem(), 1), Ingredient.of(ENDER_PEARL), Ingredient.of(DIAMOND), FluidStack(FLUIDS["ender_essence"].still.get(), 1000), 5000, 200).save(recipeOutput)
         InfuserRecipeBuilder(ItemStack(ENDER_EYE, 1), Ingredient.of(ENDER_PEARL), Ingredient.EMPTY, FluidStack(FLUIDS["nether_essence"].still.get(), 500), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":ender_eye_from_infuser")
@@ -123,14 +125,9 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         InfuserRecipeBuilder(ItemStack(SOUL_CAMPFIRE, 1), Ingredient.of(CAMPFIRE), Ingredient.EMPTY, FluidStack(FLUIDS["nether_essence"].still.get(), 200), 5000, 40).save(recipeOutput, AzurumMiner.ID + ":soul_campfire_from_infuser")
         InfuserRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE.asItem(), 1), Ingredient.of(ORES["azurum"].nugget), Ingredient.of(STONE), FluidStack(FLUIDS["molten_ore"].still.get(), 1000), 5000, 200).save(recipeOutput)
 
-
         InfuserRecipeBuilder(ItemStack(BLUE_ICE.asItem(), 1), Ingredient.of(PACKED_ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
         InfuserRecipeBuilder(ItemStack(PACKED_ICE.asItem(), 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
-        InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
-
-
-        // TODO THINK ABOUT
-        InfuserRecipeBuilder(ItemStack(DIMENSIONAL_MATRIX.asItem(), 1), Ingredient.of(CRYING_OBSIDIAN), Ingredient.of(CRYING_OBSIDIAN), FluidStack(Fluids.LAVA, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW_BLOCK), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
 
         MinerRecipeBuilder(Ingredient.of(oreTier1Tag), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
         MinerRecipeBuilder(Ingredient.of(oreTier2Tag), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
@@ -164,8 +161,8 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('G', ORES["palestium"].gear!!).define('P', ELABORATE_VOID_PROCESSOR).define('F', ORES["thelxium"].gear!!).define('C', CRAFTER).define('D', CONGLOMERATE_OF_ORE_SHARD)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.INFUSER).pattern(" P ").pattern(" B ").pattern("CPC")
-            .define('C', COPPER_BLOCK).define('P', SIMPLE_VOID_PROCESSOR).define('B', ORES["azurum"].block)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.INFUSER).pattern("BVB").pattern("PCP").pattern("OVO")
+            .define('V', SIMPLE_VOID_PROCESSOR).define('C', CAULDRON).define('P', PISTON).define('B', COPPER_BLOCK).define('O', OBSIDIAN)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.LIQUIFIER).pattern("OAO").pattern("GFG").pattern("OPO")
@@ -194,6 +191,6 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[3]), has(ModMachines.MINER_BLOCK_TIERS[3])).save(recipeOutput)
 
 
-        // primal ore shard made for conglomerate of ore maybe need drill block or multiblock
+        // primal ore shard made for conglomerate of ore maybe need drill block or multi block
     }
 }
