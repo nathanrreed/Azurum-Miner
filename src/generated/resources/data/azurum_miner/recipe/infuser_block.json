@@ -3,19 +3,25 @@
   "category": "misc",
   "key": {
     "B": {
-      "item": "azurum_miner:azurum_block"
-    },
-    "C": {
       "item": "minecraft:copper_block"
     },
+    "C": {
+      "item": "minecraft:cauldron"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
     "P": {
+      "item": "minecraft:piston"
+    },
+    "V": {
       "item": "azurum_miner:simple_void_processor"
     }
   },
   "pattern": [
-    " P ",
-    " B ",
-    "CPC"
+    "BVB",
+    "PCP",
+    "OVO"
   ],
   "result": {
     "count": 1,

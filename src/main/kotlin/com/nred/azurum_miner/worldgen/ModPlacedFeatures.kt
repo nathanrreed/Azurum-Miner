@@ -16,9 +16,9 @@ object ModPlacedFeatures {
         return listOf(countPlacement, InSquarePlacement.spread(), heightRange, BiomeFilter.biome())
     }
 
-    private fun commonOrePlacement(count: Int, heightRange: PlacementModifier): List<PlacementModifier> {
-        return orePlacement(CountPlacement.of(count), heightRange)
-    }
+//    private fun commonOrePlacement(count: Int, heightRange: PlacementModifier): List<PlacementModifier> {
+//        return orePlacement(CountPlacement.of(count), heightRange)
+//    }
 
     private fun rareOrePlacement(chance: Int, heightRange: PlacementModifier): List<PlacementModifier> {
         return orePlacement(RarityFilter.onAverageOnceEvery(chance), heightRange)
@@ -29,10 +29,10 @@ object ModPlacedFeatures {
     fun bootstrap(context: BootstrapContext<PlacedFeature>) {
         val configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE)
 
-        register(context, AZURUM_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.AZURUM_ORE_KEY), rareOrePlacement(3, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(4))))
+        register(context, AZURUM_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.AZURUM_ORE_KEY), rareOrePlacement(5, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(4))))
     }
 
-    fun registerKey(name: String): ResourceKey<PlacedFeature> {
+    private fun registerKey(name: String): ResourceKey<PlacedFeature> {
         return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, name))
     }
 

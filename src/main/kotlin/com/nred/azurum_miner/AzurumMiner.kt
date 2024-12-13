@@ -7,6 +7,7 @@ import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.fluid.ModFluids
+import com.nred.azurum_miner.item.EmptyMatrixItemEntity
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
@@ -21,7 +22,9 @@ import com.nred.azurum_miner.util.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.CreativeModeTabs
+import net.minecraft.world.item.Items
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
@@ -34,7 +37,11 @@ import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
+import net.neoforged.neoforge.event.entity.item.ItemTossEvent
+import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.network.handling.IPayloadHandler
 import org.apache.logging.log4j.LogManager
@@ -67,6 +74,7 @@ object AzurumMiner {
         MOD_BUS.addListener(::registerCapabilities)
         MOD_BUS.addListener(::registerConfig)
         MOD_BUS.addListener(::onCommonSetup)
+        NeoForge.EVENT_BUS.addListener(::onPlayerToss)
 
         ModCreativeModTabs.register(MOD_BUS)
         ModRecipe.register(MOD_BUS)
@@ -173,6 +181,14 @@ object AzurumMiner {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.itemStackHandler }
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.energyHandler }
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.fluidHandler }
+
+        event.registerItem(Capabilities.FluidHandler.ITEM, { stack, _ ->
+            object : FluidBucketWrapper(stack) {
+                override fun getFluid(): FluidStack {
+                    return FluidStack(ModFluids.snow_still, 1000)
+                }
+            }
+        }, Items.POWDER_SNOW_BUCKET)
     }
 
     /**
@@ -206,5 +222,14 @@ object AzurumMiner {
     @SubscribeEvent
     fun onCommonSetup(event: FMLCommonSetupEvent) {
 //        event.enqueueWork()
+    }
+
+    fun onPlayerToss(event: ItemTossEvent) {
+        if (event.entity.item.`is`(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())) {
+            event.isCanceled = true
+            val tag = CompoundTag()
+            event.entity.save(tag)
+            event.player.getCommandSenderWorld().addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
+        }
     }
 }

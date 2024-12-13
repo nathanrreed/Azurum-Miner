@@ -33,10 +33,30 @@ object ModFluids {
         }
 
         override fun getTintColor(): Int {
-            return 0xFFE9E9FF.toInt()
+            return 0xFFD6E5FF.toInt()
         }
     }
 
+
+//    event.register<FluidType>(NeoForgeRegistries.Keys.FLUID_TYPES, Consumer<RegisterHelper<FluidType?>> { helper: RegisterHelper<FluidType?> ->
+//        helper.register(
+//            NeoForgeMod.MILK_TYPE.unwrapKey().orElseThrow(), FluidType(
+//                FluidType.Properties.create().density(1024).viscosity(1024)
+//                    .sound(SoundActions.BUCKET_FILL, NeoForgeMod.BUCKET_FILL_MILK.value())
+//                    .sound(SoundActions.BUCKET_EMPTY, NeoForgeMod.BUCKET_EMPTY_MILK.value())
+//            )
+//        )
+//    })
+
+
+    // register fluids
+//    event.register<Fluid>(Registries.FLUID, Consumer<RegisterHelper<Fluid?>> { helper: RegisterHelper<Fluid?> ->
+//        // set up properties
+//        val properties = BaseFlowingFluid.Properties({ NeoForgeMod.MILK_TYPE.value() }, { NeoForgeMod.MILK.value() }, { NeoForgeMod.FLOWING_MILK.value() }).bucket { Items.MILK_BUCKET }
+//
+//        helper.register(NeoForgeMod.MILK.id, BaseFlowingFluid.Source(properties))
+//        helper.register(NeoForgeMod.FLOWING_MILK.id, BaseFlowingFluid.Flowing(properties))
+//    })
 //    class MoltenOreBlock(fluid: FlowingFluid, properties: Properties) : LiquidBlock(fluid, properties) {
 //        override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
 //            level.scheduleTick(pos, this, 200)

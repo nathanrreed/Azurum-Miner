@@ -1,19 +1,19 @@
 {
   "type": "azurum_miner:infuser_recipe",
   "catalyst": {
-    "item": "minecraft:iron_ingot"
+    "item": "minecraft:blue_ice"
   },
   "fluid_stack": {
     "amount": 1000,
     "id": "minecraft:lava"
   },
   "ingredient": {
-    "item": "azurum_miner:azurum"
+    "item": "minecraft:ice"
   },
-  "power": 5000,
-  "processingTime": 200,
+  "power": 10000,
+  "processingTime": 600,
   "result": {
-    "count": 1,
-    "id": "azurum_miner:azurum_ingot"
+    "count": 9,
+    "id": "minecraft:obsidian"
   }
 }

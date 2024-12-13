@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "azurum_miner:dimensional_matrix"
+        "recipe": "azurum_miner:obsidian_from_infuser"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "azurum_miner:dimensional_matrix"
+      "azurum_miner:obsidian_from_infuser"
     ]
   }
 }
