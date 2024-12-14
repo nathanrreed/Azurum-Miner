@@ -41,6 +41,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
 
         simpleMachineModel(ModMachines.LIQUIFIER, "liquifier")
         simpleMachineModel(ModMachines.INFUSER, "infuser")
+        simpleMachineModel(ModMachines.TRANSMOGRIFIER, "transmogrifier")
     }
 
     private fun blockWithItem(deferredBlock: DeferredBlock<Block>) {

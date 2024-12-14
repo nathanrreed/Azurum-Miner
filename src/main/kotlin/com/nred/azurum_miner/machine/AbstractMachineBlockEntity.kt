@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.energy.EnergyStorage
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 
@@ -29,7 +28,6 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPo
     protected var capCache: BlockCapabilityCache<IItemHandler, Direction>? = null
     abstract val itemStackHandler: ItemStackHandler
     abstract val energyHandler: EnergyStorage
-    abstract val fluidHandler: FluidTank
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
         return null

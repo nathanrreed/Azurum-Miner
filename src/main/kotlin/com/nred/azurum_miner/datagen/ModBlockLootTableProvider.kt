@@ -1,11 +1,13 @@
 package com.nred.azurum_miner.datagen
 
 import com.nred.azurum_miner.block.ModBlocks.BLOCKS
+import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.ModMachines.INFUSER
 import com.nred.azurum_miner.machine.ModMachines.LIQUIFIER
 import com.nred.azurum_miner.machine.ModMachines.MINER_BLOCK_TIERS
+import com.nred.azurum_miner.machine.ModMachines.TRANSMOGRIFIER
 import com.nred.azurum_miner.util.OreHelper
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.component.DataComponents
@@ -52,8 +54,10 @@ class ModBlockLootTableProvider(registries: HolderLookup.Provider) :
 
         add(INFUSER.get(), createMachineDrop(INFUSER.get()))
         add(LIQUIFIER.get(), createMachineDrop(LIQUIFIER.get()))
+        add(TRANSMOGRIFIER.get(), createMachineDrop(TRANSMOGRIFIER.get()))
 
         dropSelf(CONGLOMERATE_OF_ORE_BLOCK.get())
+        dropSelf(CONGLOMERATE_OF_ORE.get())
 
         for (ore in OreHelper.ORES) {
             if (ore.isGem) {

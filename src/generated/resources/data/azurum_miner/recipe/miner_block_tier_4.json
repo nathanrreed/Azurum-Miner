@@ -4,7 +4,7 @@
   "index": 4,
   "key": {
     "D": {
-      "item": "azurum_miner:ender_diamond"
+      "item": "minecraft:diamond_block"
     },
     "G": {
       "item": "azurum_miner:thelxium_gear"
@@ -20,8 +20,8 @@
     }
   },
   "pattern": [
-    "GSG",
-    "DMD",
+    "GDG",
+    "SMS",
     "GPG"
   ],
   "result": {

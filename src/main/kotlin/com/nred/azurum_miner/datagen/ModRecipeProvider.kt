@@ -11,6 +11,7 @@ import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
+import com.nred.azurum_miner.item.ModItems.DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ELABORATE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
@@ -18,10 +19,7 @@ import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
 import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.VOID_PROCESSOR
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.recipe.InfuserRecipeBuilder
-import com.nred.azurum_miner.recipe.LiquifierRecipeBuilder
-import com.nred.azurum_miner.recipe.MinerRecipeBuilder
-import com.nred.azurum_miner.recipe.ShapedRecipeBuilderTransform
+import com.nred.azurum_miner.recipe.*
 import com.nred.azurum_miner.util.FluidHelper.Companion.FLUIDS
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
 import com.nred.azurum_miner.util.OreHelper.Companion.ORES
@@ -30,6 +28,7 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.recipes.*
 import net.minecraft.data.recipes.RecipeCategory.BUILDING_BLOCKS
+import net.minecraft.tags.ItemTags.SAPLINGS
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items.*
 import net.minecraft.world.item.crafting.*
@@ -90,7 +89,7 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         }
 
         ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, CONGLOMERATE_OF_ORE_BLOCK, 1).requires(CONGLOMERATE_OF_ORE_SHARD, 9).unlockedBy(getHasName(CONGLOMERATE_OF_ORE_SHARD), has(CONGLOMERATE_OF_ORE_SHARD)).save(recipeOutput)
-        ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, CONGLOMERATE_OF_ORE_SHARD, 9).requires(CONGLOMERATE_OF_ORE_BLOCK, 1).unlockedBy(getHasName(CONGLOMERATE_OF_ORE_BLOCK), has(CONGLOMERATE_OF_ORE_BLOCK)).save(recipeOutput)
+        ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, CONGLOMERATE_OF_ORE_SHARD, 9).requires(CONGLOMERATE_OF_ORE_BLOCK, 1).unlockedBy(getHasName(CONGLOMERATE_OF_ORE_BLOCK), has(CONGLOMERATE_OF_ORE_BLOCK)).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_block")
 
         LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 25), Ingredient.of(oreTier1Tag), 5000, 50).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier1ore")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 50), Ingredient.of(oreTier2Tag), 5000, 35).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier2ore")
@@ -128,6 +127,19 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         InfuserRecipeBuilder(ItemStack(BLUE_ICE.asItem(), 1), Ingredient.of(PACKED_ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
         InfuserRecipeBuilder(ItemStack(PACKED_ICE.asItem(), 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
         InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW_BLOCK), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
+
+        TransmogrifierRecipeBuilder(ItemStack(RED_SAND, 1), Ingredient.of(SAND), 50000, 60).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(CALCITE, 1), Ingredient.of(DIORITE), 50000, 60).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(TUFF, 1), Ingredient.of(ANDESITE), 50000, 60).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(BASALT, 1), Ingredient.of(DEEPSLATE), 100000, 180).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(GILDED_BLACKSTONE, 1), Ingredient.of(BLACKSTONE), 100000, 1200).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(PACKED_MUD, 1), Ingredient.of(GRANITE), 80000, 120).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(SPONGE, 1), Ingredient.of(STRIPPED_BAMBOO_BLOCK), 500000, 2400).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(BUDDING_AMETHYST, 1), Ingredient.of(ItemStack(AMETHYST_BLOCK, 8)), 50000, 2400).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(DEAD_BUSH, 1), Ingredient.of(SAPLINGS), 100000, 60).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(OXIDIZED_COPPER, 1), Ingredient.of(COPPER_BLOCK), 100000, 360).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(CRYING_OBSIDIAN, 1), Ingredient.of(OBSIDIAN), 1000000, 3600).save(recipeOutput)
+        TransmogrifierRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE_SHARD.get(), 2), Ingredient.of(CONGLOMERATE_OF_ORE), 2000000, 1200).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_ore")
 
         MinerRecipeBuilder(Ingredient.of(oreTier1Tag), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
         MinerRecipeBuilder(Ingredient.of(oreTier2Tag), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
@@ -169,6 +181,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('A', ANVIL).define('O', OBSIDIAN).define('F', BLAST_FURNACE).define('P', SIMPLE_VOID_PROCESSOR).define('G', TINTED_GLASS)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.TRANSMOGRIFIER).pattern("NED").pattern("MCM").pattern("GVG")
+            .define('V', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', DIMENSIONAL_MATRIX).define('E', ENDER_EYE).define('C', CONGLOMERATE_OF_ORE).define('N', NETHER_DIAMOND).define('D', ENDER_DIAMOND)
+            .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[0]).pattern("CPC").pattern("PDP").pattern("CPC")
             .define('C', COPPER_BLOCK).define('D', DIAMOND).define('P', SIMPLE_VOID_PROCESSOR)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
@@ -177,20 +193,16 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('I', IRON_BLOCK).define('D', NETHER_DIAMOND).define('P', SIMPLE_VOID_PROCESSOR).define('M', ModMachines.MINER_BLOCK_TIERS[0])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[0]), has(ModMachines.MINER_BLOCK_TIERS[0])).save(recipeOutput)
 
-        // TODO FIX
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[2], 1, 4).pattern("IGI").pattern("DMD").pattern("IPI")
-            .define('I', IRON_BLOCK).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[2], 1, 4).pattern("SGS").pattern("DMD").pattern("SPS")
+            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[1]), has(ModMachines.MINER_BLOCK_TIERS[1])).save(recipeOutput)
 
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GSG").pattern("DMD").pattern("GPG")
-            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', ENDER_DIAMOND).define('P', ELABORATE_VOID_PROCESSOR).define('G', ORES["thelxium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[2])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GDG").pattern("SMS").pattern("GPG")
+            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', DIAMOND_BLOCK).define('P', ELABORATE_VOID_PROCESSOR).define('G', ORES["thelxium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[2])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[2]), has(ModMachines.MINER_BLOCK_TIERS[2])).save(recipeOutput)
 
         ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[4], 1, 4).pattern("BPB").pattern("DMD").pattern("GPG")
-            .define('B', CONGLOMERATE_OF_ORE_BLOCK).define('D', ENDER_DIAMOND).define('P', COMPLEX_VOID_PROCESSOR).define('G', ORES["palestium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[3])
+            .define('B', CONGLOMERATE_OF_ORE_BLOCK).define('D', DIMENSIONAL_MATRIX).define('P', COMPLEX_VOID_PROCESSOR).define('G', ORES["palestium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[3])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[3]), has(ModMachines.MINER_BLOCK_TIERS[3])).save(recipeOutput)
-
-
-        // primal ore shard made for conglomerate of ore maybe need drill block or multi block
     }
 }

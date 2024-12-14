@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:diorite"
+  },
+  "power": 50000,
+  "processingTime": 60,
+  "result": {
+    "count": 1,
+    "id": "minecraft:calcite"
+  }
+}

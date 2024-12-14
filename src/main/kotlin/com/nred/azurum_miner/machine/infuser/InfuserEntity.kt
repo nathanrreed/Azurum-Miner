@@ -26,7 +26,7 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.jvm.optionals.getOrNull
 
-open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension { //, ModRecipeType.MINER
+open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(InfuserEnum.entries.size)
 
     private var data: ContainerData = object : ContainerData {
@@ -71,7 +71,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
     }
 
-    override val fluidHandler = object : FluidTank(FLUID_SIZE, { true }) {
+    val fluidHandler = object : FluidTank(FLUID_SIZE, { true }) {
         override fun onContentsChanged() {
             setChanged()
             if (!level!!.isClientSide()) {

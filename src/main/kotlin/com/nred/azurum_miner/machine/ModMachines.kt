@@ -4,6 +4,7 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.infuser.Infuser
 import com.nred.azurum_miner.machine.liquifier.Liquifier
 import com.nred.azurum_miner.machine.miner.Miner
+import com.nred.azurum_miner.machine.transmogrifier.Transmogrifier
 import com.nred.azurum_miner.util.Helpers
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.bus.api.IEventBus
@@ -20,6 +21,7 @@ object ModMachines {
 
     val LIQUIFIER = Helpers.registerBlock("liquifier_block", MACHINES) {-> Liquifier(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F))}
     val INFUSER = Helpers.registerBlock("infuser_block", MACHINES) {-> Infuser(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
+    val TRANSMOGRIFIER = Helpers.registerBlock("transmogrifier_block", MACHINES) {-> Transmogrifier(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
 
     fun register(eventBus: IEventBus) {
         MACHINES.register(eventBus)

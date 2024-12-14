@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "tag": "minecraft:saplings"
+  },
+  "power": 100000,
+  "processingTime": 60,
+  "result": {
+    "count": 1,
+    "id": "minecraft:dead_bush"
+  }
+}

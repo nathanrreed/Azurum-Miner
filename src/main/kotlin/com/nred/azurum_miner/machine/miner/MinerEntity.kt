@@ -35,7 +35,7 @@ import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.random.Random
 
-open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), pos, blockState), IMenuProviderExtension { //, ModRecipeType.MINER
+open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), pos, blockState), IMenuProviderExtension {
     fun getMinerConfig(key: String): Int {
         return CONFIG.getInt("miner.tiers.$key.tier${this.tier + 1}")
     }
@@ -118,7 +118,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    override val fluidHandler = object : FluidTank(FLUID_SIZE, { it.`is`(FluidHelper.FLUIDS["molten_ore"].still) }) {
+    val fluidHandler = object : FluidTank(FLUID_SIZE, { it.`is`(FluidHelper.FLUIDS["molten_ore"].still) }) {
         override fun onContentsChanged() {
             setChanged()
             super.onContentsChanged()

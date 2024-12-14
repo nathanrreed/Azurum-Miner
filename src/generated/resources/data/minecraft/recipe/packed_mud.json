@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:granite"
+  },
+  "power": 80000,
+  "processingTime": 120,
+  "result": {
+    "count": 1,
+    "id": "minecraft:packed_mud"
+  }
+}

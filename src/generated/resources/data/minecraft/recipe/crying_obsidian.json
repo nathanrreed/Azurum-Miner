@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:obsidian"
+  },
+  "power": 1000000,
+  "processingTime": 3600,
+  "result": {
+    "count": 1,
+    "id": "minecraft:crying_obsidian"
+  }
+}
