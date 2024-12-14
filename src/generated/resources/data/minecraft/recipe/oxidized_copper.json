@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:copper_block"
+  },
+  "power": 100000,
+  "processingTime": 360,
+  "result": {
+    "count": 1,
+    "id": "minecraft:oxidized_copper"
+  }
+}

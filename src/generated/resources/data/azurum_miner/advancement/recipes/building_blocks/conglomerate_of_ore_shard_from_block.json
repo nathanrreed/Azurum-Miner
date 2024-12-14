@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "azurum_miner:conglomerate_of_ore_shard"
+        "recipe": "azurum_miner:conglomerate_of_ore_shard_from_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "azurum_miner:conglomerate_of_ore_shard"
+      "azurum_miner:conglomerate_of_ore_shard_from_block"
     ]
   }
 }

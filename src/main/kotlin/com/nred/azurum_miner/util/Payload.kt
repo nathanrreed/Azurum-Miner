@@ -6,6 +6,7 @@ import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -48,6 +49,11 @@ class ServerPayloadHandler {
 
                 "infuser" -> when (data.name) {
                     "ENUM" -> (context.player().level().getBlockEntity(data.pos) as InfuserEntity).updateEnumData(data.index, data.value)
+                    else -> throw UnsupportedOperationException("Unknown packet type: ${data.name}")
+                }
+
+                "transmogrifier" -> when (data.name) {
+                    "ENUM" -> (context.player().level().getBlockEntity(data.pos) as TransmogrifierEntity).updateEnumData(data.index, data.value)
                     else -> throw UnsupportedOperationException("Unknown packet type: ${data.name}")
                 }
             }

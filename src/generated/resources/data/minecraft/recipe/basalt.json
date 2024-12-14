@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:deepslate"
+  },
+  "power": 100000,
+  "processingTime": 180,
+  "result": {
+    "count": 1,
+    "id": "minecraft:basalt"
+  }
+}

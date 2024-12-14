@@ -9,20 +9,20 @@
     "G": {
       "item": "azurum_miner:galibium_gear"
     },
-    "I": {
-      "item": "minecraft:iron_block"
-    },
     "M": {
       "item": "azurum_miner:miner_block_tier_2"
     },
     "P": {
       "item": "azurum_miner:void_processor"
+    },
+    "S": {
+      "item": "azurum_miner:conglomerate_of_ore_shard"
     }
   },
   "pattern": [
-    "IGI",
+    "SGS",
     "DMD",
-    "IPI"
+    "SPS"
   ],
   "result": {
     "count": 1,

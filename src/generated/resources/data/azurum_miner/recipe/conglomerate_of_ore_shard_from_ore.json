@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "azurum_miner:conglomerate_of_ore"
+  },
+  "power": 2000000,
+  "processingTime": 1200,
+  "result": {
+    "count": 2,
+    "id": "azurum_miner:conglomerate_of_ore_shard"
+  }
+}

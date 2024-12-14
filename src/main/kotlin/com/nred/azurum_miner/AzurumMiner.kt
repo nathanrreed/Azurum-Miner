@@ -16,6 +16,8 @@ import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.MinerScreen
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.*
@@ -161,6 +163,7 @@ object AzurumMiner {
         event.register(ModMenuTypes.MINER_MENU.get(), ::MinerScreen)
         event.register(ModMenuTypes.LIQUIFIER_MENU.get(), ::LiquifierScreen)
         event.register(ModMenuTypes.INFUSER_MENU.get(), ::InfuserScreen)
+        event.register(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), ::TransmogrifierScreen)
     }
 
     private fun registerConfig(event: ModConfigEvent.Loading) {
@@ -181,6 +184,9 @@ object AzurumMiner {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.itemStackHandler }
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.energyHandler }
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.fluidHandler }
+
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.energyHandler }
 
         event.registerItem(Capabilities.FluidHandler.ITEM, { stack, _ ->
             object : FluidBucketWrapper(stack) {

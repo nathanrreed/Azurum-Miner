@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:stripped_bamboo_block"
+  },
+  "power": 500000,
+  "processingTime": 2400,
+  "result": {
+    "count": 1,
+    "id": "minecraft:sponge"
+  }
+}

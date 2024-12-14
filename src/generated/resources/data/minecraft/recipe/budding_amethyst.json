@@ -1,0 +1,12 @@
+{
+  "type": "azurum_miner:transmogrifier_recipe",
+  "ingredient": {
+    "item": "minecraft:amethyst_block"
+  },
+  "power": 50000,
+  "processingTime": 2400,
+  "result": {
+    "count": 1,
+    "id": "minecraft:budding_amethyst"
+  }
+}

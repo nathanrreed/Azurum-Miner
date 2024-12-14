@@ -12,7 +12,9 @@ import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.miner.MinerScreen
-import com.nred.azurum_miner.recipe.*
+import com.nred.azurum_miner.recipe.InfuserRecipe
+import com.nred.azurum_miner.recipe.LiquifierRecipe
+import com.nred.azurum_miner.recipe.MinerRecipe
 import com.nred.azurum_miner.recipe.ModRecipe.INFUSER_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.LIQUIFIER_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER1_RECIPE_TYPE
@@ -21,6 +23,8 @@ import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER3_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER4_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER5_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.SHAPED_RECIPE_TRANSFORM_TYPE
+import com.nred.azurum_miner.recipe.ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE
+import com.nred.azurum_miner.recipe.TransmogrifierRecipe
 import mezz.jei.api.IModPlugin
 import mezz.jei.api.JeiPlugin
 import mezz.jei.api.gui.handlers.IGuiClickableArea
@@ -36,15 +40,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
-import net.minecraft.world.item.crafting.*
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.MutableCollection
-import kotlin.collections.MutableList
-import kotlin.collections.listOf
-import kotlin.collections.mutableListOf
-import kotlin.collections.toMutableList
-import kotlin.collections.withIndex
+import net.minecraft.world.item.crafting.RecipeHolder
 
 @JeiPlugin
 class JEIPlugin : IModPlugin {
@@ -56,6 +52,7 @@ class JEIPlugin : IModPlugin {
     override fun registerCategories(registration: IRecipeCategoryRegistration) {
         registration.addRecipeCategories(LiquifierCategory(registration.jeiHelpers.guiHelper))
         registration.addRecipeCategories(InfuserCategory(registration.jeiHelpers.guiHelper))
+        registration.addRecipeCategories(TransmogrifierCategory(registration.jeiHelpers.guiHelper))
         registration.addRecipeCategories(MinerCategory(registration.jeiHelpers.guiHelper, 1), MinerCategory(registration.jeiHelpers.guiHelper, 2), MinerCategory(registration.jeiHelpers.guiHelper, 3), MinerCategory(registration.jeiHelpers.guiHelper, 4), MinerCategory(registration.jeiHelpers.guiHelper, 5))
     }
 
@@ -66,6 +63,7 @@ class JEIPlugin : IModPlugin {
     override fun registerRecipeCatalysts(registration: IRecipeCatalystRegistration) {
         registration.addRecipeCatalysts(LiquifierCategory.TYPE, ModMachines.LIQUIFIER)
         registration.addRecipeCatalysts(InfuserCategory.TYPE, ModMachines.INFUSER)
+        registration.addRecipeCatalysts(TransmogrifierCategory.TYPE, ModMachines.TRANSMOGRIFIER)
 
         registration.addRecipeCatalysts(MinerCategory.TYPE_TIER1, ModMachines.MINER_BLOCK_TIERS[0], ModMachines.MINER_BLOCK_TIERS[1], ModMachines.MINER_BLOCK_TIERS[2], ModMachines.MINER_BLOCK_TIERS[3], ModMachines.MINER_BLOCK_TIERS[4])
         registration.addRecipeCatalysts(MinerCategory.TYPE_TIER2, ModMachines.MINER_BLOCK_TIERS[1], ModMachines.MINER_BLOCK_TIERS[2], ModMachines.MINER_BLOCK_TIERS[3], ModMachines.MINER_BLOCK_TIERS[4])
@@ -114,6 +112,7 @@ class JEIPlugin : IModPlugin {
         val recipeManager = Minecraft.getInstance().level!!.recipeManager
         registration.addRecipes(LiquifierCategory.TYPE, recipeManager.getAllRecipesFor(LIQUIFIER_RECIPE_TYPE.get()).stream().map(RecipeHolder<LiquifierRecipe>::value).toList())
         registration.addRecipes(InfuserCategory.TYPE, recipeManager.getAllRecipesFor(INFUSER_RECIPE_TYPE.get()).stream().map(RecipeHolder<InfuserRecipe>::value).toList())
+        registration.addRecipes(TransmogrifierCategory.TYPE, recipeManager.getAllRecipesFor(TRANSMOGRIFIER_RECIPE_TYPE.get()).stream().map(RecipeHolder<TransmogrifierRecipe>::value).toList())
 
         val crafting = RecipeType(BuiltInRegistries.RECIPE_TYPE.getKey(net.minecraft.world.item.crafting.RecipeType.CRAFTING)!!, RecipeHolder::class.java)
         registration.addRecipes(crafting, recipeManager.getAllRecipesFor(SHAPED_RECIPE_TRANSFORM_TYPE.get()).toList())

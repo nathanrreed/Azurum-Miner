@@ -26,9 +26,11 @@ class EmiPlugin : EmiPlugin {
 
         val LIQUIFIER_WORKSTATION = EmiStack.of(ModMachines.LIQUIFIER)
         val INFUSER_WORKSTATION = EmiStack.of(ModMachines.INFUSER)
+        val TRANSMOGRIFIER_WORKSTATION = EmiStack.of(ModMachines.TRANSMOGRIFIER)
         val MINER_WORKSTATION = EmiIngredient.of(ModMachines.MINER_BLOCK_TIERS.map { EmiIngredient.of(Ingredient.of(it.get())) })
         val LIQUIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier"), LIQUIFIER_WORKSTATION)
         val INFUSER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser"), INFUSER_WORKSTATION)
+        val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier"), TRANSMOGRIFIER_WORKSTATION)
         val MINER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner"), MINER_WORKSTATION)
         val PORTAL_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")) { guiGraphics, x, y, _ ->
             guiGraphics.blit(portal, x, y, 0f, animationTick * 16f, 16, 16, 16, 512)
@@ -45,11 +47,13 @@ class EmiPlugin : EmiPlugin {
     override fun register(registry: EmiRegistry) {
         registry.addCategory(LIQUIFIER_CATEGORY)
         registry.addCategory(INFUSER_CATEGORY)
+        registry.addCategory(TRANSMOGRIFIER_CATEGORY)
         registry.addCategory(MINER_CATEGORY)
         registry.addCategory(PORTAL_CATEGORY)
 
         registry.addWorkstation(LIQUIFIER_CATEGORY, LIQUIFIER_WORKSTATION)
         registry.addWorkstation(INFUSER_CATEGORY, INFUSER_WORKSTATION)
+        registry.addWorkstation(TRANSMOGRIFIER_CATEGORY, TRANSMOGRIFIER_WORKSTATION)
         registry.addWorkstation(MINER_CATEGORY, MINER_WORKSTATION)
 
         val manager = registry.recipeManager
@@ -70,6 +74,10 @@ class EmiPlugin : EmiPlugin {
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get())) {
             registry.addRecipe(EmiInfuserRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+        }
+
+        for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {
+            registry.addRecipe(EmiTransmogrifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
         }
 
         registry.addRecipe(EmiPortalRecipe(ResourceLocation.parse(AzurumMiner.ID + ":/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))

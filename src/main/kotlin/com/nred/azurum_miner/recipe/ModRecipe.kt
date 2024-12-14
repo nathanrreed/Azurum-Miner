@@ -27,9 +27,20 @@ object ModRecipe {
             }
         }
     )
+
     val INFUSER_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<InfuserRecipe>> = RECIPE_TYPES.register(
         "infuser_recipe", { registryName ->
             object : RecipeType<InfuserRecipe> {
+                override fun toString(): String {
+                    return registryName.toString()
+                }
+            }
+        }
+    )
+
+    val TRANSMOGRIFIER_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<TransmogrifierRecipe>> = RECIPE_TYPES.register(
+        "transmogrifier_recipe", { registryName ->
+            object : RecipeType<TransmogrifierRecipe> {
                 override fun toString(): String {
                     return registryName.toString()
                 }
@@ -97,6 +108,7 @@ object ModRecipe {
 
     val LIQUIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("liquifier_recipe") { -> LiquifierRecipeSerializer() }
     val INFUSER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("infuser_recipe") { -> InfuserRecipeSerializer() }
+    val TRANSMOGRIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("transmogrifier_recipe") { -> TransmogrifierRecipeSerializer() }
     val SHAPED_RECIPE_TRANSFORM_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_shaped_transform") { -> ShapedRecipeTransformSerializer() }
     val MINER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("miner_recipe") { -> MinerRecipeSerializer() }
 
