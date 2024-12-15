@@ -1,11 +1,7 @@
 package com.nred.azurum_miner.compat.jei
 
 import com.nred.azurum_miner.AzurumMiner
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier1Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier2Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier3Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier4Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
+import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
@@ -73,7 +69,7 @@ class JEIPlugin : IModPlugin {
     }
 
     override fun registerAdvanced(registration: IAdvancedRegistration) {
-        val data = listOf(Triple(MINER_TIER1_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER1, oreTier1Tag), Triple(MINER_TIER2_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER2, oreTier2Tag), Triple(MINER_TIER3_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER3, oreTier3Tag), Triple(MINER_TIER4_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER4, oreTier4Tag), Triple(MINER_TIER5_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER5, oreTier5Tag))
+        val data = listOf(Triple(MINER_TIER1_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER1, oreTierTag[0]), Triple(MINER_TIER2_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER2,  oreTierTag[1]), Triple(MINER_TIER3_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER3,  oreTierTag[2]), Triple(MINER_TIER4_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER4,  oreTierTag[3]), Triple(MINER_TIER5_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER5,  oreTierTag[4]))
         for ((idx, tier) in data.withIndex()) {
             registration.addTypedRecipeManagerPlugin(RecipeType.createRecipeHolderType(tier.second.uid), object : ISimpleRecipeManagerPlugin<RecipeHolder<MinerRecipe>> {
                 override fun isHandledInput(input: ITypedIngredient<*>): Boolean {

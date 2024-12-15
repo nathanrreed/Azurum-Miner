@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.TOTAL_MODIFIER_POINTS
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.getMinerConfig
 import com.nred.azurum_miner.util.Helpers
 import io.netty.buffer.Unpooled
 import net.minecraft.client.gui.screens.Screen
@@ -80,7 +81,7 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
 
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
-            val numPoints = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars").getOrElse(TOTAL_MODIFIER_POINTS.ordinal, { _ -> 0 })
+            val numPoints = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars").getOrElse(TOTAL_MODIFIER_POINTS.ordinal) { _ -> getMinerConfig("numModifierPoints", this.tier) }
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner.extended", this.tier + 1, numPoints))
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner", this.tier + 1))

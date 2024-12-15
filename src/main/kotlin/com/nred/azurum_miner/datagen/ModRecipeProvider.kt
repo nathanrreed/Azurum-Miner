@@ -3,11 +3,7 @@ package com.nred.azurum_miner.datagen
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier1Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier2Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier3Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier4Tag
-import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTier5Tag
+import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
@@ -91,11 +87,11 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, CONGLOMERATE_OF_ORE_BLOCK, 1).requires(CONGLOMERATE_OF_ORE_SHARD, 9).unlockedBy(getHasName(CONGLOMERATE_OF_ORE_SHARD), has(CONGLOMERATE_OF_ORE_SHARD)).save(recipeOutput)
         ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, CONGLOMERATE_OF_ORE_SHARD, 9).requires(CONGLOMERATE_OF_ORE_BLOCK, 1).unlockedBy(getHasName(CONGLOMERATE_OF_ORE_BLOCK), has(CONGLOMERATE_OF_ORE_BLOCK)).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_block")
 
-        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 25), Ingredient.of(oreTier1Tag), 5000, 50).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier1ore")
-        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 50), Ingredient.of(oreTier2Tag), 5000, 35).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier2ore")
-        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 75), Ingredient.of(oreTier3Tag), 5000, 30).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier3ore")
-        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 100), Ingredient.of(oreTier4Tag), 5000, 25).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier4ore")
-        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 250), Ingredient.of(oreTier5Tag), 5000, 20).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier5ore")
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 25), Ingredient.of(oreTierTag[0]), 5000, 50).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier1ore")
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 50), Ingredient.of(oreTierTag[1]), 5000, 35).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier2ore")
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 75), Ingredient.of(oreTierTag[2]), 5000, 30).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier3ore")
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 100), Ingredient.of(oreTierTag[3]), 5000, 25).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier4ore")
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["molten_ore"].still, 250), Ingredient.of(oreTierTag[4]), 5000, 20).unlockedBy("has_ore", has(Tags.Items.ORES)).save(recipeOutput, AzurumMiner.ID + ":molten_ore_from_tier5ore")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["nether_essence"].still, 5), Ingredient.of(NETHERRACK, NETHER_BRICK), 5000, 20).unlockedBy(getHasName(NETHERRACK), has(NETHERRACK)).unlockedBy(getHasName(NETHER_BRICK), has(NETHER_BRICK)).save(recipeOutput, AzurumMiner.ID + ":nether_essence_from_netherrack")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["nether_essence"].still, 20), Ingredient.of(NETHER_BRICKS, NETHER_WART), 5000, 20).unlockedBy(getHasName(NETHER_BRICKS), has(NETHER_BRICKS)).unlockedBy(getHasName(NETHER_WART), has(NETHER_WART)).save(recipeOutput, AzurumMiner.ID + ":nether_essence_from_nether_bricks")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["nether_essence"].still, 180), Ingredient.of(NETHER_WART_BLOCK), 5000, 20).unlockedBy(getHasName(NETHER_WART_BLOCK), has(NETHER_WART_BLOCK)).save(recipeOutput, AzurumMiner.ID + ":nether_essence_from_nether_wart_block")
@@ -141,11 +137,11 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         TransmogrifierRecipeBuilder(ItemStack(CRYING_OBSIDIAN, 1), Ingredient.of(OBSIDIAN), 1000000, 3600).save(recipeOutput)
         TransmogrifierRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE_SHARD.get(), 2), Ingredient.of(CONGLOMERATE_OF_ORE), 2000000, 1200).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_ore")
 
-        MinerRecipeBuilder(Ingredient.of(oreTier1Tag), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
-        MinerRecipeBuilder(Ingredient.of(oreTier2Tag), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
-        MinerRecipeBuilder(Ingredient.of(oreTier3Tag), 3).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier3")
-        MinerRecipeBuilder(Ingredient.of(oreTier4Tag), 4).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier4")
-        MinerRecipeBuilder(Ingredient.of(oreTier5Tag), 5).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier5")
+        MinerRecipeBuilder(Ingredient.of(oreTierTag[0]), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
+        MinerRecipeBuilder(Ingredient.of(oreTierTag[1]), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
+        MinerRecipeBuilder(Ingredient.of(oreTierTag[2]), 3).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier3")
+        MinerRecipeBuilder(Ingredient.of(oreTierTag[3]), 4).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier4")
+        MinerRecipeBuilder(Ingredient.of(oreTierTag[4]), 5).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier5")
 
         for (ore in listOf("azurum", "galibium", "thelxium", "palestium").map { ORES[it] }) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ore.gear!!).pattern(" I ").pattern("IBI").pattern(" I ")

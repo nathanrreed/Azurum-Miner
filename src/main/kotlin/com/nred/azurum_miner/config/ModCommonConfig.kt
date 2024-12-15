@@ -1,9 +1,7 @@
 package com.nred.azurum_miner.config
 
 import com.nred.azurum_miner.AzurumMiner
-import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.event.config.ModConfigEvent
 import net.neoforged.neoforge.common.ModConfigSpec
 
 @EventBusSubscriber(modid = AzurumMiner.ID, bus = EventBusSubscriber.Bus.MOD)
@@ -17,10 +15,9 @@ class ModCommonConfig {
             BUILDER.comment("Miner Settings").push("miner")
 
             BUILDER.comment("Setting for Tiered Machines").push("options")
-            BUILDER.define("modifierRFMultiplier", 1.2)
             BUILDER.defineInRange("mBUsedOnMiss", 100, 0, 9223372036854775807)
             BUILDER.defineInRange("mBUsedOnHit", 50, 0, 9223372036854775807)
-            BUILDER.comment("y = 1.2^{x}+4 is the default, where x is the number of modifier points gained by this function and y = the number of buckets need for the next level").define("fluidNeedExponentialBase", 1.2)
+            BUILDER.comment("y = 1.35^{x}+4 is the default, where x is the number of modifier points gained by this function and y = the number of buckets need for the next level").define("fluidNeedExponentialBase", 1.35)
             BUILDER.defineInRange("fluidNeedMin", 4, 0, 9223372036854775807)
             BUILDER.pop()
 
@@ -28,47 +25,63 @@ class ModCommonConfig {
 
             BUILDER.push("speed")
             BUILDER.comment("Additive speed up (% or value)").define("1", "15%")
-            BUILDER.comment("FE multiplier (x or value)").define("1FE", "1.2x")
-            BUILDER.comment("Speed up when cycle is a miss (% or value)").define("2", "50%")
-            BUILDER.comment("FE multiplier (x or value)").define("2FE", "1.2x")
-            BUILDER.comment("Additive speed up (% or value)").define("3", "15%")
-            BUILDER.comment("FE multiplier (x or value)").define("3FE", "1.2x")
-            BUILDER.comment("Additive speed up (% or value)").define("4", "20%")
-            BUILDER.comment("FE multiplier (x or value)").define("4FE", "1.2x")
-            BUILDER.comment("Additive speed up (% or value)").define("5", "30%")
-            BUILDER.comment("FE multiplier (x or value)").define("5FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("1FE", 1.2)
+            BUILDER.comment("Speed up when cycle is a miss").defineInRange("2", 50, 0, 100)
+            BUILDER.comment("FE multiplier").define("2FE", 1.2)
+            BUILDER.comment("Speed up (% or value)").define("3", "20%")
+            BUILDER.comment("FE multiplier").define("3FE", 1.2)
+            BUILDER.comment("Speed up (% or value)").define("4", "30%")
+            BUILDER.comment("FE multiplier").define("4FE", 1.5)
+            BUILDER.comment("Speed up (% or value)").define("5", "45%")
+            BUILDER.comment("FE multiplier").define("5FE", 2)
             BUILDER.pop()
 
             BUILDER.push("filter")
             BUILDER.comment("Gain 1st filter slot. Percentage of ores that are from the filter").defineInRange("1", 25, 0, 33)
-            BUILDER.comment("FE multiplier (x or value)").define("1FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("1FE", 1.2)
             BUILDER.comment("No more materials (unless in filter)")
-            BUILDER.comment("FE multiplier (x or value)").define("2FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("2FE", 1.2)
             BUILDER.comment("Gain 2nd filter slot. Percentage of ores that are from the filter").defineInRange("3", 25, 0, 33)
-            BUILDER.comment("FE multiplier (x or value)").define("3FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("3FE", 1.2)
             BUILDER.comment("No more raw")
-            BUILDER.comment("FE multiplier (x or value)").define("4FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("4FE", 1.2)
             BUILDER.comment("Gain 3rd filter slot and unlock tag filters. Percentage of ores that are from the filter").defineInRange("5", 25, 0, 33)
-            BUILDER.comment("FE multiplier (x or value)").define("5FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("5FE", 1.2)
             BUILDER.pop()
 
             BUILDER.push("accuracy")
             BUILDER.comment("Percentage additive less misses").defineInRange("1", 5, 0, 33)
-            BUILDER.comment("FE multiplier (x or value)").define("1FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("1FE", 1.2)
             BUILDER.comment("Percentage additive ore from higher unlocked tiers").defineInRange("2", 25, 0, 50)
-            BUILDER.comment("FE multiplier (x or value)").define("2FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("2FE", 1.2)
             BUILDER.comment("Percentage additive less misses").defineInRange("3", 5, 0, 33)
-            BUILDER.comment("FE multiplier (x or value)").define("3FE", "1.2x")
-            BUILDER.comment("Percentage additive ore from higher unlocked tiers or filtered ore").defineInRange("4", 25, 0, 50)
-            BUILDER.comment("FE multiplier (x or value)").define("4FE", "1.2x")
+            BUILDER.comment("FE multiplier").define("3FE", 1.2)
+            BUILDER.comment("Percentage additive ore from higher unlocked tiers").defineInRange("4", 25, 0, 50)
+            BUILDER.comment("FE multiplier").define("4FE", 1.2)
             BUILDER.comment("No more misses")
-            BUILDER.comment("FE multiplier (x or value)").define("5FE", "3x")
+            BUILDER.comment("FE multiplier").define("5FE", 3.0)
             BUILDER.pop()
 
             BUILDER.push("efficiency")
+            BUILDER.comment("Percentage additive less base power").defineInRange("1", 5, 0, 99)
+            BUILDER.comment("Percentage less on misses").defineInRange("2", 25, 0, 100)
+            BUILDER.comment("FE modifier reduction multiplier").define("3", 0.1)
+            BUILDER.comment("Percentage additive less base power").defineInRange("4", 5, 0, 99)
+            BUILDER.comment("Percentage additive less base power").defineInRange("5", 10, 0, 99)
+            BUILDER.comment("No more misses")
             BUILDER.pop()
 
             BUILDER.push("production")
+            BUILDER.comment("Max ore output per cycle increase").defineInRange("1", 1, 0, 16)
+            BUILDER.comment("FE multiplier").define("1FE", 1.4)
+            BUILDER.comment("Max ore output per cycle increase").defineInRange("2", 1, 0, 16)
+            BUILDER.comment("FE multiplier").define("2FE", 1.4)
+            BUILDER.comment("Min ore output per cycle increase").defineInRange("3", 1, 0, 8)
+            BUILDER.comment("FE multiplier").define("3FE", 1.8)
+            BUILDER.comment("Max ore output per cycle increase").defineInRange("4", 1, 0, 16)
+            BUILDER.comment("FE multiplier").define("4FE", 1.4)
+            BUILDER.comment("Min ore output per cycle increase").defineInRange("5", 1, 0, 8)
+            BUILDER.comment("FE multiplier").define("5FE", 3.0)
             BUILDER.pop()
 
             BUILDER.pop()
@@ -88,8 +101,8 @@ class ModCommonConfig {
             BUILDER.defineInRange("tier1", 20000, 0, 9223372036854775807)
             BUILDER.defineInRange("tier2", 20000, 0, 9223372036854775807)
             BUILDER.defineInRange("tier3", 80000, 0, 9223372036854775807)
-            BUILDER.defineInRange("tier4", 900000, 0, 9223372036854775807)
-            BUILDER.defineInRange("tier5", 10000000, 0, 9223372036854775807)
+            BUILDER.defineInRange("tier4", 90000, 0, 9223372036854775807)
+            BUILDER.defineInRange("tier5", 100000, 0, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("The energy capacity").push("energyCapacity")
@@ -132,21 +145,13 @@ class ModCommonConfig {
             BUILDER.defineInRange("tier5", 200, 1, 9223372036854775807)
             BUILDER.pop()
 
-            BUILDER.comment("The percentage chance to get material instead of ore").push("baseVariance")
+            BUILDER.comment("The percentage chance to get material instead of ore").push("baseMaterialChance")
             BUILDER.defineInRange("tier1", 50, 0, 100)
             BUILDER.defineInRange("tier2", 30, 0, 100)
             BUILDER.defineInRange("tier3", 25, 0, 100)
             BUILDER.defineInRange("tier4", 15, 0, 100)
             BUILDER.defineInRange("tier5", 10, 0, 100)
             BUILDER.pop()
-
-            //            BUILDER.comment("The percentage chance for the miner to output raw instead of ore").push("numFilters")
-            //            BUILDER.defineInRange("tier1", 0, 0, 3)
-            //            BUILDER.defineInRange("tier2", 0, 0, 3)
-            //            BUILDER.defineInRange("tier3", 1, 0, 3)
-            //            BUILDER.defineInRange("tier4", 1, 0, 3)
-            //            BUILDER.defineInRange("tier5", 2, 0, 3)
-            //            BUILDER.pop()
 
             BUILDER.comment("The number of modifier points").push("numModifierPoints")
             BUILDER.defineInRange("tier1", 2, 0, 25)
@@ -172,12 +177,20 @@ class ModCommonConfig {
             BUILDER.defineInRange("tier5", 20, 0, 100)
             BUILDER.pop()
 
-            BUILDER.comment("The amount of ores on multi").push("baseMultiAmount")
-            BUILDER.defineInRange("tier1", 8, 1, 64)
-            BUILDER.defineInRange("tier2", 5, 1, 64)
-            BUILDER.defineInRange("tier3", 3, 1, 64)
-            BUILDER.defineInRange("tier4", 3, 1, 64)
-            BUILDER.defineInRange("tier5", 5, 1, 64)
+            BUILDER.comment("The amount of ores on multi").push("baseMultiMin")
+            BUILDER.defineInRange("tier1", 6, 2, 64)
+            BUILDER.defineInRange("tier2", 3, 2, 64)
+            BUILDER.defineInRange("tier3", 2, 2, 64)
+            BUILDER.defineInRange("tier4", 2, 2, 64)
+            BUILDER.defineInRange("tier5", 2, 2, 64)
+            BUILDER.pop()
+
+            BUILDER.comment("The amount of ores on multi").push("baseMultiMax")
+            BUILDER.defineInRange("tier1", 8, 2, 64)
+            BUILDER.defineInRange("tier2", 5, 2, 64)
+            BUILDER.defineInRange("tier3", 3, 2, 64)
+            BUILDER.defineInRange("tier4", 3, 2, 64)
+            BUILDER.defineInRange("tier5", 5, 2, 64)
             BUILDER.pop()
 
             BUILDER.pop()
@@ -185,10 +198,5 @@ class ModCommonConfig {
 
             return BUILDER.build()
         }
-    }
-
-    @SubscribeEvent
-    fun onLoad(evemt: ModConfigEvent) {
-
     }
 }

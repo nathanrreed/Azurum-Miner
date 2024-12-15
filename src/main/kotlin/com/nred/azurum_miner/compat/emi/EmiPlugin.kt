@@ -39,9 +39,6 @@ class EmiPlugin : EmiPlugin {
                 this.animationTick = (this.animationTick + 1) % 32
             }
         }
-
-
-//            EmiTexture(ResourceLocation.withDefaultNamespace("textures/block/nether_portal.png"), 0, 0, 16, 16))
     }
 
     override fun register(registry: EmiRegistry) {

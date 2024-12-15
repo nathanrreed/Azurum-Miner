@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.transmogrifier
 
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.recipe.ModRecipe
@@ -145,6 +146,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         if (!this.loaded) return
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get(), TransmogrifierInput(state, itemStackHandler.getStackInSlot(0)), level).getOrNull()?.value
         if (recipe != null) {
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
             if (energyHandler.energyStored > recipe.power / recipe.processingTime && data[IS_ON] == 1 && !itemStackHandler.getStackInSlot(0).isEmpty) {
                 if (data[PROGRESS] < recipe.processingTime) {
@@ -156,6 +158,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
                     data[PROGRESS] = 0
                 }
             } else {
+                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
                 data[PROGRESS] = 0
             }
         }

@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.infuser
 
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
 import com.nred.azurum_miner.recipe.InfuserInput
@@ -165,6 +166,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         if (!this.loaded) return
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1)), level).getOrNull()?.value
         if (recipe != null) {
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
             if (energyHandler.energyStored > recipe.power / recipe.processingTime && data[IS_ON] == 1 && !itemStackHandler.getStackInSlot(0).isEmpty && !itemStackHandler.getStackInSlot(1).isEmpty && FluidStack.isSameFluidSameComponents(this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE), recipe.inputFluid)) {
                 if (data[PROGRESS] < recipe.processingTime) {
@@ -178,6 +180,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                     data[PROGRESS] = 0
                 }
             } else {
+                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
                 data[PROGRESS] = 0
             }
         }

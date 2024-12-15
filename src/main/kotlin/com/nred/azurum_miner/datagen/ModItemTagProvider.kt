@@ -22,11 +22,9 @@ class ModItemTagProvider(
     existingFileHelper: ExistingFileHelper?
 ) : ItemTagsProvider(output, lookupProvider, blockTags, ID, existingFileHelper) {
     companion object {
-        val oreTier1Tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier1_tag"))
-        val oreTier2Tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier2_tag"))
-        val oreTier3Tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier3_tag"))
-        val oreTier4Tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier4_tag"))
-        val oreTier5Tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier5_tag"))
+        val oreTierTag = listOf(
+            ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier1_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier2_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier3_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier4_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier5_tag"))
+        )
     }
 
     override fun addTags(provider: HolderLookup.Provider) {
@@ -36,10 +34,10 @@ class ModItemTagProvider(
             Ore.setItemTags(::tag, ore)
         }
 
-        tag(oreTier1Tag).addTags(Tags.Items.ORES_COAL, Tags.Items.ORES_COPPER, OreHelper.ORES["azurum"].ore_tag)
-        tag(oreTier2Tag).addTags(Tags.Items.ORES_IRON, Tags.Items.ORES_REDSTONE, Tags.Items.ORES_LAPIS, OreHelper.ORES["galibium"].ore_tag)
-        tag(oreTier3Tag).addTags(Tags.Items.ORES_GOLD, OreHelper.ORES["thelxium"].ore_tag)
-        tag(oreTier4Tag).addTags(Tags.Items.ORES_QUARTZ, OreHelper.ORES["palestium"].ore_tag)
-        tag(oreTier5Tag).addTags(Tags.Items.ORES_DIAMOND, Tags.Items.ORES_EMERALD, Tags.Items.ORES_NETHERITE_SCRAP)
+        tag(oreTierTag[0]).addTags(Tags.Items.ORES_COAL, Tags.Items.ORES_COPPER, OreHelper.ORES["azurum"].ore_tag)
+        tag(oreTierTag[1]).addTags(Tags.Items.ORES_IRON, Tags.Items.ORES_REDSTONE, Tags.Items.ORES_LAPIS, OreHelper.ORES["galibium"].ore_tag)
+        tag(oreTierTag[2]).addTags(Tags.Items.ORES_GOLD, OreHelper.ORES["thelxium"].ore_tag)
+        tag(oreTierTag[3]).addTags(Tags.Items.ORES_QUARTZ, OreHelper.ORES["palestium"].ore_tag)
+        tag(oreTierTag[4]).addTags(Tags.Items.ORES_DIAMOND, Tags.Items.ORES_EMERALD, Tags.Items.ORES_NETHERITE_SCRAP)
     }
 }

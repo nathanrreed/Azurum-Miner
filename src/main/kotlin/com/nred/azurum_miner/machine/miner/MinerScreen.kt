@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.machine.miner
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
@@ -12,6 +13,8 @@ import com.nred.azurum_miner.util.Helpers.componentSplit
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.components.tabs.TabManager
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -21,7 +24,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
+import java.util.Optional
 import kotlin.math.floor
+import kotlin.math.round
 
 class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component) : AbstractContainerScreen<MinerMenu>(menu, playerInventory, title) {
     companion object {
@@ -38,6 +43,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
     var powerButton = ScreenRectangle.empty()
     var energy = ScreenRectangle.empty()
     val tabManager = TabManager({ widget -> this.addRenderableWidget(widget) }, { widget -> this.removeWidget(widget) })
+    lateinit var navigationBar: VerticalTabNavigationBar
 
     private fun resize() {
         x = (width - imageWidth) / 2 - 51
@@ -48,8 +54,11 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
     }
 
     override fun resize(minecraft: Minecraft, width: Int, height: Int) {
+        val saveCurrentTab = navigationBar.saveCurrentTab()
         super.resize(minecraft, width, height)
         resize()
+
+        navigationBar.loadCurrentTab(saveCurrentTab)
     }
 
     override fun init() {
@@ -66,7 +75,8 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
 
         val btn = SpriteTabButton(tabManager, mainTab, 12, 18)
         val btn2 = SpriteTabButton(tabManager, optionsTab, 12, 18)
-        val navigationBar = VerticalTabNavigationBar(x - 21, y + 6, tabManager, listOf(btn, btn2))
+
+        this.navigationBar = VerticalTabNavigationBar(x - 21, y + 6, tabManager, listOf(btn, btn2))
 
         this.addRenderableWidget(navigationBar)
     }
@@ -104,23 +114,23 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
 
         //MISS
         guiGraphics.setColor(1f, 0.30f, 0.30f, 1f)
-        barRects.add(ScreenRectangle(barGraphs.left() + barGraphs.width, height, barGraphs.width, (barGraphs.height * barData[0]).toInt()))
+        barRects.add(ScreenRectangle(barGraphs.left() + barGraphs.width, height, barGraphs.width, barHeight(barGraphs.height * barData[0])))
         guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[0].left(), barRects[0].top(), barGraphs.width, barRects[0].height)
-        height += (barGraphs.height * barData[0]).toInt()
+        height += barHeight(barGraphs.height * barData[0])
 
-        // VARIANCE
+        // MATERIAL CHANCE
         guiGraphics.setColor(0.3f, 0.8f, 1f, 1f)
-        barData.add(hit * (menu.containerData[VARIANCE] / 100.0))
-        barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, (barGraphs.height * barData[1]).toInt()))
+        barData.add(hit * (menu.containerData[MATERIAL_CHANCE] / 100.0))
+        barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, barHeight(barGraphs.height * barData[1])))
         guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[1].left(), barRects[1].top(), barGraphs.width, barRects[1].height)
-        height += (barGraphs.height * barData[1]).toInt()
+        height += barHeight(barGraphs.height * barData[1])
 
         // RAW
         guiGraphics.setColor(0.9f, 0.3f, 0.9f, 1f)
         barData.add(hit * (menu.containerData[RAW_CHANCE] / 100.0))
-        barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, (barGraphs.height * barData[2]).toInt()))
+        barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, barHeight(barGraphs.height * barData[2])))
         guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[2].left(), barRects[2].top(), barGraphs.width, barRects[2].height)
-        height += (barGraphs.height * barData[2]).toInt()
+        height += barHeight(barGraphs.height * barData[2])
 
         // ORES
         guiGraphics.setColor(0.3f, 1f, 0.3f, 1f)
@@ -133,9 +143,6 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         // MOLTEN ORE
         val varMoltenLen = floor(menu.containerData[MOLTEN_ORE_LEVEL].toDouble() / MinerEntity.FLUID_SIZE.toDouble() * tank.height).toInt()
         guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/molten_ore_still"), tank.left(), tank.bottom() - varMoltenLen, tank.width, varMoltenLen)
-
-        guiGraphics.renderOutline(base.right() -50,base.top() + 99, 45,13, 0xFF000000.toInt())
-        guiGraphics.drawString(font, "Ores", base.right() -40,base.top() + 101, 0xFFFFFFFF.toInt())
 
         // TANK
         guiGraphics.blitSprite(TANK, tank.left() - 1, tank.top() - 1, 4, 45, tank.height + 2)
@@ -160,8 +167,6 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
     private var y = 0
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-//        renderBg(guiGraphics, partialTick, mouseX, mouseY)
-
         super.render(guiGraphics, mouseX, mouseY, partialTick)
 
         renderTooltip(guiGraphics, mouseX, mouseY)
@@ -174,4 +179,32 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         }
         return super.mouseClicked(mouseX, mouseY, button)
     }
+
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        val edit = this.focused
+        if (tabManager.currentTab is OptionsTab && edit is EditBox) {
+            if (edit.isActive && edit.isFocused) {
+                if (keyCode == InputConstants.KEY_NUMPADENTER || keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_ESCAPE) {
+                    edit.isFocused = false
+                    return true
+                }
+                return edit.keyPressed(keyCode, scanCode, modifiers)
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
+    override fun getChildAt(mouseX: Double, mouseY: Double): Optional<GuiEventListener?> {
+        return super.getChildAt(mouseX, mouseY)
+    }
+
+    override fun getTabOrderGroup(): Int {
+        return -1
+    }
+}
+
+fun barHeight(inHeight: Double): Int {
+    if (inHeight == 0.0) return 0
+    if (inHeight < 3.0) return 3
+    return round(inHeight).toInt()
 }

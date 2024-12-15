@@ -1,40 +1,55 @@
 package com.nred.azurum_miner.machine.miner
 
 import com.nred.azurum_miner.AzurumMiner
-import com.nred.azurum_miner.AzurumMiner.CONFIG
+import com.nred.azurum_miner.datagen.ModItemTagProvider
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MappingInfo
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.calculateEnergyModifier
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.calculateFluidCost
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.get
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.getModifierVal
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.minerMapping
+import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import com.nred.azurum_miner.screen.RenderTab
 import com.nred.azurum_miner.util.Helpers.compC
 import com.nred.azurum_miner.util.Helpers.compCat
+import com.nred.azurum_miner.util.Helpers.componentSplit
+import com.nred.azurum_miner.util.MinerFilterPayloadToServer
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.AbstractWidget
-import net.minecraft.client.gui.components.ImageButton
-import net.minecraft.client.gui.components.Tooltip
-import net.minecraft.client.gui.components.WidgetSprites
+import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.layouts.FrameLayout
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.layouts.LayoutSettings
+import net.minecraft.client.gui.layouts.SpacerElement
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.ItemTags
+import net.minecraft.tags.TagKey
 import net.minecraft.util.CommonColors
 import net.minecraft.world.inventory.ContainerData
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.crafting.Ingredient
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.network.PacketDistributor
+import org.joml.Vector2i
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
-import kotlin.reflect.KCallable
+import kotlin.math.ceil
+import kotlin.math.min
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE as TooltipPositioner
 
 @OnlyIn(Dist.CLIENT)
 class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
@@ -59,7 +74,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
 
         infoBoxLayout = GridLayout()
         val infoBox = infoBoxLayout.createRowHelper(1)
-        infoBox.addChild(InfoBox(0, 0, 70, 90, menu.containerData), LayoutSettings.defaults().alignHorizontallyLeft().paddingHorizontal(2))
+        infoBox.addChild(InfoBox(0, 0, 70, 90, menu), LayoutSettings.defaults().alignHorizontallyLeft().paddingHorizontal(2))
 
         makePointButton(helper, menu)
     }
@@ -79,6 +94,9 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
         guiGraphics.drawString(font, str, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 80, 0xFF0000)
     }
 
+    override fun onSwap() {
+    }
+
     override fun doLayout(rectangle: ScreenRectangle) {
         this.layout.arrangeElements()
         FrameLayout.alignInRectangle(this.layout, rectangle, 0.17f, 0.17f)
@@ -89,7 +107,6 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
 
     @OnlyIn(Dist.CLIENT)
     fun makePointButton(gridlayout: GridLayout.RowHelper, menu: MinerMenu) {
-
         for (i in 0..<pointsData.count) {
             val imageBtn = object : ImageButton(0, 0, 24, 54, buttonSprites, { }) {
                 var init = false
@@ -112,43 +129,34 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                     return button == 0 || button == 1
                 }
 
-                val mapping = mapOf(
-                    0 to mapOf("name" to "speed", "info" to listOf(Triple(TICKS_PER_OP, false, ::getTime), Triple(MISS_TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime))),
-                    1 to mapOf("name" to "filter", "info" to listOf(Triple(TICKS_PER_OP, false, ::getTime), Triple(MISS_TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime))),
-                    2 to mapOf("name" to "accuracy", "info" to listOf(Triple(TICKS_PER_OP, false, ::getTime), Triple(MISS_TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime))),
-                    3 to mapOf("name" to "efficiency", "info" to listOf(Triple(TICKS_PER_OP, false, ::getTime), Triple(MISS_TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime))),
-                    4 to mapOf("name" to "production", "info" to listOf(Triple(TICKS_PER_OP, false, ::getTime), Triple(MISS_TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime), Triple(TICKS_PER_OP, false, ::getTime)))
-                )
+                fun getVals(pointIdx: Int, levelIdx: Int): List<Any> {
+                    val map = minerMapping[pointIdx]!!
+                    val name = map["name"].toString()
+                    var info = (map["info"] as List<*>)[levelIdx - 1]
 
-                // "additive" to listOf(false, false, false, false, false), "values" to listOf(TICKS_PER_OP, MISS_TICKS_PER_OP, TICKS_PER_OP, TICKS_PER_OP, TICKS_PER_OP)))
-
-                fun getVal(path: String, start: Int, additive: Boolean): Pair<Number, String> {
-                    val value = CONFIG.getOptional<Any>(path).getOrNull()
-                    if (value is String) {
-                        if (value.endsWith("%")) {
-                            val percent = value.substringBefore('%').toDouble() / 100.0
-                            return Pair(start.toDouble() * if (additive) (1.0 + percent) else (1.0 - percent), value)
-                        } else if (value.endsWith("x")) {
-                            return Pair(start.toDouble() * value.substringBefore('x').toDouble(), value)
-                        } else {
-                            return Pair(start.toDouble() - value.toDouble(), value)
-                        }
-                    } else if (value is Int) {
-                        return Pair(if (additive) start + value else start - value, value.toString())
-                    } else {
-                        return Pair(0, "")
+                    if (name == "efficiency" && levelIdx == 3) {
+                        return listOf(getModifierVal("miner.modifiers.${name}.${levelIdx}", 0, true).second, "", "")
                     }
+
+                    if (info !is MappingInfo) {
+                        return listOf("", "", "")
+                    }
+
+                    val start = data[info.enum]
+                    val newValue = getModifierVal("miner.modifiers.${name}.${levelIdx}", start, info.additive)
+
+                    if (info.vals == 1) {
+                        return listOf(newValue.second, "", "")
+                    } else if (info.vals == 2) {
+                        return listOf(info.func.call(start), info.func.call(newValue.first), "")
+                    }
+                    return listOf(newValue.second, info.func.call(start), info.func.call(newValue.first))
                 }
 
-                fun getVals(pointIdx: Int, levelIdx: Int): List<Any> {
-                    val map = mapping[pointIdx]
-                    val name = map?.get("name")
-                    val info = (map?.get("info") as List<Triple<Enum<*>, Boolean, KCallable<String>>>)[levelIdx - 1]
-
-                    val start = data[info.first]
-                    val newValue = getVal("miner.modifiers.${name}.$levelIdx", start, info.second)
-                    val FE = getFE(getVal("miner.modifiers.${name}.${levelIdx}FE", data[ENERGY_NEEDED], true).first)
-                    return listOf(info.third.call(newValue.first), FE, newValue.second, info.third.call(start))
+                fun getFEVal(pointIdx: Int, levelIdx: Int): String {
+                    val map = minerMapping[pointIdx]!!
+                    val name = map["name"].toString()
+                    return if (name != "efficiency") getFE(calculateEnergyModifier(data[ENERGY_NEEDED], name, levelIdx, pointsData[3])) else ""
                 }
 
                 fun modifierToolTip(): Tooltip {
@@ -156,8 +164,8 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                     if (points < 5) {
                         val vals = getVals(num, points + 1)
                         val lines = arrayOf(
-                            compC("tooltip.azurum_miner.miner.button${num + 1}.upgrade${points + 1}", if (data[TOTAL_MODIFIER_POINTS] - data[USED_MODIFIER_POINTS] < 1) CommonColors.GRAY else CommonColors.GREEN, vals[2], vals[3], vals[0]), // Upside
-                            compC("tooltip.azurum_miner.miner.button.FEChange", CommonColors.SOFT_RED, getFE(data[ENERGY_NEEDED]), vals[1]) // Power use
+                            compC("tooltip.azurum_miner.miner.button${num + 1}.upgrade${points + 1}", if (data[TOTAL_MODIFIER_POINTS] - data[USED_MODIFIER_POINTS] < 1) CommonColors.GRAY else CommonColors.GREEN, vals[0], vals[1], vals[2]), // Upside
+                            if (num != 3) compC("tooltip.azurum_miner.miner.button.FEChange", CommonColors.SOFT_RED, getFE(data[ENERGY_NEEDED]), getFEVal(num, points + 1)) else Component.empty() // Power use
                         )
 
                         return Tooltip.create(compCat(compC("tooltip.azurum_miner.miner.button${num + 1}"), *lines))
@@ -207,38 +215,39 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
     }
 }
 
-class InfoBox(x: Int, y: Int, width: Int, height: Int, data: ContainerData) : AbstractWidget(x, y, width, height, Component.empty()) {
-    val data: ContainerData
+class InfoBox(x: Int, y: Int, width: Int, height: Int, val menu: MinerMenu) : AbstractWidget(x, y, width, height, Component.empty()) {
+    val data: ContainerData = menu.containerData
     val font: Font = Minecraft.getInstance().font
-
-    init {
-        this.data = data
-    }
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         var rect = ScreenRectangle(this.x + 2, this.y + 2, 0, font.lineHeight)
-        guiGraphics.renderOutline(this.x, this.y, 70, 92, (0xFF000000).toInt())
+        guiGraphics.renderOutline(this.x, this.y, 70, 107, (0xFF000000).toInt())
         val lines = listOf(
-            getTime(data[TICKS_PER_OP] - data[PROGRESS]), getFE(data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble()) + "/t",
-            "Modifiers: " + (data[TOTAL_MODIFIER_POINTS] - data[USED_MODIFIER_POINTS]),
+            getTime(data[TICKS_PER_OP] - data[PROGRESS]),
+            getFE(data[ENERGY_NEEDED].toDouble()),
+            getFE(data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble()) + "/t",
+            Component.translatable("tooltip.azurum_miner.miner.filter", if (data[HAS_FILTER] == 1) data[FILTER_CHANCE] else 0).string,
+            Component.translatable("tooltip.azurum_miner.miner.higher", data[HIGHER_TIER_CHANCE]).string,
+            Component.translatable("tooltip.azurum_miner.miner.multi", data[MULTI_CHANCE]).string,
+            Component.translatable("tooltip.azurum_miner.miner.multiMinMax", data[MULTI_MIN], data[MULTI_MAX]).string,
+            Component.translatable("tooltip.azurum_miner.miner.modifiers", (data[TOTAL_MODIFIER_POINTS] - data[USED_MODIFIER_POINTS])).string,
+            getBuckets(calculateFluidCost(data[TOTAL_MODIFIER_POINTS], menu.tier + 1))
         )
-//        val lines = listOf("Acc: ${data.get(MinerEntity.Companion.MinerEnum.ACCURACY.ordinal)}%", "Raw: ${data.get(MinerEntity.Companion.MinerEnum.RAW_CHANCE.ordinal)}%")
 
         for ((idx, line) in lines.withIndex()) {
-            guiGraphics.drawString(font, line, rect.left(), (font.lineHeight + 1) * idx + rect.top(), 0xFFFFFF)
+            guiGraphics.drawString(font, line, rect.left(), (font.lineHeight + 3) * idx + rect.top() - 1, 0xFFFFFF)
         }
 
         for ((idx, line) in lines.withIndex()) {
-            rect = ScreenRectangle(rect.left(), (font.lineHeight + 3) * idx + this.y + 2, font.width(line), rect.height)
+            rect = ScreenRectangle(rect.left(), (font.lineHeight + 3) * idx + this.y + 1, font.width(line), rect.height)
             if (rect.containsPoint(mouseX, mouseY)) {
-                guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.miner.info$idx"), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, componentSplit("tooltip.azurum_miner.miner.info$idx"), mouseX, mouseY)
             }
-
         }
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
-//        TODO("Not yet implemented")
+        // TODO
     }
 }
 
@@ -248,32 +257,155 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
         private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.options.title")
     }
 
+    val editBoxes = ArrayList<FilterEditBox>()
+    val filterBoxes = ArrayList<FilterBox>()
+
     init {
-        val gridlayout = layout.rowSpacing(8).createRowHelper(3)
+        val gridlayout = layout.rowSpacing(7).columnSpacing(6).createRowHelper(3)
 
         for (i in 0..2) {
-            gridlayout.addChild(FilterBox(menu.containerData))
+            filterBoxes += FilterBox(i, menu.containerData)
+            gridlayout.addChild(filterBoxes.last())
+            editBoxes += FilterEditBox(160, 18, i, menu)
+            gridlayout.addChild(editBoxes.last())
+            filterBoxes += FilterBox(i, menu.containerData, editBoxes.last())
+            gridlayout.addChild(filterBoxes.last())
         }
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
     }
 
-}
+    override fun onSwap() {
+        for (edit in editBoxes) {
+            edit.active = this.menu.containerData[NUM_FILTERS] > 2
+            edit.setEditable(edit.active)
+            if (!edit.active) {
+                edit.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.filters_required"))
+            } else {
+                edit.tooltip = Tooltip.create(Component.literal("Ex. c:ores/diamond"))
+            }
+        }
 
-class FilterBox(data: ContainerData) : AbstractWidget(0, 0, 50, 100, Component.empty()) {
-    val data: ContainerData
+        for (box in filterBoxes) {
+            if (box.editBox != null) {
+                box.active = this.menu.containerData[NUM_FILTERS] > 2
+            } else {
+                box.active = this.menu.containerData[NUM_FILTERS] > box.idx
+            }
 
-    init {
-        this.data = data
+            if (!box.active) {
+                box.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.filters_required"))
+            } else {
+                box.tooltip = null
+            }
+        }
     }
 
-    val SLOT = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
+    override fun doLayout(rectangle: ScreenRectangle) {
+        this.layout.arrangeElements()
+        FrameLayout.alignInRectangle(this.layout, rectangle, 0.82f, 0.165f)
+    }
+}
+
+@OnlyIn(Dist.CLIENT)
+class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) : EditBox(Minecraft.getInstance().font, width, height, Component.literal(menu.filters[idx])) {
+    val SPRITES = WidgetSprites(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_disabled"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_highlighted"))
+    var ingredients = Ingredient.EMPTY
+    val foundTags = ArrayList<TagKey<Item>>()
+
+    init {
+        // Update to Server on change
+        this.setResponder { PacketDistributor.sendToServer(MinerFilterPayloadToServer(this.idx, this.value, this.menu.pos)) }
+        PacketDistributor.sendToServer(MinerFilterPayloadToServer(this.idx, this.value, this.menu.pos, true)) // Get saved data
+
+        this.setTextColor(0xFFFFFFFF.toInt())
+        this.setTextColorUneditable(0xFFBBBBBB.toInt())
+
+        for (i in 0..this.menu.tier) {
+            this.foundTags += ModItemTagProvider.oreTierTag[i]
+        }
+    }
+
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        guiGraphics.blitSprite(SLOT, this.x + 13, this.y + 13, 18, 18)
+        guiGraphics.blitSprite(this.SPRITES.get(this.isActive, this.isFocused), this.x, this.y, 0, this.getWidth(), this.getHeight())
+
+        if (this.value == "" && this.menu.filters[this.idx] != "") {
+            this.value = this.menu.filters[this.idx]
+        }
+
+        if (ResourceLocation.tryParse(this.value) != null) {
+            this.ingredients = Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(this.value))).items.filter { it -> foundTags.any { tag -> it.`is`(tag) } }.stream())
+        } else {
+            this.ingredients = Ingredient.EMPTY
+        }
+
+        if (this.value.isEmpty()) {
+            guiGraphics.drawString(Minecraft.getInstance().font, "Set filter with Tag",this.x + 4, this.y + (this.height - 8) / 2, 0xFFBBBBBB.toInt(), this.textShadow)
+        }
+
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick)
+    }
+
+    override fun getInnerWidth(): Int {
+        return this.width - 8
+    }
+
+    override fun isBordered(): Boolean {
+        return false
+    }
+}
+
+class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBox? = null) : AbstractWidget(0, 0, 18, 18, Component.empty()) {
+    val SLOT = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
+    var index = 0
+    var frame = 0
+    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+        guiGraphics.blitSprite(SLOT, this.x, this.y, 18, 18)
+
+        if (!this.active) {
+            guiGraphics.fill(this.x + 1, this.y + 1, this.x + 17, this.y + 17, 0x70323232.toInt())
+        }
+
+        if (editBox != null) {
+            if (frame < 80) {
+                frame++
+            } else {
+                frame = 0
+                if (index < editBox.ingredients.items.size - 1) {
+                    index++
+                } else {
+                    index = 0
+                }
+            }
+            guiGraphics.renderItem(editBox.ingredients.items.getOrElse(this.index) { ItemStack(Items.BARRIER, 1) }, this.x + 1, this.y + 1)
+
+            if (!this.editBox.ingredients.hasNoItems() && ScreenRectangle(this.x, this.y, 16, 16).containsPoint(mouseX, mouseY)) {
+                // Max size is 8 x 8 (64 items)
+                val size = Vector2i((if (editBox.ingredients.items.size < 8) editBox.ingredients.items.size else 8) * 16, min(ceil(editBox.ingredients.items.size / 8.0).toInt(), 8) * 16)
+
+                val screen = Minecraft.getInstance().screen!!
+                val position = TooltipPositioner.positionTooltip(screen.width, screen.height, mouseX, mouseY, size.x, size.y)
+                TooltipRenderUtil.renderTooltipBackground(guiGraphics, position.x(), position.y(), size.x, size.y, 9000)
+
+                guiGraphics.pose().pushPose()
+                guiGraphics.pose().translate(0f, 0f, 9000f)
+                for ((idx, item) in editBox.ingredients.items.withIndex()) {
+                    guiGraphics.renderItem(item, position.x() + (16 * (idx % 8)), position.y() + (16 * (idx / 8)))
+                }
+                guiGraphics.pose().popPose()
+            }
+        }
+    }
+
+    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        if (this.editBox == null) {
+            return super.mouseClicked(mouseX, mouseY, button)
+        }
+        return false
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
-//        TODO("Not yet implemented")
+        // TODO
     }
 }
