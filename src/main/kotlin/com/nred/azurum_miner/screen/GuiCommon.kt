@@ -20,20 +20,26 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import java.text.DecimalFormat
 import kotlin.math.max
 
 abstract class GuiCommon {
     companion object {
-        @OnlyIn(Dist.CLIENT)
         fun getFE(powerNum: Number): String {
             val power = powerNum.toDouble()
             return when {
                 (power / 1000000000.0) >= 0.999999 -> String.format("%.1f GFE", power / 1000000000.0)
                 (power / 1000000.0) >= 0.999999 -> String.format("%.1f MFE", power / 1000000.0)
                 (power / 1000.0) >= 0.999999 -> String.format("%.1f kFE", power / 1000.0)
-                else -> "$power FE"
+                else -> String.format("%.1f FE", power)
+            }
+        }
+
+        fun getBuckets(fluidNum: Number): String {
+            val fluid = fluidNum.toDouble()
+            return when {
+                fluid >= 10000 -> String.format("%s B", DecimalFormat("#,###.0").format(fluid / 1000.0))
+                else -> String.format("%s mB", DecimalFormat("#,###").format(fluid.toInt()))
             }
         }
 
@@ -77,6 +83,7 @@ abstract class GuiCommon {
 
 abstract class RenderTab(title: Component) : GridLayoutTab(title) {
     abstract fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int)
+    abstract fun onSwap()
 }
 
 class VerticalTabNavigationBar(private val x: Int, private val y: Int, private val tabManager: TabManager, tabButtons: Iterable<SpriteTabButton>) : AbstractContainerEventHandler(), Renderable, NarratableEntry {
@@ -108,7 +115,22 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
             this.currentTab = tabButton
             tabButton.isSelected = true
             this.tabManager.setCurrentTab(tabButton.tab(), playClickSound)
+            tabButton.tab().onSwap()
         }
+    }
+
+    fun loadCurrentTab(idx: Int) {
+        setTab(this.tabButtons.get(idx), false)
+    }
+
+    fun saveCurrentTab(): Int {
+        //TODO SAVE STRING
+        for ((idx, tabButton) in this.tabButtons.withIndex()) {
+            if (tabButton == this.currentTab){
+                return idx
+            }
+        }
+        return 0
     }
 
     override fun children(): MutableList<out GuiEventListener> {
@@ -232,6 +254,11 @@ class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height
 
         guiGraphics.setColor(1f, 1f, 1f, 1f)
     }
+
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
 }
 
 fun colorToFloat(color: Int): FloatArray {

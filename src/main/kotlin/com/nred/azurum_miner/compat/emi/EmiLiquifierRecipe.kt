@@ -32,7 +32,7 @@ class EmiLiquifierRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, outp
         widgets.addTank(outputs[0], width - tank.width - 1, tank.top() - 1, tank.width, energy.height + 1, outputs[0].amount.toInt()).drawBack(false).recipeContext(this)
         widgets.addDrawable(width - tank.width - 1, tank.top() - 1, tank.width, energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.TANK, 0, 0, 150, tank.width, energy.height) }
 
-        widgets.addDrawable(Companion.energy.left() - 13, Companion.energy.top() - 1, Companion.energy.width, Companion.energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.ENERGY_BAR, 0, 0, 3, Companion.energy.width, Companion.energy.height) }.tooltipText(listOf(Component.literal(getFE(power))))
-        widgets.addTexture(Companion.ENERGY_INNER.withPath("textures/gui/sprites/common/energy_inner.png"), Companion.energy.left() - 12, Companion.energy.bottom() - Companion.energy.height, Companion.energy.width - 2, Companion.energy.height - 2, 0, 0, Companion.energy.width - 2, Companion.energy.height - 2, 4, 2)
+        widgets.addDrawable(energy.left() - 13, energy.top() - 1, energy.width, energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.ENERGY_BAR, 0, 0, 3, energy.width, energy.height) }.tooltipText(listOf(Component.literal(getFE(power))))
+        widgets.addTexture(Companion.ENERGY_INNER.withPath("textures/gui/sprites/common/energy_inner.png"), energy.left() - 12, energy.bottom() - energy.height, energy.width - 2, energy.height - 2, 0, 0, energy.width - 2, energy.height - 2, 4, 2)
     }
 }

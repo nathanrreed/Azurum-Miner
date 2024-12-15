@@ -6,10 +6,10 @@ import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
+import com.nred.azurum_miner.machine.miner.MinerScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
@@ -22,7 +22,7 @@ class Payload(val index: Int, val value: Int, val name: String, val from: String
     constructor(enumIndex: Enum<*>, value: Int, name: String, from: String, pos: BlockPos) : this(enumIndex.ordinal, value, name, from, pos)
 
     companion object {
-        val TYPE: CustomPacketPayload.Type<Payload> = CustomPacketPayload.Type<Payload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "container_data_client_to_server"))
+        val TYPE = CustomPacketPayload.Type<Payload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "container_data_client_to_server"))
         val STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, Payload::index, ByteBufCodecs.INT, Payload::value, ByteBufCodecs.STRING_UTF8, Payload::name, ByteBufCodecs.STRING_UTF8, Payload::from, BlockPos.STREAM_CODEC, Payload::pos, ::Payload)
     }
 
@@ -57,23 +57,54 @@ class ServerPayloadHandler {
                     else -> throw UnsupportedOperationException("Unknown packet type: ${data.name}")
                 }
             }
-
-            // Do something with the data, on the main thread
-            context.enqueueWork {
-            }
-                .exceptionally { e: Throwable ->
-                    // Handle exception
-                    context.disconnect(Component.translatable("azurum_miner.networking.failed", e.message))
-                    null
-                }
         }
     }
 }
 
+class MinerFilterPayloadToServer(val idx: Int, val string: String, val pos: BlockPos, val reply: Boolean = false) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<MinerFilterPayloadToServer>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_filter_handler_server"))
+        val STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MinerFilterPayloadToServer::idx, ByteBufCodecs.STRING_UTF8, MinerFilterPayloadToServer::string, BlockPos.STREAM_CODEC, MinerFilterPayloadToServer::pos, ByteBufCodecs.BOOL, MinerFilterPayloadToServer::reply, ::MinerFilterPayloadToServer)
+    }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
+        return TYPE
+    }
+}
+
+class MinerFilterPayloadToPlayer(val idx: Int, val string: String) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<MinerFilterPayloadToPlayer>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_filter_handler_player"))
+        val STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MinerFilterPayloadToPlayer::idx, ByteBufCodecs.STRING_UTF8, MinerFilterPayloadToPlayer::string, ::MinerFilterPayloadToPlayer)
+    }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
+        return TYPE
+    }
+}
+
+class MinerFilterPayloadHandler {
+    companion object {
+        fun handleDataOnServer(data: MinerFilterPayloadToServer, context: IPayloadContext) {
+            if(data.reply){
+                context.reply(MinerFilterPayloadToPlayer(data.idx, (context.player().level().getBlockEntity(data.pos) as MinerEntity).getFilterData(data.idx)))
+            }else{
+                (context.player().level().getBlockEntity(data.pos) as MinerEntity).updateFilterData(data.idx, data.string)
+            }
+        }
+
+        fun handleDataOnPlayer(data: MinerFilterPayloadToPlayer, context: IPayloadContext) {
+            val screen = Minecraft.getInstance().screen
+            if (screen is MinerScreen) {
+                screen.menu.filters[data.idx] = data.string
+            }
+        }
+    }
+}
 
 class FluidPayload(val fluid: FluidStack) : CustomPacketPayload {
     companion object {
-        val TYPE: CustomPacketPayload.Type<FluidPayload> = CustomPacketPayload.Type<FluidPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "fluid_server_to_client"))
+        val TYPE = CustomPacketPayload.Type<FluidPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "fluid_server_to_client"))
         val STREAM_CODEC = StreamCodec.composite(FluidStack.OPTIONAL_STREAM_CODEC, FluidPayload::fluid, ::FluidPayload)
     }
 
@@ -91,15 +122,6 @@ class FluidPayloadHandler {
             } else if (screen is InfuserScreen) {
                 screen.fluid = data.fluid
             }
-
-            // Do something with the data, on the main thread
-            context.enqueueWork {
-            }
-                .exceptionally { e: Throwable ->
-                    // Handle exception
-                    context.disconnect(Component.translatable("nred_mod.networking.failed", e.message))
-                    null
-                }
         }
     }
 }

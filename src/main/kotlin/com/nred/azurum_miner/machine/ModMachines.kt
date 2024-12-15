@@ -12,16 +12,17 @@ import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModMachines {
     val MACHINES = DeferredRegister.createBlocks(AzurumMiner.ID)
+    val BASE_PROPERTIES = BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F).lightLevel { state -> if(state.getValue(AbstractMachine.MACHINE_ON)) 7 else 0 }
 
     val MINER_BLOCK_TIERS = (0..<5).toList().map { tier ->
         Helpers.registerBlock("miner_block_tier_${tier + 1}", MACHINES) { ->
-            Miner(tier, BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F))
+            Miner(tier, BASE_PROPERTIES)
         }
     }
 
-    val LIQUIFIER = Helpers.registerBlock("liquifier_block", MACHINES) {-> Liquifier(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F))}
-    val INFUSER = Helpers.registerBlock("infuser_block", MACHINES) {-> Infuser(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
-    val TRANSMOGRIFIER = Helpers.registerBlock("transmogrifier_block", MACHINES) {-> Transmogrifier(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
+    val LIQUIFIER = Helpers.registerBlock("liquifier_block", MACHINES) {-> Liquifier(BASE_PROPERTIES)}
+    val INFUSER = Helpers.registerBlock("infuser_block", MACHINES) {-> Infuser(BASE_PROPERTIES) }
+    val TRANSMOGRIFIER = Helpers.registerBlock("transmogrifier_block", MACHINES) {-> Transmogrifier(BASE_PROPERTIES) }
 
     fun register(eventBus: IEventBus) {
         MACHINES.register(eventBus)

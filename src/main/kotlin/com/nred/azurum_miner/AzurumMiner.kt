@@ -208,12 +208,14 @@ object AzurumMiner {
     fun clientToServerUpdate(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
         registrar.playToServer(Payload.TYPE, Payload.STREAM_CODEC, IPayloadHandler(ServerPayloadHandler::handleDataOnNetwork))
+        registrar.playToServer(MinerFilterPayloadToServer.TYPE, MinerFilterPayloadToServer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnServer))
     }
 
     @SubscribeEvent
     fun serverToClientUpdate(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
         registrar.playToClient(FluidPayload.TYPE, FluidPayload.STREAM_CODEC, IPayloadHandler(FluidPayloadHandler::handleDataOnNetwork))
+        registrar.playToClient(MinerFilterPayloadToPlayer.TYPE, MinerFilterPayloadToPlayer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnPlayer))
     }
 
     @SubscribeEvent
@@ -235,7 +237,7 @@ object AzurumMiner {
             event.isCanceled = true
             val tag = CompoundTag()
             event.entity.save(tag)
-            event.player.getCommandSenderWorld().addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
+            event.player.commandSenderWorld.addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
         }
     }
 }
