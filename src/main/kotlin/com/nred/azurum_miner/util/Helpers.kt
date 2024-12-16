@@ -57,8 +57,8 @@ object Helpers {
     private const val VANILLA_FIRST_SLOT_INDEX: Int = 0
     private val TE_INVENTORY_FIRST_SLOT_INDEX: Int = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT
 
-    fun quickMoveStack(playerIn: Player?, pIndex: Int, slots: NonNullList<Slot>, moveItemStackTo: (ItemStack, Int, Int, Boolean) -> Boolean, TE_INVENTORY_SLOT_COUNT: Int): ItemStack {
-        val sourceSlot: Slot = slots.get(pIndex)
+    fun quickMoveStack(playerIn: Player, pIndex: Int, slots: NonNullList<Slot>, moveItemStackTo: (ItemStack, Int, Int, Boolean) -> Boolean, TE_INVENTORY_SLOT_COUNT: Int): ItemStack {
+        val sourceSlot: Slot? = slots[pIndex]
         if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY //EMPTY_ITEM
 
         val sourceStack = sourceSlot.item

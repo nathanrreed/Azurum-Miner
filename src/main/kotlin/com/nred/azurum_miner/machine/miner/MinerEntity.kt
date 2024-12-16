@@ -137,7 +137,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             if (slot == OUTPUT) {
                 return false // NO INPUT
-            } else if (data[NUM_FILTERS] > slot && foundOres.contains(stack)) {
+            } else if (data[NUM_FILTERS] > slot && this@MinerEntity.foundOres.any { ore -> ore.`is`(stack.item) }) {
                 return true
             }
             return false
@@ -148,6 +148,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 return stack // NO INPUT
             }
             return super.insertItem(slot, stack, simulate)
+        }
+
+        override fun getSlotLimit(slot: Int): Int {
+            return 1
         }
     }
 
@@ -342,11 +346,11 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     override fun onLoad() {
         super.onLoad()
 
-        if (!level!!.isClientSide) {
-            for (i in 0..this.tier){
-                this.foundOres += Ingredient.of(ModItemTagProvider.oreTierTag[i]).items
-            }
+//        if (!level!!.isClientSide) {
+        for (i in 0..this.tier) {
+            this.foundOres += Ingredient.of(ModItemTagProvider.oreTierTag[i]).items
         }
+//        }
 
         calculateModifiers()
         this.loaded = true

@@ -26,17 +26,18 @@ import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.layouts.FrameLayout
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.layouts.LayoutSettings
-import net.minecraft.client.gui.layouts.SpacerElement
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
 import net.minecraft.util.CommonColors
+import net.minecraft.util.Unit
 import net.minecraft.world.inventory.ContainerData
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -95,6 +96,9 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
     }
 
     override fun onSwap() {
+        for (slot in this.menu.filterSlots) {
+            slot.active = false
+        }
     }
 
     override fun doLayout(rectangle: ScreenRectangle) {
@@ -264,11 +268,11 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
         val gridlayout = layout.rowSpacing(7).columnSpacing(6).createRowHelper(3)
 
         for (i in 0..2) {
-            filterBoxes += FilterBox(i, menu.containerData)
-            gridlayout.addChild(filterBoxes.last())
             editBoxes += FilterEditBox(160, 18, i, menu)
-            gridlayout.addChild(editBoxes.last())
             filterBoxes += FilterBox(i, menu.containerData, editBoxes.last())
+            gridlayout.addChild(filterBoxes.last())
+            gridlayout.addChild(editBoxes.last())
+            filterBoxes += FilterBox(i, menu.containerData, editBoxes.last(), true)
             gridlayout.addChild(filterBoxes.last())
         }
     }
@@ -277,6 +281,10 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
     }
 
     override fun onSwap() {
+        for (slot in this.menu.filterSlots) {
+            slot.active = true
+        }
+
         for (edit in editBoxes) {
             edit.active = this.menu.containerData[NUM_FILTERS] > 2
             edit.setEditable(edit.active)
@@ -288,7 +296,7 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
         }
 
         for (box in filterBoxes) {
-            if (box.editBox != null) {
+            if (box.ingredientSlot) {
                 box.active = this.menu.containerData[NUM_FILTERS] > 2
             } else {
                 box.active = this.menu.containerData[NUM_FILTERS] > box.idx
@@ -311,7 +319,7 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
 @OnlyIn(Dist.CLIENT)
 class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) : EditBox(Minecraft.getInstance().font, width, height, Component.literal(menu.filters[idx])) {
     val SPRITES = WidgetSprites(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_disabled"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_highlighted"))
-    var ingredients = Ingredient.EMPTY
+    var ingredients: Ingredient = Ingredient.EMPTY
     val foundTags = ArrayList<TagKey<Item>>()
 
     init {
@@ -341,7 +349,7 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
         }
 
         if (this.value.isEmpty()) {
-            guiGraphics.drawString(Minecraft.getInstance().font, "Set filter with Tag",this.x + 4, this.y + (this.height - 8) / 2, 0xFFBBBBBB.toInt(), this.textShadow)
+            guiGraphics.drawString(Minecraft.getInstance().font, "Set filter with Tag", this.x + 4, this.y + (this.height - 8) / 2, 0xFFBBBBBB.toInt(), this.textShadow)
         }
 
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick)
@@ -356,19 +364,21 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
     }
 }
 
-class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBox? = null) : AbstractWidget(0, 0, 18, 18, Component.empty()) {
+class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBox, val ingredientSlot: Boolean = false) : AbstractWidget(0, 0, 18, 18, Component.empty()) {
     val SLOT = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
     var index = 0
     var frame = 0
+    var dontUse = false
+    val minecraft = Minecraft.getInstance()
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.blitSprite(SLOT, this.x, this.y, 18, 18)
 
-        if (!this.active) {
-            guiGraphics.fill(this.x + 1, this.y + 1, this.x + 17, this.y + 17, 0x70323232.toInt())
+        if (!this.active || (this.dontUse && this.editBox.active)) {
+            guiGraphics.fill(this.x + 1, this.y + 1, this.x + 17, this.y + 17, 100, 0x70323232.toInt())
         }
 
-        if (editBox != null) {
-            if (frame < 80) {
+        if (ingredientSlot) {
+            if (frame < 100) {
                 frame++
             } else {
                 frame = 0
@@ -380,28 +390,42 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
             }
             guiGraphics.renderItem(editBox.ingredients.items.getOrElse(this.index) { ItemStack(Items.BARRIER, 1) }, this.x + 1, this.y + 1)
 
-            if (!this.editBox.ingredients.hasNoItems() && ScreenRectangle(this.x, this.y, 16, 16).containsPoint(mouseX, mouseY)) {
-                // Max size is 8 x 8 (64 items)
-                val size = Vector2i((if (editBox.ingredients.items.size < 8) editBox.ingredients.items.size else 8) * 16, min(ceil(editBox.ingredients.items.size / 8.0).toInt(), 8) * 16)
+            if (ScreenRectangle(this.x, this.y, 16, 16).containsPoint(mouseX, mouseY) && this.tooltip == null) {
+                if (this.editBox.ingredients.hasNoItems()) {
+                    guiGraphics.renderTooltip(minecraft.font, Component.translatable("tooltip.azurum_miner.miner.filters_no_tag", editBox.value), mouseX, mouseY)
+                } else {
+                    // Max size is 8 x 8 (64 items)
+                    val size = Vector2i((if (editBox.ingredients.items.size < 8) editBox.ingredients.items.size else 8) * 16, min(ceil(editBox.ingredients.items.size / 8.0).toInt(), 8) * 16)
 
-                val screen = Minecraft.getInstance().screen!!
-                val position = TooltipPositioner.positionTooltip(screen.width, screen.height, mouseX, mouseY, size.x, size.y)
-                TooltipRenderUtil.renderTooltipBackground(guiGraphics, position.x(), position.y(), size.x, size.y, 9000)
+                    val screen = minecraft.screen!!
+                    val position = TooltipPositioner.positionTooltip(screen.width, screen.height, mouseX, mouseY, size.x, size.y)
+                    TooltipRenderUtil.renderTooltipBackground(guiGraphics, position.x(), position.y(), size.x, size.y, 9000)
 
-                guiGraphics.pose().pushPose()
-                guiGraphics.pose().translate(0f, 0f, 9000f)
-                for ((idx, item) in editBox.ingredients.items.withIndex()) {
-                    guiGraphics.renderItem(item, position.x() + (16 * (idx % 8)), position.y() + (16 * (idx / 8)))
+                    guiGraphics.pose().pushPose()
+                    guiGraphics.pose().translate(0f, 0f, 9000f)
+                    for ((idx, item) in editBox.ingredients.items.withIndex()) {
+                        guiGraphics.renderItem(item, position.x() + (16 * (idx % 8)), position.y() + (16 * (idx / 8)))
+                    }
+                    guiGraphics.pose().popPose()
                 }
-                guiGraphics.pose().popPose()
+            }
+        } else {
+            this.dontUse = !this.editBox.ingredients.hasNoItems() && this.editBox.menu.containerData[NUM_FILTERS] > 2
+            if (this.active && this.dontUse) {
+                this.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.filters_has_tag", editBox.value))
+                this.editBox.menu.filterSlots[idx].dontUse = true
+                this.editBox.menu.filterSlots[idx].item.set(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
+//                this.editBox.menu.filterSlots[idx].active = false
+            } else {
+                this.editBox.menu.filterSlots[idx].dontUse = false
+                this.editBox.menu.filterSlots[idx].item.remove(DataComponents.HIDE_TOOLTIP)
+                this.tooltip = null
+//                this.editBox.menu.filterSlots[idx].active = true
             }
         }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (this.editBox == null) {
-            return super.mouseClicked(mouseX, mouseY, button)
-        }
         return false
     }
 
