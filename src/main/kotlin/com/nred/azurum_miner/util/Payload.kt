@@ -6,7 +6,7 @@ import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
-import com.nred.azurum_miner.machine.miner.MinerScreen
+import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
@@ -86,17 +86,22 @@ class MinerFilterPayloadToPlayer(val idx: Int, val string: String) : CustomPacke
 class MinerFilterPayloadHandler {
     companion object {
         fun handleDataOnServer(data: MinerFilterPayloadToServer, context: IPayloadContext) {
-            if(data.reply){
+            if (data.reply) {
                 context.reply(MinerFilterPayloadToPlayer(data.idx, (context.player().level().getBlockEntity(data.pos) as MinerEntity).getFilterData(data.idx)))
-            }else{
+            } else {
                 (context.player().level().getBlockEntity(data.pos) as MinerEntity).updateFilterData(data.idx, data.string)
+            }
+
+            val menu = context.player().containerMenu
+            if (menu is MinerMenu) {
+                menu.filters[data.idx] = data.string
             }
         }
 
         fun handleDataOnPlayer(data: MinerFilterPayloadToPlayer, context: IPayloadContext) {
-            val screen = Minecraft.getInstance().screen
-            if (screen is MinerScreen) {
-                screen.menu.filters[data.idx] = data.string
+            val menu = context.player().containerMenu
+            if (menu is MinerMenu) {
+                menu.filters[data.idx] = data.string
             }
         }
     }
