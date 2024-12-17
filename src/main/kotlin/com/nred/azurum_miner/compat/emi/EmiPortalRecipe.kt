@@ -13,8 +13,6 @@ import net.minecraft.resources.ResourceLocation
 import kotlin.math.abs
 
 class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output: EmiStack, val processingTime: Int) : BasicEmiRecipe(PORTAL_CATEGORY, id, 128, 95) {
-    var animationTick = 0
-    var frame = 0
     val obsidian: ResourceLocation = ResourceLocation.withDefaultNamespace("textures/block/obsidian.png")
 
     init {
@@ -29,16 +27,11 @@ class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output:
             for (x in 0..3) {
                 for (y in 0..4) {
                     if (abs(x.toDouble() - 1.5) < 1.0 && y != 0 && y != 4) {
-                        guiGraphics.blit(portal, x * 16, y * 16, 0f, animationTick * 16f, 16, 16, 16, 512)
+                        guiGraphics.blitSprite(portal, x * 16, y * 16, 16, 16)
                     } else {
                         guiGraphics.blit(obsidian, x * 16, y * 16, 0f, 0f, 16, 16, 16, 16)
                     }
                 }
-            }
-
-            this.frame = (this.frame + 1) % 8
-            if (frame == 0) {
-                this.animationTick = (this.animationTick + 1) % 32
             }
         }
 

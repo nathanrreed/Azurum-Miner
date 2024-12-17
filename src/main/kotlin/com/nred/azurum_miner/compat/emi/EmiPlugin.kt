@@ -20,9 +20,7 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient
 @EmiEntrypoint
 class EmiPlugin : EmiPlugin {
     companion object {
-        var animationTick = 0
-        var frame = 0
-        val portal: ResourceLocation = ResourceLocation.withDefaultNamespace("textures/block/nether_portal.png")
+        val portal: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")
 
         val LIQUIFIER_WORKSTATION: EmiStack? = EmiStack.of(ModMachines.LIQUIFIER)
         val INFUSER_WORKSTATION: EmiStack? = EmiStack.of(ModMachines.INFUSER)
@@ -33,11 +31,7 @@ class EmiPlugin : EmiPlugin {
         val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier"), TRANSMOGRIFIER_WORKSTATION)
         val MINER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner"), MINER_WORKSTATION)
         val PORTAL_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")) { guiGraphics, x, y, _ ->
-            guiGraphics.blit(portal, x, y, 0f, animationTick * 16f, 16, 16, 16, 512)
-            this.frame = (this.frame + 1) % 8
-            if (frame == 0) {
-                this.animationTick = (this.animationTick + 1) % 32
-            }
+            guiGraphics.blitSprite(portal, x, y, 16, 16)
         }
     }
 
