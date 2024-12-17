@@ -97,8 +97,8 @@ class MinerRecipeSerializer : RecipeSerializer<MinerRecipe> {
 }
 
 class MinerRecipeBuilder(val result: Ingredient, val tier: Int) : RecipeBuilder {
-    protected val criteria = LinkedHashMap<String, Criterion<*>>()
-    protected var group: String? = null
+    private val criteria = LinkedHashMap<String, Criterion<*>>()
+    private var group: String? = null
 
     override fun unlockedBy(name: String, criterion: Criterion<*>): RecipeBuilder {
         this.criteria[name] = criterion

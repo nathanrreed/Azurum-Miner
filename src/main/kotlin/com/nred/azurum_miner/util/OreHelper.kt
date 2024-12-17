@@ -78,7 +78,7 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
     }
 
     companion object {
-        val BASIC_BLOCK = BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)
+        val BASIC_BLOCK: BlockBehaviour.Properties = BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)
 
         fun setItemTags(tag: (TagKey<Item>) -> IntrinsicHolderTagsProvider.IntrinsicTagAppender<Item>, ore: Ore) {
             tag(Tags.Items.ORES).add(ore.ore.asItem(), ore.deepslate_ore.asItem())

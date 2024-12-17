@@ -31,7 +31,7 @@ import net.minecraft.world.item.ItemStack
 
 class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
     companion object {
-        val UID = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier")
+        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier")
         val TYPE = RecipeType(UID, LiquifierRecipe::class.java)
     }
 

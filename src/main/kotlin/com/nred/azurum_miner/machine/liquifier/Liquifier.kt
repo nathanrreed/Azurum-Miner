@@ -29,7 +29,7 @@ import net.neoforged.neoforge.fluids.FluidUtil
 
 
 class Liquifier(properties: Properties) : AbstractMachine(properties) {
-    val LIQUIFIER_CODEC = RecordCodecBuilder.mapCodec<Liquifier>({ instance ->
+    val LIQUIFIER_CODEC= RecordCodecBuilder.mapCodec<Liquifier>({ instance ->
         instance.group(propertiesCodec()).apply(instance, ::Liquifier)
     })
 

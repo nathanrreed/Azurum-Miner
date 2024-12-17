@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult
 
 
 class Transmogrifier(properties: Properties) : AbstractMachine(properties) {
-    val TRANSMOGRIFIER_CODEC = RecordCodecBuilder.mapCodec<Transmogrifier>({ instance ->
+    val TRANSMOGRIFIER_CODEC= RecordCodecBuilder.mapCodec<Transmogrifier>({ instance ->
         instance.group(propertiesCodec()).apply(instance, ::Transmogrifier)
     })
 

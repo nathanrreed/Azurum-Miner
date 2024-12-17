@@ -9,16 +9,16 @@ import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.material.Fluid
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.fluids.FluidStack
-import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModRecipe {
-    val RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, AzurumMiner.ID)
-    val LIQUIFIER_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<LiquifierRecipe>> = RECIPE_TYPES.register(
+    val RECIPE_TYPES: DeferredRegister<RecipeType<*>?> = DeferredRegister.create(Registries.RECIPE_TYPE, AzurumMiner.ID)
+    val LIQUIFIER_RECIPE_TYPE = RECIPE_TYPES.register(
         "liquifier_recipe", { registryName ->
             object : RecipeType<LiquifierRecipe> {
                 override fun toString(): String {
@@ -28,7 +28,7 @@ object ModRecipe {
         }
     )
 
-    val INFUSER_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<InfuserRecipe>> = RECIPE_TYPES.register(
+    val INFUSER_RECIPE_TYPE = RECIPE_TYPES.register(
         "infuser_recipe", { registryName ->
             object : RecipeType<InfuserRecipe> {
                 override fun toString(): String {
@@ -38,7 +38,7 @@ object ModRecipe {
         }
     )
 
-    val TRANSMOGRIFIER_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<TransmogrifierRecipe>> = RECIPE_TYPES.register(
+    val TRANSMOGRIFIER_RECIPE_TYPE = RECIPE_TYPES.register(
         "transmogrifier_recipe", { registryName ->
             object : RecipeType<TransmogrifierRecipe> {
                 override fun toString(): String {
@@ -48,7 +48,7 @@ object ModRecipe {
         }
     )
 
-    val SHAPED_RECIPE_TRANSFORM_TYPE: DeferredHolder<RecipeType<*>, RecipeType<ShapedRecipeWithComponents>> = RECIPE_TYPES.register(
+    val SHAPED_RECIPE_TRANSFORM_TYPE = RECIPE_TYPES.register(
         "crafting_shaped_transform", { registryName ->
             object : RecipeType<ShapedRecipeWithComponents> {
                 override fun toString(): String {
@@ -58,7 +58,7 @@ object ModRecipe {
         }
     )
 
-    val MINER_TIER1_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<MinerRecipe>> = RECIPE_TYPES.register(
+    val MINER_TIER1_RECIPE_TYPE = RECIPE_TYPES.register(
         "miner_recipe_tier1", { registryName ->
             object : RecipeType<MinerRecipe> {
                 override fun toString(): String {
@@ -67,7 +67,7 @@ object ModRecipe {
             }
         }
     )
-    val MINER_TIER2_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<MinerRecipe>> = RECIPE_TYPES.register(
+    val MINER_TIER2_RECIPE_TYPE = RECIPE_TYPES.register(
         "miner_recipe_tier2", { registryName ->
             object : RecipeType<MinerRecipe> {
                 override fun toString(): String {
@@ -76,7 +76,7 @@ object ModRecipe {
             }
         }
     )
-    val MINER_TIER3_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<MinerRecipe>> = RECIPE_TYPES.register(
+    val MINER_TIER3_RECIPE_TYPE = RECIPE_TYPES.register(
         "miner_recipe_tier3", { registryName ->
             object : RecipeType<MinerRecipe> {
                 override fun toString(): String {
@@ -85,7 +85,7 @@ object ModRecipe {
             }
         }
     )
-    val MINER_TIER4_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<MinerRecipe>> = RECIPE_TYPES.register(
+    val MINER_TIER4_RECIPE_TYPE = RECIPE_TYPES.register(
         "miner_recipe_tier4", { registryName ->
             object : RecipeType<MinerRecipe> {
                 override fun toString(): String {
@@ -94,7 +94,7 @@ object ModRecipe {
             }
         }
     )
-    val MINER_TIER5_RECIPE_TYPE: DeferredHolder<RecipeType<*>, RecipeType<MinerRecipe>> = RECIPE_TYPES.register(
+    val MINER_TIER5_RECIPE_TYPE = RECIPE_TYPES.register(
         "miner_recipe_tier5", { registryName ->
             object : RecipeType<MinerRecipe> {
                 override fun toString(): String {
@@ -104,7 +104,7 @@ object ModRecipe {
         }
     )
 
-    val RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, AzurumMiner.ID)
+    val RECIPE_SERIALIZERS: DeferredRegister<RecipeSerializer<*>?> = DeferredRegister.create(Registries.RECIPE_SERIALIZER, AzurumMiner.ID)
 
     val LIQUIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("liquifier_recipe") { -> LiquifierRecipeSerializer() }
     val INFUSER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("infuser_recipe") { -> InfuserRecipeSerializer() }

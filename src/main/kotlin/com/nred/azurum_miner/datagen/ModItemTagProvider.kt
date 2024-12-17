@@ -10,8 +10,9 @@ import net.minecraft.data.PackOutput
 import net.minecraft.data.tags.ItemTagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.Items.*
 import net.minecraft.world.level.block.Block
-import net.neoforged.neoforge.common.Tags
+import net.neoforged.neoforge.common.Tags.Items.*
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
@@ -25,19 +26,22 @@ class ModItemTagProvider(
         val oreTierTag = listOf(
             ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier1_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier2_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier3_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier4_tag")), ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_ore_tier5_tag"))
         )
+        val materialTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ID, "miner_material_tag"))
     }
 
     override fun addTags(provider: HolderLookup.Provider) {
-        tag(Tags.Items.BUCKETS).add(*FluidHelper.FLUIDS.map { fluid -> fluid.bucket.get() }.toTypedArray())
+        tag(BUCKETS).add(*FluidHelper.FLUIDS.map { fluid -> fluid.bucket.get() }.toTypedArray())
 
         for (ore in OreHelper.ORES) {
             Ore.setItemTags(::tag, ore)
         }
 
-        tag(oreTierTag[0]).addTags(Tags.Items.ORES_COAL, Tags.Items.ORES_COPPER, OreHelper.ORES["azurum"].ore_tag)
-        tag(oreTierTag[1]).addTags(Tags.Items.ORES_IRON, Tags.Items.ORES_REDSTONE, Tags.Items.ORES_LAPIS, OreHelper.ORES["galibium"].ore_tag)
-        tag(oreTierTag[2]).addTags(Tags.Items.ORES_GOLD, OreHelper.ORES["thelxium"].ore_tag)
-        tag(oreTierTag[3]).addTags(Tags.Items.ORES_QUARTZ, OreHelper.ORES["palestium"].ore_tag)
-        tag(oreTierTag[4]).addTags(Tags.Items.ORES_DIAMOND, Tags.Items.ORES_EMERALD, Tags.Items.ORES_NETHERITE_SCRAP)
+        tag(oreTierTag[0]).addTags(ORES_COAL, ORES_COPPER, OreHelper.ORES["azurum"].ore_tag)
+        tag(oreTierTag[1]).addTags(ORES_IRON, ORES_REDSTONE, ORES_LAPIS, OreHelper.ORES["galibium"].ore_tag)
+        tag(oreTierTag[2]).addTags(ORES_GOLD, OreHelper.ORES["thelxium"].ore_tag)
+        tag(oreTierTag[3]).addTags(ORES_QUARTZ, OreHelper.ORES["palestium"].ore_tag)
+        tag(oreTierTag[4]).addTags(ORES_DIAMOND, ORES_EMERALD, ORES_NETHERITE_SCRAP)
+
+        tag(materialTag).addTags(STONES, COBBLESTONES, COBBLESTONES_DEEPSLATE, GRAVELS, OBSIDIANS, SANDS).add(DIRT, GRASS_BLOCK, COARSE_DIRT, ROOTED_DIRT, BASALT, SMOOTH_BASALT, BLACKSTONE, CALCITE, CLAY, MUD, MUDDY_MANGROVE_ROOTS, PACKED_MUD)
     }
 }

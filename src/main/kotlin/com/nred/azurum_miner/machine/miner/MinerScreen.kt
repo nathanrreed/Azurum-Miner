@@ -25,23 +25,24 @@ import net.minecraft.world.entity.player.Inventory
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
 import java.util.Optional
+import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
 
 class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component) : AbstractContainerScreen<MinerMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/base")
-        val SLOT = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
-        val PLAY = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
-        val PAUSE = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
-        val ENERGY_BAR = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_bar")
-        val ENERGY_INNER = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
-        val TANK = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/fluid_tank")
+        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/base")
+        val SLOT: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
+        val PLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
+        val PAUSE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
+        val ENERGY_BAR: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_bar")
+        val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
+        val TANK: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/fluid_tank")
     }
 
-    var base = ScreenRectangle.empty()
-    var powerButton = ScreenRectangle.empty()
-    var energy = ScreenRectangle.empty()
+    var base: ScreenRectangle = ScreenRectangle.empty()
+    var powerButton: ScreenRectangle = ScreenRectangle.empty()
+    var energy: ScreenRectangle = ScreenRectangle.empty()
     val tabManager = TabManager({ widget -> this.addRenderableWidget(widget) }, { widget -> this.removeWidget(widget) })
     lateinit var navigationBar: VerticalTabNavigationBar
 
@@ -90,7 +91,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         }
 
         // Draw Energy
-        val varLen = floor(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * 82.0).toInt()
+        val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * 82.0).toInt()
 
         guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top(), 3, energy.width, energy.height)
         guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - 1 - varLen, 4, energy.width - 2, varLen)

@@ -1,3 +1,5 @@
+@file:Suppress("UsePropertyAccessSyntax")
+
 package com.nred.azurum_miner.machine
 
 import net.minecraft.core.BlockPos
@@ -22,6 +24,7 @@ import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 
+@Suppress("UsePropertyAccessSyntax")
 abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) : BlockEntity(type, pos, blockState), MenuProvider {
 
     var loaded = false
@@ -60,8 +63,8 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPo
     }
 
     fun drops() {
-        val inventory = SimpleContainer(itemStackHandler.getSlots())
-        for (i in 0..<itemStackHandler.getSlots()) {
+        val inventory = SimpleContainer(itemStackHandler.slots)
+        for (i in 0..<itemStackHandler.slots) {
             inventory.setItem(i, itemStackHandler.getStackInSlot(i))
         }
 

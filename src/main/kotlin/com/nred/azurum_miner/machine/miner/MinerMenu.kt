@@ -65,6 +65,7 @@ class MinerMenu : AbstractContainerMenu {
         for (i in 0..this.tier) {
             foundTags += ModItemTagProvider.oreTierTag[i]
         }
+        foundTags += ModItemTagProvider.materialTag
     }
 
     // Client Constructor

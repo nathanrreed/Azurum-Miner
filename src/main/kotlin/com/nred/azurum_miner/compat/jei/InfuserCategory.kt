@@ -31,7 +31,7 @@ import net.minecraft.world.item.ItemStack
 
 class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
     companion object {
-        val UID = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser")
+        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser")
         val TYPE = RecipeType(UID, InfuserRecipe::class.java)
     }
 

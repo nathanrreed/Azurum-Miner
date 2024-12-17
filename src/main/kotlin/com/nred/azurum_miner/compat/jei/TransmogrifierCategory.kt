@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack
 
 class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<TransmogrifierRecipe> {
     companion object {
-        val UID = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "Transmogrifier")
+        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "Transmogrifier")
         val TYPE = RecipeType(UID, TransmogrifierRecipe::class.java)
     }
 

@@ -11,8 +11,8 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModMachines {
-    val MACHINES = DeferredRegister.createBlocks(AzurumMiner.ID)
-    val BASE_PROPERTIES = BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F).lightLevel { state -> if(state.getValue(AbstractMachine.MACHINE_ON)) 7 else 0 }
+    val MACHINES: DeferredRegister.Blocks = DeferredRegister.createBlocks(AzurumMiner.ID)
+    val BASE_PROPERTIES: BlockBehaviour.Properties = BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F).lightLevel { state -> if(state.getValue(AbstractMachine.MACHINE_ON)) 7 else 0 }
 
     val MINER_BLOCK_TIERS = (0..<5).toList().map { tier ->
         Helpers.registerBlock("miner_block_tier_${tier + 1}", MACHINES) { ->
