@@ -17,24 +17,25 @@ import net.minecraft.world.level.block.NetherPortalBlock
 import net.minecraft.world.level.block.Portal
 import net.minecraft.world.phys.Vec3
 import net.neoforged.bus.api.IEventBus
+import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3i
 import kotlin.random.Random
 
 object ModItems {
-    val ITEMS = DeferredRegister.createItems(AzurumMiner.ID)
+    val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(AzurumMiner.ID)
 
     //val tt = ITEM_ENTITIES.register("SS", {-> ItemEntity. })
-    val SIMPLE_VOID_PROCESSOR = ITEMS.register("simple_void_processor") { -> Item(Properties()) }
-    val VOID_PROCESSOR = ITEMS.register("void_processor") { -> Item(Properties()) }
-    val ELABORATE_VOID_PROCESSOR = ITEMS.register("elaborate_void_processor") { -> Item(Properties()) }
-    val COMPLEX_VOID_PROCESSOR = ITEMS.register("complex_void_processor") { -> Item(Properties()) }
+    val SIMPLE_VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("simple_void_processor") { -> Item(Properties()) }
+    val VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("void_processor") { -> Item(Properties()) }
+    val ELABORATE_VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("elaborate_void_processor") { -> Item(Properties()) }
+    val COMPLEX_VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("complex_void_processor") { -> Item(Properties()) }
 
-    val CONGLOMERATE_OF_ORE_SHARD = ITEMS.register("conglomerate_of_ore_shard") { -> Item(Properties()) }
-    val NETHER_DIAMOND = ITEMS.register("nether_diamond") { -> Item(Properties()) }
-    val ENDER_DIAMOND = ITEMS.register("ender_diamond") { -> Item(Properties()) }
-    val DIMENSIONAL_MATRIX = ITEMS.register("dimensional_matrix") { -> Item(Properties()) }
-    val EMPTY_DIMENSIONAL_MATRIX = ITEMS.register("empty_dimensional_matrix") { -> Item(Properties()) }
+    val CONGLOMERATE_OF_ORE_SHARD: DeferredItem<Item?> = ITEMS.register("conglomerate_of_ore_shard") { -> Item(Properties()) }
+    val NETHER_DIAMOND: DeferredItem<Item?> = ITEMS.register("nether_diamond") { -> Item(Properties()) }
+    val ENDER_DIAMOND: DeferredItem<Item?> = ITEMS.register("ender_diamond") { -> Item(Properties()) }
+    val DIMENSIONAL_MATRIX: DeferredItem<Item?> = ITEMS.register("dimensional_matrix") { -> Item(Properties()) }
+    val EMPTY_DIMENSIONAL_MATRIX: DeferredItem<Item?> = ITEMS.register("empty_dimensional_matrix") { -> Item(Properties()) }
 
 //    val EXAMPLE_ITEM: DeferredItem<Item> = ITEMS.register(
 //        "test",
@@ -62,7 +63,7 @@ object ModItems {
 class EmptyMatrixItemEntity(tag: CompoundTag, level: Level) : ItemEntity(EntityType.ITEM, level) {
     var fill = 0
     var inPortal = false
-    var dest = Vec3.ZERO
+    var dest: Vec3 = Vec3.ZERO
 
     init {
         this.load(tag)

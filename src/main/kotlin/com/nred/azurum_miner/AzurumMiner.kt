@@ -94,13 +94,13 @@ object AzurumMiner {
     }
 
     fun addCreative(event: BuildCreativeModeTabContentsEvent) {
-        if (event.getTabKey() == MOD_TAB.key) {
+        if (event.tabKey == MOD_TAB.key) {
             for (item in ModItems.ITEMS.entries) {
                 event.accept(item.get())
             }
         }
 
-        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+        if (event.tabKey == CreativeModeTabs.INGREDIENTS) {
             event.accept(ModItems.SIMPLE_VOID_PROCESSOR.get())
             event.accept(ModItems.VOID_PROCESSOR.get())
             event.accept(ModItems.ELABORATE_VOID_PROCESSOR.get())
@@ -116,29 +116,29 @@ object AzurumMiner {
             }
         }
 
-        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+        if (event.tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
             for (ore in OreHelper.ORES) {
                 event.accept(ore.ore)
                 event.accept(ore.deepslate_ore)
                 ore.raw_block?.let { event.accept(it) }
             }
-            event.accept(ModBlocks.CONGLOMERATE_OF_ORE_BLOCK)
-        }
-
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            for (ore in OreHelper.ORES) {
-                event.accept(ore.block)
-            }
             event.accept(ModBlocks.CONGLOMERATE_OF_ORE)
         }
 
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+        if (event.tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
+            for (ore in OreHelper.ORES) {
+                event.accept(ore.block)
+            }
+            event.accept(ModBlocks.CONGLOMERATE_OF_ORE_BLOCK)
+        }
+
+        if (event.tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             for (fluid in FluidHelper.FLUIDS) {
                 event.accept(fluid.bucket)
             }
         }
 
-        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+        if (event.tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ModMachines.LIQUIFIER)
             event.accept(ModMachines.INFUSER)
             for (i in 0..<5) {

@@ -15,7 +15,7 @@ import kotlin.math.abs
 class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output: EmiStack, val processingTime: Int) : BasicEmiRecipe(PORTAL_CATEGORY, id, 128, 95) {
     var animationTick = 0
     var frame = 0
-    val obsidian = ResourceLocation.withDefaultNamespace("textures/block/obsidian.png")
+    val obsidian: ResourceLocation = ResourceLocation.withDefaultNamespace("textures/block/obsidian.png")
 
     init {
         this.inputs.addAll(inputs)

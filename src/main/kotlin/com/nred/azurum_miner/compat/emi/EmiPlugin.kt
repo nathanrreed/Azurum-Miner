@@ -22,12 +22,12 @@ class EmiPlugin : EmiPlugin {
     companion object {
         var animationTick = 0
         var frame = 0
-        val portal = ResourceLocation.withDefaultNamespace("textures/block/nether_portal.png")
+        val portal: ResourceLocation = ResourceLocation.withDefaultNamespace("textures/block/nether_portal.png")
 
-        val LIQUIFIER_WORKSTATION = EmiStack.of(ModMachines.LIQUIFIER)
-        val INFUSER_WORKSTATION = EmiStack.of(ModMachines.INFUSER)
-        val TRANSMOGRIFIER_WORKSTATION = EmiStack.of(ModMachines.TRANSMOGRIFIER)
-        val MINER_WORKSTATION = EmiIngredient.of(ModMachines.MINER_BLOCK_TIERS.map { EmiIngredient.of(Ingredient.of(it.get())) })
+        val LIQUIFIER_WORKSTATION: EmiStack? = EmiStack.of(ModMachines.LIQUIFIER)
+        val INFUSER_WORKSTATION: EmiStack? = EmiStack.of(ModMachines.INFUSER)
+        val TRANSMOGRIFIER_WORKSTATION: EmiStack? = EmiStack.of(ModMachines.TRANSMOGRIFIER)
+        val MINER_WORKSTATION: EmiIngredient? = EmiIngredient.of(ModMachines.MINER_BLOCK_TIERS.map { EmiIngredient.of(Ingredient.of(it.get())) })
         val LIQUIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier"), LIQUIFIER_WORKSTATION)
         val INFUSER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser"), INFUSER_WORKSTATION)
         val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier"), TRANSMOGRIFIER_WORKSTATION)

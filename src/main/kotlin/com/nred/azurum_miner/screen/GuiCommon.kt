@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package com.nred.azurum_miner.screen
 
 import com.google.common.collect.ImmutableList
@@ -35,7 +37,7 @@ abstract class GuiCommon {
             }
         }
 
-        fun getBuckets(fluidNum: Number): String {
+        fun getBuckets(fluidNum: Number): String { //data[TOTAL_MODIFIER_POINTS]
             val fluid = fluidNum.toDouble()
             return when {
                 fluid >= 10000 -> String.format("%s B", DecimalFormat("#,###.0").format(fluid / 1000.0))
@@ -44,14 +46,21 @@ abstract class GuiCommon {
         }
 
         fun getTime(ticks: Number): String {
-            var time = ticks.toInt() / 20
-            var str = String.format("%dh ", time / 360)
-            time %= 360
-            str += String.format("%dm ", time / 60)
-            time %= 60
-            str += String.format("%ds", time)
+            var time = max(ticks.toDouble() / 20.0, 0.0)
+            val hours = time / 360.0
+            time %= 360.0
+            val mins = time / 60.0
+            time %= 60.0
 
-            return str.replace(Regex("""(?<!\d)0\w """), "")
+            var str = ""
+            if (hours > 1){
+                str += String.format("%.1fh ", hours)
+            }
+            if (mins > 1){
+                str += String.format("%.1fm ", mins)
+            }
+            str += String.format("%.1fs", time)
+            return str
         }
 
         fun listPlayerInventoryPos(): ArrayList<IntArray> {
@@ -120,13 +129,13 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
     }
 
     fun loadCurrentTab(idx: Int) {
-        setTab(this.tabButtons.get(idx), false)
+        setTab(this.tabButtons[idx], false)
     }
 
     fun saveCurrentTab(): Int {
         //TODO SAVE STRING
         for ((idx, tabButton) in this.tabButtons.withIndex()) {
-            if (tabButton == this.currentTab){
+            if (tabButton == this.currentTab) {
                 return idx
             }
         }
@@ -167,7 +176,7 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
      * @param narrationElementOutput the narration output to update.
      * @param tabButton              the tab button whose position is being narrated.
      */
-    protected fun narrateListElementPosition(narrationElementOutput: NarrationElementOutput, tabButton: TabButton?) {
+    private fun narrateListElementPosition(narrationElementOutput: NarrationElementOutput, tabButton: TabButton?) {
         if (tabs.size > 1) {
             val i = tabButtons.indexOf(tabButton)
             if (i != -1) {
@@ -192,6 +201,7 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
     }
 }
 
+@Suppress("PrivatePropertyName")
 class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height: Int) : TabButton(tabManager, tab, width, height) {
     private val TAB = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/tab")
     private var navigationBar: VerticalTabNavigationBar? = null

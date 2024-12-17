@@ -31,8 +31,8 @@ class LiquifierMenu : AbstractContainerMenu {
     val inventory: Inventory
 
     companion object {
-        val slot_x = 18
-        val slot_y = 26
+        const val slot_x = 18
+        const val slot_y = 26
     }
 
     // Server Constructor

@@ -22,20 +22,20 @@ import kotlin.math.floor
 
 class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory, title: Component) : AbstractContainerScreen<TransmogrifierMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/base")
-        val SLOT = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
-        val PLAY = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
-        val PAUSE = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
-        val ENERGY_BAR = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_bar")
-        val ENERGY_INNER = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
-        val ARROW = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/arrow")
-        val ARROW_FILLED = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
+        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/base")
+        val SLOT: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
+        val PLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
+        val PAUSE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
+        val ENERGY_BAR: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_bar")
+        val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
+        val ARROW: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/arrow")
+        val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
 
 
-        var base = ScreenRectangle.empty()
-        var powerButton = ScreenRectangle.empty()
-        var energy = ScreenRectangle.empty()
-        var progressBar = ScreenRectangle.empty()
+        var base: ScreenRectangle = ScreenRectangle.empty()
+        var powerButton: ScreenRectangle = ScreenRectangle.empty()
+        var energy: ScreenRectangle = ScreenRectangle.empty()
+        var progressBar: ScreenRectangle = ScreenRectangle.empty()
 
         private var x = 0
         private var y = 0

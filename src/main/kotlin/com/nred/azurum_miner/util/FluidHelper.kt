@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package com.nred.azurum_miner.util
 
 import com.mojang.blaze3d.shaders.FogShape
@@ -24,6 +26,7 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import kotlin.math.abs
 import kotlin.reflect.KFunction2
 
+@Suppress("LocalVariableName")
 class FluidHelper(name: String, tint: Int, still: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/fluid_still"), flow: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/fluid_flow"), block_func: KFunction2<FlowingFluid, BlockBehaviour.Properties, LiquidBlock> = ::LiquidBlock) {
     companion object {
         val FLUIDS = ArrayList<Fluid>()
@@ -38,26 +41,26 @@ class FluidHelper(name: String, tint: Int, still: ResourceLocation = ResourceLoc
     }
 }
 
-class Fluid(val name: String, val tint: Int, val block_func: KFunction2<FlowingFluid, BlockBehaviour.Properties, LiquidBlock>, still: ResourceLocation, flow: ResourceLocation) {
-    val type = FLUID_TYPES.register(name + "_type", { -> FluidType(FluidType.Properties.create().lightLevel(3).temperature(1200).viscosity(100000).density(100000).motionScale(0.00001).fallDistanceModifier(0.05f)) })
-    val still: DeferredHolder<net.minecraft.world.level.material.Fluid, BaseFlowingFluid.Source> = ModFluids.FLUIDS.register(name, { -> BaseFlowingFluid.Source(this.properties) })
-    val flowing: DeferredHolder<net.minecraft.world.level.material.Fluid, BaseFlowingFluid.Flowing> = ModFluids.FLUIDS.register(name + "flowing", { -> BaseFlowingFluid.Flowing(this.properties) })
+class Fluid(val name: String, val tint: Int, val blockFunc: KFunction2<FlowingFluid, BlockBehaviour.Properties, LiquidBlock>, still: ResourceLocation, flow: ResourceLocation) {
+    val type: DeferredHolder<FluidType?, FluidType?> = FLUID_TYPES.register(name + "_type") { -> FluidType(FluidType.Properties.create().lightLevel(3).temperature(1200).viscosity(100000).density(100000).motionScale(0.00001).fallDistanceModifier(0.05f)) }
+    val still = ModFluids.FLUIDS.register(name) { -> BaseFlowingFluid.Source(this.properties) }
+    val flowing = ModFluids.FLUIDS.register(name + "flowing") { -> BaseFlowingFluid.Flowing(this.properties) }
     val properties: BaseFlowingFluid.Properties = BaseFlowingFluid.Properties({ -> this.type.get() }, { -> this.still.get() }, { -> this.flowing.get() }).bucket({ this.bucket.get() }).block({ this.block.get() }).tickRate(100).levelDecreasePerBlock(2)
 
-    val block = BLOCKS.register(name, { ->
-        block_func(
+    val block = BLOCKS.register(name) { ->
+        blockFunc(
             this.still.get(), BlockBehaviour.Properties.of().mapColor(if (name == "molten_ore") MapColor.STONE else ARGBtoMapColor(tint))
                 .replaceable()
                 .noCollission()
                 .strength(100.0F)
-                .lightLevel({ _ -> 2 })
+                .lightLevel { _ -> 2 }
                 .pushReaction(PushReaction.DESTROY)
                 .noLootTable()
                 .liquid()
         )
-    })
+    }
 
-    val bucket = ITEMS.register(name + "_bucket", { -> BucketItem(this.still.get(), Properties().stacksTo(1)) })
+    val bucket = ITEMS.register(name + "_bucket") { -> BucketItem(this.still.get(), Properties().stacksTo(1)) }
 
     val client = object : IClientFluidTypeExtensions {
         override fun getFlowingTexture(): ResourceLocation {

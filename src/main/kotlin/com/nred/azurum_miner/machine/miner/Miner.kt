@@ -35,11 +35,11 @@ import net.neoforged.neoforge.fluids.FluidUtil
 
 
 class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties) {
-    val MINER_CODEC = RecordCodecBuilder.mapCodec<Miner>({ instance ->
+    val MINER_CODEC = RecordCodecBuilder.mapCodec<Miner> { instance ->
         instance.group(
             Codec.INT.fieldOf("tier").forGetter({ miner -> miner.tier }), propertiesCodec()
         ).apply(instance, ::Miner)
-    })
+    }
 
 
     override fun codec(): MapCodec<out BaseEntityBlock> {
@@ -92,7 +92,7 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
     override fun <T : BlockEntity?> getTicker(level: Level, state: BlockState, blockEntityType: BlockEntityType<T>): BlockEntityTicker<T>? {
         if (level.isClientSide) return null
 
-        return createTickerHelper(blockEntityType, ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), { level1, pos, state1, blockEntity -> blockEntity.tick(level1, pos, state1, blockEntity) })
+        return createTickerHelper(blockEntityType, ModBlockEntities.MINER_ENTITY_TIERS[tier].get()) { level1, pos, state1, blockEntity -> blockEntity.tick(level1, pos, state1, blockEntity) }
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
