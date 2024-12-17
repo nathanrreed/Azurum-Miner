@@ -85,6 +85,7 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
             tag(Tags.Items.ORE_RATES_SINGULAR).add(ore.ore.asItem(), ore.deepslate_ore.asItem())
             tag(Tags.Items.ORES_IN_GROUND_STONE).add(ore.ore.asItem())
             tag(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(ore.deepslate_ore.asItem())
+            tag(Tags.Items.STORAGE_BLOCKS).add(ore.block.asItem())
             tag(ore.block_tag).add(ore.block.asItem())
             tag(ore.ore_tag).add(ore.ore.asItem(), ore.deepslate_ore.asItem())
 
@@ -102,7 +103,7 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
 
             if (ore.isOre && !ore.isGem) {
                 tag(Tags.Items.RAW_MATERIALS).add(ore.raw!!.get())
-                tag(Tags.Items.STORAGE_BLOCKS).add(ore.block.asItem(), ore.raw_block!!.asItem())
+                tag(Tags.Items.STORAGE_BLOCKS).add(ore.raw_block!!.asItem())
                 tag(ore.raw_tag!!).add(ore.raw!!.get())
                 tag(ore.raw_block_tag!!).add(ore.raw_block!!.asItem())
             }
