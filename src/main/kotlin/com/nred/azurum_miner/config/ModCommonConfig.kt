@@ -12,6 +12,19 @@ class ModCommonConfig {
         val CONFIG_SPEC = build()
 
         fun build(): ModConfigSpec {
+
+            BUILDER.comment("Infuser Settings").push("infuser")
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
+            BUILDER.pop()
+
+            BUILDER.comment("Liquifier Settings").push("liquifier")
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
+            BUILDER.pop()
+
+            BUILDER.comment("Transmogrifier Settings").push("transmogrifier")
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 50000000, 0, 9223372036854775807)
+            BUILDER.pop()
+
             BUILDER.comment("Miner Settings").push("miner")
 
             BUILDER.comment("Setting for Tiered Machines").push("options")

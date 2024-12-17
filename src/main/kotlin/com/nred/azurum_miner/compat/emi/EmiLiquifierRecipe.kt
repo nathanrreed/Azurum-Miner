@@ -2,9 +2,9 @@ package com.nred.azurum_miner.compat.emi
 
 import com.nred.azurum_miner.compat.emi.EmiPlugin.Companion.LIQUIFIER_CATEGORY
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
+import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.energy
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.tank
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
@@ -32,7 +32,7 @@ class EmiLiquifierRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, outp
         widgets.addTank(outputs[0], width - tank.width - 1, tank.top() - 1, tank.width, energy.height + 1, outputs[0].amount.toInt()).drawBack(false).recipeContext(this)
         widgets.addDrawable(width - tank.width - 1, tank.top() - 1, tank.width, energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.TANK, 0, 0, 150, tank.width, energy.height) }
 
-        widgets.addDrawable(energy.left() - 13, energy.top() - 1, energy.width, energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.ENERGY_BAR, 0, 0, 3, energy.width, energy.height) }.tooltipText(listOf(Component.literal(getFE(power))))
-        widgets.addTexture(Companion.ENERGY_INNER.withPath("textures/gui/sprites/common/energy_inner.png"), energy.left() - 12, energy.bottom() - energy.height, energy.width - 2, energy.height - 2, 0, 0, energy.width - 2, energy.height - 2, 4, 2)
+        widgets.addDrawable(energy.left() - 2, energy.top() - 1, energy.width, energy.height) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(Companion.ENERGY_BAR, 0, 0, 3, energy.width, energy.height) }.tooltipText(listOf(Component.literal(getFE(power))))
+        widgets.addTexture(Companion.ENERGY_INNER.withPath("textures/gui/sprites/common/energy_inner.png"), energy.left() - 1, energy.bottom() - energy.height, energy.width - 2, energy.height - 2, 0, 0, energy.width - 2, energy.height - 2, 4, 2)
     }
 }

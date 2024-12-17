@@ -133,7 +133,6 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
     }
 
     fun saveCurrentTab(): Int {
-        //TODO SAVE STRING
         for ((idx, tabButton) in this.tabButtons.withIndex()) {
             if (tabButton == this.currentTab) {
                 return idx

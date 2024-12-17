@@ -3,6 +3,20 @@
     "#c:stones",
     "#c:cobblestones",
     "#c:cobblestones/deepslate",
-    "#c:sands"
+    "#c:gravels",
+    "#c:obsidians",
+    "#c:sands",
+    "minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "minecraft:basalt",
+    "minecraft:smooth_basalt",
+    "minecraft:blackstone",
+    "minecraft:calcite",
+    "minecraft:clay",
+    "minecraft:mud",
+    "minecraft:muddy_mangrove_roots",
+    "minecraft:packed_mud"
   ]
 }

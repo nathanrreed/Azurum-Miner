@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.machine.infuser
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
@@ -52,7 +53,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         data[IS_ON] = 1
         data[ENERGY_LEVEL] = 0
         data[PROGRESS] = 0
-        data[ENERGY_CAPACITY] = 500000 //TODO MOVE TO CONFIG
+        data[ENERGY_CAPACITY] = CONFIG.getInt("infuser.energyCapacity")
         data[PROCESSING_TIME] = 0
     }
 
@@ -156,10 +157,6 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
 
     override fun getDisplayName(): Component {
         return Component.translatable("menu.title.azurum_miner.infuser")
-    }
-
-    //This is where you can react to capability changes, removals, or appearances.
-    fun onCapInvalidate() {
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {

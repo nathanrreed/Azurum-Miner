@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.machine.transmogrifier
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
@@ -49,7 +50,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         data[IS_ON] = 1
         data[ENERGY_LEVEL] = 0
         data[PROGRESS] = 0
-        data[ENERGY_CAPACITY] = 500000 //TODO MOVE TO CONFIG
+        data[ENERGY_CAPACITY] = CONFIG.getInt("transmogrifier.energyCapacity")
         data[PROCESSING_TIME] = 0
     }
 
@@ -136,10 +137,6 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
 
     override fun getDisplayName(): Component {
         return Component.translatable("menu.title.azurum_miner.transmogrifier")
-    }
-
-    //This is where you can react to capability changes, removals, or appearances.
-    fun onCapInvalidate() {
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
