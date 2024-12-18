@@ -25,4 +25,4 @@ runs
 .kotlin
 *.cache
 
-/src/generated/resources/assets/emi/recipe/defaults/
+src/generated/resources/assets/emi/recipe/defaults/azurum_miner.json
