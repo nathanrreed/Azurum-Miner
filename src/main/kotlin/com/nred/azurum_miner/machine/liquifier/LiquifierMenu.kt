@@ -51,9 +51,7 @@ class LiquifierMenu : AbstractContainerMenu {
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
         this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x - 30, slot_y + 7))
 
-
         this.fluidHandler = inventory.player.level().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.NORTH)!!
-//        this.addSlot(SlotFluidHandler(this.fluidHandler, 1))
 
         this.addDataSlots(this.containerData)
     }

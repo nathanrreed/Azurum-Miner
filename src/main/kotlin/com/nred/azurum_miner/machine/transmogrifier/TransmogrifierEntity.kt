@@ -70,7 +70,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(3) {
+    override val itemStackHandler = object : ItemStackHandler(2) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
