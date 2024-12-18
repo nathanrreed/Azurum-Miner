@@ -25,6 +25,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
 import net.neoforged.bus.api.SubscribeEvent
@@ -41,7 +44,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
-import net.neoforged.neoforge.event.entity.item.ItemTossEvent
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
@@ -76,7 +79,7 @@ object AzurumMiner {
         MOD_BUS.addListener(::registerCapabilities)
         MOD_BUS.addListener(::registerConfig)
         MOD_BUS.addListener(::onCommonSetup)
-        NeoForge.EVENT_BUS.addListener(::onPlayerToss)
+        NeoForge.EVENT_BUS.addListener(::onEntityTravelToDimension)
 
         ModCreativeModTabs.register(MOD_BUS)
         ModRecipe.register(MOD_BUS)
@@ -232,12 +235,14 @@ object AzurumMiner {
 //        event.enqueueWork()
     }
 
-    fun onPlayerToss(event: ItemTossEvent) {
-        if (event.entity.item.`is`(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())) {
+    fun onEntityTravelToDimension(event: EntityTravelToDimensionEvent) {
+        val entity = event.entity
+        if (entity is ItemEntity && entity.item.`is`(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())) {
             event.isCanceled = true
             val tag = CompoundTag()
-            event.entity.save(tag)
-            event.player.commandSenderWorld.addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
+            entity.save(tag)
+            entity.remove(Entity.RemovalReason.KILLED)
+            (entity.level() as ServerLevel).addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
         }
     }
 }
