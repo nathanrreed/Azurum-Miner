@@ -61,7 +61,7 @@ class TransmogrifierMenu : AbstractContainerMenu {
             this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(TransmogrifierEnum.entries.size))
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
-        return Helpers.quickMoveStack(player, index, slots, ::moveItemStackTo, 3)
+        return Helpers.quickMoveStack(player, index, slots, ::moveItemStackTo, 2)
     }
 
     override fun stillValid(player: Player): Boolean {

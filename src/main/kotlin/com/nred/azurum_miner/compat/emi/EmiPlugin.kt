@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.compat.emi
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.recipe.ModRecipe
@@ -9,12 +10,24 @@ import dev.emi.emi.api.EmiPlugin
 import dev.emi.emi.api.EmiRegistry
 import dev.emi.emi.api.neoforge.NeoForgeEmiIngredient
 import dev.emi.emi.api.recipe.EmiCraftingRecipe
+import dev.emi.emi.api.recipe.EmiInfoRecipe
 import dev.emi.emi.api.recipe.EmiRecipeCategory
+import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe
 import dev.emi.emi.api.stack.EmiIngredient
 import dev.emi.emi.api.stack.EmiStack
+import dev.emi.emi.api.widget.SlotWidget
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.Ingredient
+import net.minecraft.world.level.block.Blocks
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient
 
 @EmiEntrypoint
@@ -72,5 +85,31 @@ class EmiPlugin : EmiPlugin {
         }
 
         registry.addRecipe(EmiPortalRecipe(ResourceLocation.parse(AzurumMiner.ID + ":/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))
+
+        registry.addRecipe(EmiInfoRecipe(listOf(NeoForgeEmiIngredient.of(FluidIngredient.of(ModFluids.snow_still.get())), EmiIngredient.of(Ingredient.of(Items.POWDER_SNOW_BUCKET))), listOf(Component.translatable("emi.azurum_miner.powder_snow")), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "/powder_snow_bucket_from_fake_block")))
+        registry.addRecipe(
+            EmiWorldInteractionRecipe.builder().leftInput(EmiIngredient.of(Ingredient.of(Items.BUCKET))).rightInput(
+                EmiIngredient.of(Ingredient.of(Blocks.POWDER_SNOW)), false
+            ) { s ->
+                object : SlotWidget(s.stack, s.bounds.x, s.bounds.y) {
+                    val snow = Minecraft.getInstance().itemRenderer.itemModelShaper.modelManager.blockModelShaper.getBlockModel(Blocks.POWDER_SNOW.defaultBlockState())
+                    override fun drawStack(draw: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+                        draw.pose().pushPose()
+                        draw.pose().translate((x + 9).toFloat(), (y + 9).toFloat(), 150f)
+                        draw.pose().scale(16.0F, -16.0F, 16.0F)
+                        Minecraft.getInstance().itemRenderer.render(ItemStack(Blocks.POWDER_SNOW, 1), ItemDisplayContext.GUI, false, draw.pose(), draw.bufferSource(), 15728880, OverlayTexture.NO_OVERLAY, snow)
+                        draw.flush()
+                        draw.pose().popPose()
+                    }
+
+                    override fun getTooltip(mouseX: Int, mouseY: Int): List<ClientTooltipComponent?>? {
+                        val tooltips = super.getTooltip(mouseX, mouseY)
+                        tooltips[0] = ClientTooltipComponent.create(Component.translatable("fluid_type.azurum_miner.snow_type").withColor(net.minecraft.util.CommonColors.WHITE).visualOrderText)
+                        tooltips[1] = ClientTooltipComponent.create(Component.literal("minecraft:powder_snow").withColor(net.minecraft.util.CommonColors.GRAY).visualOrderText)
+                        return tooltips
+                    }
+                }
+            }.id(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "/powder_snow_liquid_from_powder_snow_bucket")).output(EmiStack.of { Items.POWDER_SNOW_BUCKET }).build()
+        )
     }
 }
