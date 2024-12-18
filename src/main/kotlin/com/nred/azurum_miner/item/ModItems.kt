@@ -25,7 +25,6 @@ import kotlin.random.Random
 object ModItems {
     val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(AzurumMiner.ID)
 
-    //val tt = ITEM_ENTITIES.register("SS", {-> ItemEntity. })
     val SIMPLE_VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("simple_void_processor") { -> Item(Properties()) }
     val VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("void_processor") { -> Item(Properties()) }
     val ELABORATE_VOID_PROCESSOR: DeferredItem<Item?> = ITEMS.register("elaborate_void_processor") { -> Item(Properties()) }
@@ -36,24 +35,6 @@ object ModItems {
     val ENDER_DIAMOND: DeferredItem<Item?> = ITEMS.register("ender_diamond") { -> Item(Properties()) }
     val DIMENSIONAL_MATRIX: DeferredItem<Item?> = ITEMS.register("dimensional_matrix") { -> Item(Properties()) }
     val EMPTY_DIMENSIONAL_MATRIX: DeferredItem<Item?> = ITEMS.register("empty_dimensional_matrix") { -> Item(Properties()) }
-
-//    val EXAMPLE_ITEM: DeferredItem<Item> = ITEMS.register(
-//        "test",
-//        {
-//            ->
-//            object : Item(Properties()) {
-//                override fun appendHoverText(
-//                    stack: ItemStack,
-//                    context: TooltipContext,
-//                    tooltipComponents: MutableList<Component>,
-//                    tooltipFlag: TooltipFlag
-//                ) {
-//                    tooltipComponents.add(Component.literal("TEST"))
-//                    super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)
-//                }
-//            }
-//        }
-//    )
 
     fun register(eventBus: IEventBus) {
         ITEMS.register(eventBus)
@@ -104,7 +85,6 @@ class EmptyMatrixItemEntity(tag: CompoundTag, level: Level) : ItemEntity(EntityT
     }
 
     override fun setAsInsidePortal(portal: Portal, pos: BlockPos) {
-
         if (level().isClientSide || fill != 0 || portal !is NetherPortalBlock) return
 
         dest = if (level().getBlockState(pos).getValue(portal.stateDefinition.getProperty("axis")) == "z")

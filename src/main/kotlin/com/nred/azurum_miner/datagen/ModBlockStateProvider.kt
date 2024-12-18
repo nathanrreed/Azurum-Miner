@@ -21,7 +21,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
         blockWithItem(ModBlocks.CONGLOMERATE_OF_ORE_BLOCK)
         blockWithItem(ModBlocks.CONGLOMERATE_OF_ORE)
 
-        for(fluid in FluidHelper.FLUIDS){
+        for (fluid in FluidHelper.FLUIDS) {
             simpleBlock(fluid.block.get(), models().cubeAll(fluid.block.get().name.string, fluid.client.stillTexture))
         }
 

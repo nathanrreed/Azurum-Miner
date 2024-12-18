@@ -1,0 +1,6 @@
+{
+  "effects": "burning",
+  "exhaustion": 0.1,
+  "message_id": "azurum_miner:nether_essence_damage",
+  "scaling": "never"
+}

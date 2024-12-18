@@ -1,0 +1,6 @@
+{
+  "effects": "burning",
+  "exhaustion": 0.1,
+  "message_id": "azurum_miner:ender_essence_damage",
+  "scaling": "never"
+}

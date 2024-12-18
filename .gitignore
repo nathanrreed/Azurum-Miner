@@ -24,3 +24,5 @@ runs
 
 .kotlin
 *.cache
+
+*/azurum_miner.json
