@@ -6,6 +6,7 @@ import com.nred.azurum_miner.config.ModCommonConfig
 import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.entity.ModEntities
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.EmptyMatrixItemEntity
 import com.nred.azurum_miner.item.ModItems
@@ -24,6 +25,8 @@ import com.nred.azurum_miner.util.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.entity.EntityRenderers
+import net.minecraft.client.renderer.entity.ItemEntityRenderer
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
@@ -87,6 +90,7 @@ object AzurumMiner {
         ModBlocks.register(MOD_BUS)
         ModMachines.register(MOD_BUS)
         ModItems.register(MOD_BUS)
+        ModEntities.register(MOD_BUS)
 
         ModBlockEntities.register(MOD_BUS)
         ModMenuTypes.register(MOD_BUS)
@@ -232,7 +236,7 @@ object AzurumMiner {
 
     @SubscribeEvent
     fun onCommonSetup(event: FMLCommonSetupEvent) {
-//        event.enqueueWork()
+        EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
     }
 
     fun onEntityTravelToDimension(event: EntityTravelToDimensionEvent) {

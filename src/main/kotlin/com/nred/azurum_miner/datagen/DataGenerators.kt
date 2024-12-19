@@ -35,6 +35,7 @@ object DataGenerators {
         generator.addProvider(event.includeClient(), ModItemModelProvider(packOutput, existingFileHelper))
         generator.addProvider(event.includeClient(), ModBlockStateProvider(packOutput, existingFileHelper))
         generator.addProvider(event.includeServer(), ModDatapackProvider(packOutput, lookupProvider))
+        generator.addProvider(event.includeServer(), ModEntityTypeTagsProvider(packOutput, lookupProvider, existingFileHelper))
 
         // EMI
         generator.addProvider(event.includeClient(), EmiDefaultsProvider(packOutput, lookupProvider))

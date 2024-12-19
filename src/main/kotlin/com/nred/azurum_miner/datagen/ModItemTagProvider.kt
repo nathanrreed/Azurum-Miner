@@ -20,7 +20,7 @@ class ModItemTagProvider(
     output: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
     blockTags: CompletableFuture<TagLookup<Block>>,
-    existingFileHelper: ExistingFileHelper?
+    existingFileHelper: ExistingFileHelper
 ) : ItemTagsProvider(output, lookupProvider, blockTags, ID, existingFileHelper) {
     companion object {
         val oreTierTag = listOf(
