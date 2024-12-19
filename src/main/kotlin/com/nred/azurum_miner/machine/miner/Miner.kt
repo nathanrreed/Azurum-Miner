@@ -41,7 +41,6 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
         ).apply(instance, ::Miner)
     }
 
-
     override fun codec(): MapCodec<out BaseEntityBlock> {
         return MINER_CODEC
     }
@@ -89,7 +88,7 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)
     }
 
-    override fun <T : BlockEntity?> getTicker(level: Level, state: BlockState, blockEntityType: BlockEntityType<T>): BlockEntityTicker<T>? {
+    override fun <T : BlockEntity> getTicker(level: Level, state: BlockState, blockEntityType: BlockEntityType<T>): BlockEntityTicker<T>? {
         if (level.isClientSide) return null
 
         return createTickerHelper(blockEntityType, ModBlockEntities.MINER_ENTITY_TIERS[tier].get()) { level1, pos, state1, blockEntity -> blockEntity.tick(level1, pos, state1, blockEntity) }

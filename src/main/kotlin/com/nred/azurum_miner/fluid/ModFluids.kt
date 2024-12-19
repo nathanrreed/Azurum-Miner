@@ -25,7 +25,7 @@ object ModFluids {
     }
 
     val snow_type: DeferredHolder<FluidType?, FluidType?> = FLUID_TYPES.register("snow_type") { -> FluidType(FluidType.Properties.create().temperature(-50)) }
-    val snow_still= FLUIDS.register("snow") { -> BaseFlowingFluid.Source(snow_properties) }
+    val snow_still = FLUIDS.register("snow") { -> BaseFlowingFluid.Source(snow_properties) }
     val snow_properties: BaseFlowingFluid.Properties = BaseFlowingFluid.Properties({ -> snow_type.get() }, { -> this.snow_still.get() }, { -> this.snow_still.get() }).bucket({ Items.POWDER_SNOW_BUCKET })
 
     val snow_client = object : IClientFluidTypeExtensions {
@@ -37,37 +37,6 @@ object ModFluids {
             return 0xFFD6E5FF.toInt()
         }
     }
-
-
-//    event.register<FluidType>(NeoForgeRegistries.Keys.FLUID_TYPES, Consumer<RegisterHelper<FluidType?>> { helper: RegisterHelper<FluidType?> ->
-//        helper.register(
-//            NeoForgeMod.MILK_TYPE.unwrapKey().orElseThrow(), FluidType(
-//                FluidType.Properties.create().density(1024).viscosity(1024)
-//                    .sound(SoundActions.BUCKET_FILL, NeoForgeMod.BUCKET_FILL_MILK.value())
-//                    .sound(SoundActions.BUCKET_EMPTY, NeoForgeMod.BUCKET_EMPTY_MILK.value())
-//            )
-//        )
-//    })
-
-
-    // register fluids
-//    event.register<Fluid>(Registries.FLUID, Consumer<RegisterHelper<Fluid?>> { helper: RegisterHelper<Fluid?> ->
-//        // set up properties
-//        val properties = BaseFlowingFluid.Properties({ NeoForgeMod.MILK_TYPE.value() }, { NeoForgeMod.MILK.value() }, { NeoForgeMod.FLOWING_MILK.value() }).bucket { Items.MILK_BUCKET }
-//
-//        helper.register(NeoForgeMod.MILK.id, BaseFlowingFluid.Source(properties))
-//        helper.register(NeoForgeMod.FLOWING_MILK.id, BaseFlowingFluid.Flowing(properties))
-//    })
-//    class MoltenOreBlock(fluid: FlowingFluid, properties: Properties) : LiquidBlock(fluid, properties) {
-//        override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
-//            level.scheduleTick(pos, this, 200)
-//            super.onPlace(state, level, pos, oldState, isMoving)
-//        }
-//
-//        override fun tick(state: BlockState, level: ServerLevel, pos: BlockPos, random: RandomSource) {
-//            level.setBlock(pos, CONGLOMERATE_OF_ORE_BLOCK.get().defaultBlockState(), 1.or(2))
-//        }
-//    }
 
     fun register(eventBus: IEventBus) {
         FLUID_TYPES.register(eventBus)

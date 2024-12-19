@@ -120,9 +120,9 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
-    implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
-    implementation "com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}"
-    implementation "com.blakebr0.extendedcrafting:ExtendedCrafting:${extendedcrafting_version}"
+//    implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
+//    implementation "com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}"
+//    implementation "com.blakebr0.extendedcrafting:ExtendedCrafting:${extendedcrafting_version}"
 
     compileOnly "mekanism:Mekanism:${mekanism_version}:api"
     runtimeOnly("mekanism:Mekanism:${mekanism_version}") // Mekanism
@@ -131,12 +131,12 @@ dependencies {
     runtimeOnly("mekanism:Mekanism:${mekanism_version}:tools") // Mekanism: Tools
 
     implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
-    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1:${craftTeaker_version}"
+//    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1:${craftTeaker_version}"
 
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-    implementation "appeng:appliedenergistics2:${ae2_version}"
+//    implementation "appeng:appliedenergistics2:${ae2_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
