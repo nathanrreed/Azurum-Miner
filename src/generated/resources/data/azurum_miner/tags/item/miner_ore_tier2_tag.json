@@ -3,6 +3,22 @@
     "#c:ores/iron",
     "#c:ores/redstone",
     "#c:ores/lapis",
-    "#c:ores/galibium"
+    "#c:ores/galibium",
+    {
+      "id": "#c:ores/salt",
+      "required": false
+    },
+    {
+      "id": "#c:ores/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:ores/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/lead",
+      "required": false
+    }
   ]
 }

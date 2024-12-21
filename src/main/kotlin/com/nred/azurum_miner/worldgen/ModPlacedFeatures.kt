@@ -29,7 +29,7 @@ object ModPlacedFeatures {
     fun bootstrap(context: BootstrapContext<PlacedFeature>) {
         val configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE)
 
-        register(context, AZURUM_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.AZURUM_ORE_KEY), rareOrePlacement(5, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(4))))
+        register(context, AZURUM_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.AZURUM_ORE_KEY), rareOrePlacement(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(4))))
     }
 
     private fun registerKey(name: String): ResourceKey<PlacedFeature> {

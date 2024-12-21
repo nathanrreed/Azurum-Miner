@@ -35,28 +35,28 @@ class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Co
         val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
         val ARROW: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/arrow")
         val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
-
-        var base: ScreenRectangle = ScreenRectangle.empty()
-        var powerButton: ScreenRectangle = ScreenRectangle.empty()
-        var energy: ScreenRectangle = ScreenRectangle.empty()
-        var tank: ScreenRectangle = ScreenRectangle.empty()
-        var progressBar: ScreenRectangle = ScreenRectangle.empty()
-
-        private var x = 0
-        private var y = 0
-
-        fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
-            x = (width - imageWidth) / 2 - 51
-            y = (height - imageHeight) / 2 - 32
-            base = ScreenRectangle(x, y + 30, imageWidth, imageHeight)
-            powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
-            energy = ScreenRectangle(base.left() + 5, base.top() + 5, 6, 65)
-            tank = ScreenRectangle(base.right() - 55, base.top() + 5, 31, 77)
-            progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 11, base.top() + 34, 22, 16)
-        }
     }
 
     lateinit var fluid: FluidStack
+
+    var base: ScreenRectangle = ScreenRectangle.empty()
+    var powerButton: ScreenRectangle = ScreenRectangle.empty()
+    var energy: ScreenRectangle = ScreenRectangle.empty()
+    var tank: ScreenRectangle = ScreenRectangle.empty()
+    var progressBar: ScreenRectangle = ScreenRectangle.empty()
+
+    private var x = 0
+    private var y = 0
+
+    fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
+        x = (width - imageWidth) / 2
+        y = (height - imageHeight) / 2
+        base = ScreenRectangle(x, y, imageWidth, imageHeight)
+        powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
+        energy = ScreenRectangle(base.left() + 5, base.top() + 5, 6, 65)
+        tank = ScreenRectangle(base.right() - 55, base.top() + 5, 31, 77)
+        progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 11, base.top() + 34, 22, 16)
+    }
 
     override fun resize(minecraft: Minecraft, width: Int, height: Int) {
         super.resize(minecraft, width, height)
@@ -69,20 +69,20 @@ class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Co
         this.fluid = FluidStack.EMPTY
 
         resize(width, imageWidth, height, imageHeight)
-        this.titleLabelX = -36
-//        this.titleLabelY = 1
-        this.inventoryLabelX = -42
+
+        this.titleLabelX = 16
+        this.inventoryLabelX = 10
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
-            guiGraphics.blitSprite(SLOT, slotInfo[1] + x + 50, slotInfo[2] + y + 31, 18, 18)
+        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+            guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() - 1, slotInfo[2] + base.top() - 1, 18, 18)
         }
 
-        guiGraphics.blitSprite(SLOT, base.left() + LiquifierMenu.slot_x + 20, base.top() + LiquifierMenu.slot_y + 8, 18, 18)
+        guiGraphics.blitSprite(SLOT, base.left() + LiquifierMenu.slot_x, base.top() + LiquifierMenu.slot_y, 18, 18)
 
         // Draw Energy
         val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * (energy.height.toDouble() - 2)).toInt()

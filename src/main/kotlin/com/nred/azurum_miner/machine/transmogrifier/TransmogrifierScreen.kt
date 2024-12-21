@@ -4,6 +4,8 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.get
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu.Companion.slot_x
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu.Companion.slot_y
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.util.Payload
@@ -30,27 +32,26 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
         val ARROW: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/arrow")
         val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
-
-
-        var base: ScreenRectangle = ScreenRectangle.empty()
-        var powerButton: ScreenRectangle = ScreenRectangle.empty()
-        var energy: ScreenRectangle = ScreenRectangle.empty()
-        var progressBar: ScreenRectangle = ScreenRectangle.empty()
-
-        private var x = 0
-        private var y = 0
-
-        fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
-            x = (width - imageWidth) / 2 - 51
-            y = (height - imageHeight) / 2 - 32
-            base = ScreenRectangle(x, y + 30, imageWidth, imageHeight)
-            powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
-            energy = ScreenRectangle(base.left() + 5, base.top() + 5, 6, 65)
-            progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 11, base.top() + 34, 22, 16)
-        }
     }
 
     lateinit var fluid: FluidStack
+
+    var base: ScreenRectangle = ScreenRectangle.empty()
+    var powerButton: ScreenRectangle = ScreenRectangle.empty()
+    var energy: ScreenRectangle = ScreenRectangle.empty()
+    var progressBar: ScreenRectangle = ScreenRectangle.empty()
+
+    private var x = 0
+    private var y = 0
+
+    fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
+        x = (width - imageWidth) / 2
+        y = (height - imageHeight) / 2
+        base = ScreenRectangle(x, y, imageWidth, imageHeight)
+        powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
+        energy = ScreenRectangle(base.left() + 5, base.top() + 5, 6, 65)
+        progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 11, base.top() + 34, 22, 16)
+    }
 
     override fun resize(minecraft: Minecraft, width: Int, height: Int) {
         super.resize(minecraft, width, height)
@@ -63,20 +64,20 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         this.fluid = FluidStack.EMPTY
 
         resize(width, imageWidth, height, imageHeight)
-        this.titleLabelX = -36
-        this.inventoryLabelX = -42
+        this.titleLabelX = 16
+        this.inventoryLabelX = 10
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
-            guiGraphics.blitSprite(SLOT, slotInfo[1] + x + 50, slotInfo[2] + y + 31, 18, 18)
+        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+            guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() - 1, slotInfo[2] + base.top() - 1, 18, 18)
         }
 
-        guiGraphics.blitSprite(SLOT, base.left() + TransmogrifierMenu.slot_x + 31, base.top() + TransmogrifierMenu.slot_y + 8, 18, 18)
-        guiGraphics.blitSprite(SLOT, progressBar.getCenterInAxis(ScreenAxis.HORIZONTAL) + progressBar.width - 1, base.top() + TransmogrifierMenu.slot_y + 8, 18, 18)
+        guiGraphics.blitSprite(SLOT, base.left() + slot_x, base.top() + slot_y, 18, 18)
+        guiGraphics.blitSprite(SLOT, base.left() + slot_x + 58, base.top() + slot_y, 18, 18)
 
         // Draw Energy
         val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * (energy.height.toDouble() - 2)).toInt()

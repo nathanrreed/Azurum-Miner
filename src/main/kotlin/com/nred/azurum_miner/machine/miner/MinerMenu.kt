@@ -35,6 +35,7 @@ class MinerMenu : AbstractContainerMenu {
     val filters = mutableListOf("", "", "")
     val filterSlots = ArrayList<FilterSlot>()
     val foundTags = ArrayList<TagKey<Item>>()
+    var containerId: Int
 
     // Server Constructor
     constructor (containerId: Int, inventory: Inventory, access: ContainerLevelAccess, pos: BlockPos, containerData: ContainerData, pointsContainerData: ContainerData, tier: Int) : super(ModMenuTypes.MINER_MENU.get(), containerId) {
@@ -45,9 +46,10 @@ class MinerMenu : AbstractContainerMenu {
         this.access = access
         this.pos = pos
         this.tier = tier
+        this.containerId = containerId
 
         // Set Inventory Slot locations
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
+        for (slotInfo in listPlayerInventoryHotbarPos(60)) {
             this.addSlot(Slot(inventory, slotInfo[0], slotInfo[1], slotInfo[2]))
         }
 
@@ -55,11 +57,11 @@ class MinerMenu : AbstractContainerMenu {
         this.addDataSlots(this.containerData)
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        this.filterSlots += FilterSlot(this.itemHandler, 0, -40, -10, this)
+        this.filterSlots += FilterSlot(this.itemHandler, 0, 11, -10, this)
         this.addSlot(this.filterSlots.last())
-        this.filterSlots += FilterSlot(this.itemHandler, 1, -40, 15, this)
+        this.filterSlots += FilterSlot(this.itemHandler, 1, 11, 15, this)
         this.addSlot(this.filterSlots.last())
-        this.filterSlots += FilterSlot(this.itemHandler, 2, -40, 40, this)
+        this.filterSlots += FilterSlot(this.itemHandler, 2, 11, 40, this)
         this.addSlot(this.filterSlots.last())
 
         for (i in 0..this.tier) {
@@ -73,7 +75,7 @@ class MinerMenu : AbstractContainerMenu {
             this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size), SimpleContainerData(5), extraData.readInt())
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
-        return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 3)
+        return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 0) // No quick move for filters
     }
 
     override fun stillValid(player: Player): Boolean {
@@ -91,6 +93,10 @@ class MinerMenu : AbstractContainerMenu {
                 field = value
             }
 
+        override fun isFake(): Boolean {
+            return true
+        }
+
         override fun isActive(): Boolean { // Only draw if filter is unlocked
             return this.active
         }
@@ -101,6 +107,14 @@ class MinerMenu : AbstractContainerMenu {
 
         override fun mayPlace(stack: ItemStack): Boolean {
             return if (stack.isEmpty || !Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(menu.filters[index]))).items.filter { it -> menu.foundTags.any { tag -> it.`is`(tag) } }.stream()).hasNoItems()) false else this.itemHandler.isItemValid(this.index, stack)
+        }
+
+        override fun mayPickup(playerIn: Player): Boolean {
+            return false
+        }
+
+        override fun safeInsert(stack: ItemStack): ItemStack {
+            return super.safeInsert(stack)
         }
     }
 }

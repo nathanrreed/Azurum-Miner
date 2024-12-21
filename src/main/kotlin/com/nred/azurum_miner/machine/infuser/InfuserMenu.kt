@@ -29,10 +29,11 @@ class InfuserMenu : AbstractContainerMenu {
     val access: ContainerLevelAccess
     val pos: BlockPos
     val inventory: Inventory
+    val inputSlots = ArrayList<Slot>()
 
     companion object {
-        const val slot_x = 18
-        const val slot_y = 26
+        const val slot_x = 45
+        const val slot_y = 34
     }
 
     // Server Constructor
@@ -44,16 +45,16 @@ class InfuserMenu : AbstractContainerMenu {
         this.pos = pos
 
         // Set Inventory Slot locations
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
+        for (slotInfo in listPlayerInventoryHotbarPos(50)) {
             this.addSlot(Slot(inventory, slotInfo[0], slotInfo[1], slotInfo[2]))
         }
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x - 26, slot_y + 7))
-        this.addSlot(SlotItemHandler(this.itemHandler, 1, slot_x, slot_y + 29))
+        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x + 1, slot_y + 1))
+        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 1, slot_x + 25, slot_y + 23))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandler(this.itemHandler, 2, slot_x + 28, slot_y + 7) {
+        this.addSlot(object : SlotItemHandler(this.itemHandler, 2, slot_x + 49, slot_y + 1) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }

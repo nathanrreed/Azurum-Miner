@@ -2,6 +2,26 @@
   "values": [
     "#c:ores/diamond",
     "#c:ores/emerald",
-    "#c:ores/netherite_scrap"
+    "#c:ores/netherite_scrap",
+    {
+      "id": "#c:ores/mithril",
+      "required": false
+    },
+    {
+      "id": "#c:ores/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:ores/anglesite",
+      "required": false
+    },
+    {
+      "id": "#c:ores/benitoite",
+      "required": false
+    }
   ]
 }

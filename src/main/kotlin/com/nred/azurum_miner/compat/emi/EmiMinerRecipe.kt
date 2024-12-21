@@ -9,7 +9,7 @@ import dev.emi.emi.api.widget.WidgetHolder
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class MinerRecipe(id: ResourceLocation, val output: EmiIngredient, catalysts: List<EmiIngredient>, val tier: Int) : BasicEmiRecipe(MINER_CATEGORY, id, 120, 69) {
+class EmiMinerRecipe(id: ResourceLocation, val output: EmiIngredient, catalysts: List<EmiIngredient>, val tier: Int) : BasicEmiRecipe(MINER_CATEGORY, id, 120, 69) {
     init {
         this.outputs.addAll(output.emiStacks)
         this.catalysts.addAll(catalysts)

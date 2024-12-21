@@ -1,6 +1,18 @@
 {
   "values": [
     "#c:ores/gold",
-    "#c:ores/thelxium"
+    "#c:ores/thelxium",
+    {
+      "id": "#c:ores/fluorite",
+      "required": false
+    },
+    {
+      "id": "#c:ores/silver",
+      "required": false
+    },
+    {
+      "id": "#c:ores/black_quartz",
+      "required": false
+    }
   ]
 }
