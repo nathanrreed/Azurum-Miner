@@ -5,10 +5,10 @@ import com.nred.azurum_miner.block.ModBlocks
 import com.nred.azurum_miner.config.ModCommonConfig
 import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
+import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.entity.ModEntities
 import com.nred.azurum_miner.fluid.ModFluids
-import com.nred.azurum_miner.item.EmptyMatrixItemEntity
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
@@ -216,6 +216,7 @@ object AzurumMiner {
         val registrar = event.registrar("1")
         registrar.playToServer(Payload.TYPE, Payload.STREAM_CODEC, IPayloadHandler(ServerPayloadHandler::handleDataOnNetwork))
         registrar.playToServer(MinerFilterPayloadToServer.TYPE, MinerFilterPayloadToServer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnServer))
+        registrar.playToServer(FilterSetPayload.TYPE, FilterSetPayload.STREAM_CODEC, IPayloadHandler(FilterSetPayloadHandler::handleDataOnServer))
     }
 
     @SubscribeEvent

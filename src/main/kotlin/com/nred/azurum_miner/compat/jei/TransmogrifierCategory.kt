@@ -2,11 +2,7 @@ package com.nred.azurum_miner.compat.jei
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen.Companion.ENERGY_BAR
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen.Companion.ENERGY_INNER
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen.Companion.energy
 import com.nred.azurum_miner.recipe.TransmogrifierRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -29,7 +25,7 @@ import net.minecraft.world.item.ItemStack
 
 class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<TransmogrifierRecipe> {
     companion object {
-        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "Transmogrifier")
+        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier")
         val TYPE = RecipeType(UID, TransmogrifierRecipe::class.java)
     }
 
@@ -41,7 +37,7 @@ class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<Transmogrifie
     }
 
     override fun getHeight(): Int {
-        return energy.height + 4
+        return 69
     }
 
     override fun getRecipeType(): RecipeType<TransmogrifierRecipe> {
@@ -49,7 +45,7 @@ class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<Transmogrifie
     }
 
     override fun getTitle(): Component {
-        return Component.translatable("menu.title.azurum_miner.Transmogrifier")
+        return Component.translatable("menu.title.azurum_miner.transmogrifier")
     }
 
     override fun getIcon(): IDrawable {
@@ -57,17 +53,15 @@ class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<Transmogrifie
     }
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: TransmogrifierRecipe, focuses: IFocusGroup) {
-        TransmogrifierScreen.resize(width, 0, 0, 0)
-        builder.addInputSlot(TransmogrifierMenu.slot_x, TransmogrifierMenu.slot_y).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
-        builder.addOutputSlot(TransmogrifierMenu.slot_x + 80, TransmogrifierMenu.slot_y).addItemStack(recipe.result).setOutputSlotBackground()
+        builder.addInputSlot(18, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addOutputSlot(72, 26).addItemStack(recipe.result).setOutputSlotBackground()
     }
 
     override fun draw(recipe: TransmogrifierRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {
-        TransmogrifierScreen.resize(width, 0, 0, 0)
-        guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top() - 1, 3, energy.width, energy.height)
-        guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - energy.height, 4, energy.width - 2, energy.height - 2)
+        guiGraphics.blitSprite(TransmogrifierScreen.Companion.ENERGY_BAR, 2, 2, 3, 6, 65)
+        guiGraphics.blitSprite(TransmogrifierScreen.Companion.ENERGY_INNER, 3, 3, 4, 4, 63)
 
-        if (energy.containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
+        if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
         }
         if (ScreenRectangle(40, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {

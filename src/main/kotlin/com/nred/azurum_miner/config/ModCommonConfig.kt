@@ -151,19 +151,19 @@ class ModCommonConfig {
             BUILDER.pop()
 
             BUILDER.comment("The time time in ticks to complete the operation").push("baseTicksPerOp")
-            BUILDER.defineInRange("tier1", 3200, 1, 9223372036854775807)
-            BUILDER.defineInRange("tier2", 1600, 1, 9223372036854775807)
+            BUILDER.defineInRange("tier1", 1800, 1, 9223372036854775807)
+            BUILDER.defineInRange("tier2", 1200, 1, 9223372036854775807)
             BUILDER.defineInRange("tier3", 800, 1, 9223372036854775807)
             BUILDER.defineInRange("tier4", 400, 1, 9223372036854775807)
             BUILDER.defineInRange("tier5", 200, 1, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("The percentage chance to get material instead of ore").push("baseMaterialChance")
-            BUILDER.defineInRange("tier1", 50, 0, 100)
+            BUILDER.defineInRange("tier1", 40, 0, 100)
             BUILDER.defineInRange("tier2", 30, 0, 100)
             BUILDER.defineInRange("tier3", 25, 0, 100)
             BUILDER.defineInRange("tier4", 15, 0, 100)
-            BUILDER.defineInRange("tier5", 10, 0, 100)
+            BUILDER.defineInRange("tier5", 8, 0, 100)
             BUILDER.pop()
 
             BUILDER.comment("The number of modifier points").push("numModifierPoints")

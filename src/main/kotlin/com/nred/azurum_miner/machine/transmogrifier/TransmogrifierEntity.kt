@@ -158,6 +158,9 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
                 data[PROGRESS] = 0
             }
+        } else {
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
+            data[PROGRESS] = 0
         }
     }
 }

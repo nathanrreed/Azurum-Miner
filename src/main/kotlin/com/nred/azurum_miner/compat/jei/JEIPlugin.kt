@@ -4,10 +4,10 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.InfuserScreen
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
+import com.nred.azurum_miner.machine.infuser.InfuserMenu
+import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.miner.Miner
-import com.nred.azurum_miner.machine.miner.MinerScreen
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.recipe.InfuserRecipe
 import com.nred.azurum_miner.recipe.LiquifierRecipe
 import com.nred.azurum_miner.recipe.MinerRecipe
@@ -21,10 +21,9 @@ import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER5_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.SHAPED_RECIPE_TRANSFORM_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.TransmogrifierRecipe
+import com.nred.azurum_miner.screen.ModMenuTypes
 import mezz.jei.api.IModPlugin
 import mezz.jei.api.JeiPlugin
-import mezz.jei.api.gui.handlers.IGuiClickableArea
-import mezz.jei.api.gui.handlers.IGuiContainerHandler
 import mezz.jei.api.ingredients.ITypedIngredient
 import mezz.jei.api.recipe.IRecipeManager
 import mezz.jei.api.recipe.RecipeType
@@ -52,8 +51,11 @@ class JEIPlugin : IModPlugin {
         registration.addRecipeCategories(MinerCategory(registration.jeiHelpers.guiHelper, 1), MinerCategory(registration.jeiHelpers.guiHelper, 2), MinerCategory(registration.jeiHelpers.guiHelper, 3), MinerCategory(registration.jeiHelpers.guiHelper, 4), MinerCategory(registration.jeiHelpers.guiHelper, 5))
     }
 
+
     override fun registerRecipeTransferHandlers(registration: IRecipeTransferRegistration) {
-        //TODO
+        registration.addRecipeTransferHandler(InfuserMenu::class.java, ModMenuTypes.INFUSER_MENU.get(), InfuserCategory.TYPE, 0, 3, 3, 36)
+        registration.addRecipeTransferHandler(LiquifierMenu::class.java, ModMenuTypes.LIQUIFIER_MENU.get(), LiquifierCategory.TYPE, 0, 1, 1, 36)
+        registration.addRecipeTransferHandler(TransmogrifierMenu::class.java, ModMenuTypes.TRANSMOGRIFIER_MENU.get(), TransmogrifierCategory.TYPE, 0, 2, 2, 36)
     }
 
     override fun registerRecipeCatalysts(registration: IRecipeCatalystRegistration) {
@@ -69,7 +71,7 @@ class JEIPlugin : IModPlugin {
     }
 
     override fun registerAdvanced(registration: IAdvancedRegistration) {
-        val data = listOf(Triple(MINER_TIER1_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER1, oreTierTag[0]), Triple(MINER_TIER2_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER2,  oreTierTag[1]), Triple(MINER_TIER3_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER3,  oreTierTag[2]), Triple(MINER_TIER4_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER4,  oreTierTag[3]), Triple(MINER_TIER5_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER5,  oreTierTag[4]))
+        val data = listOf(Triple(MINER_TIER1_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER1, oreTierTag[0]), Triple(MINER_TIER2_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER2, oreTierTag[1]), Triple(MINER_TIER3_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER3, oreTierTag[2]), Triple(MINER_TIER4_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER4, oreTierTag[3]), Triple(MINER_TIER5_RECIPE_TYPE.get(), MinerCategory.TYPE_TIER5, oreTierTag[4]))
         for ((idx, tier) in data.withIndex()) {
             registration.addTypedRecipeManagerPlugin(RecipeType.createRecipeHolderType(tier.second.uid), object : ISimpleRecipeManagerPlugin<RecipeHolder<MinerRecipe>> {
                 override fun isHandledInput(input: ITypedIngredient<*>): Boolean {
@@ -119,26 +121,5 @@ class JEIPlugin : IModPlugin {
     override fun onRuntimeAvailable(jeiRuntime: IJeiRuntime) {
         this.recipeManager = jeiRuntime.recipeManager
         super.onRuntimeAvailable(jeiRuntime)
-    }
-
-    override fun registerGuiHandlers(registration: IGuiHandlerRegistration) {
-        registration.addRecipeClickArea(LiquifierScreen::class.java, LiquifierScreen.progressBar.right() + 6, LiquifierScreen.progressBar.top(), 22, 16, LiquifierCategory.TYPE)
-        registration.addRecipeClickArea(InfuserScreen::class.java, InfuserScreen.progressBar.right() + 6, InfuserScreen.progressBar.top(), 22, 16, InfuserCategory.TYPE)
-
-        registration.addGuiContainerHandler(MinerScreen::class.java, object : IGuiContainerHandler<MinerScreen> {
-            override fun getGuiClickableAreas(containerScreen: MinerScreen, guiMouseX: Double, guiMouseY: Double): MutableCollection<IGuiClickableArea> {
-                val clickableArea = IGuiClickableArea.createBasic(
-                    122, 67, 45, 13, *when (containerScreen.menu.tier) {
-                        0 -> arrayOf(MinerCategory.TYPE_TIER1)
-                        1 -> arrayOf(MinerCategory.TYPE_TIER2)
-                        2 -> arrayOf(MinerCategory.TYPE_TIER3)
-                        3 -> arrayOf(MinerCategory.TYPE_TIER4)
-                        4 -> arrayOf(MinerCategory.TYPE_TIER5)
-                        else -> arrayOf(MinerCategory.TYPE_TIER5)
-                    }
-                )
-                return mutableListOf(clickableArea)
-            }
-        })
     }
 }

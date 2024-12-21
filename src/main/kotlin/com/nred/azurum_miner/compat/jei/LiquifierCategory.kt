@@ -2,13 +2,7 @@ package com.nred.azurum_miner.compat.jei
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.ENERGY_BAR
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.ENERGY_INNER
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.TANK
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.energy
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen.Companion.tank
+import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.recipe.LiquifierRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -43,7 +37,7 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
     }
 
     override fun getHeight(): Int {
-        return energy.height + 4
+        return 69
     }
 
     override fun getRecipeType(): RecipeType<LiquifierRecipe> {
@@ -59,21 +53,18 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
     }
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: LiquifierRecipe, focuses: IFocusGroup) {
-        LiquifierScreen.resize(width, 0, 0, 0)
-        builder.addInputSlot(LiquifierMenu.slot_x, LiquifierMenu.slot_y).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
-        builder.addOutputSlot(width - tank.width - 1, tank.top() - 1).addFluidStack(recipe.result.fluid, recipe.result.amount.toLong()).setFluidRenderer(recipe.result.amount.toLong(), false, tank.width, energy.height)
+        builder.addInputSlot(18, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addOutputSlot(width - 33, 2).addFluidStack(recipe.result.fluid, recipe.result.amount.toLong()).setFluidRenderer(recipe.result.amount.toLong(), false, 31, 65)
     }
 
     override fun draw(recipe: LiquifierRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {
-        LiquifierScreen.resize(width, 0, 0, 0)
-        guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top() - 1, 3, energy.width, energy.height)
-        guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - energy.height, 4, energy.width - 2, energy.height - 2)
-
+        guiGraphics.blitSprite(InfuserScreen.Companion.ENERGY_BAR, 2, 2, 3, 6, 65)
+        guiGraphics.blitSprite(InfuserScreen.Companion.ENERGY_INNER, 3, 3, 4, 4, 63)
 
         // TANK
-        guiGraphics.blitSprite(TANK, width - tank.width - 1, tank.top() - 1, 150, tank.width, energy.height)
+        guiGraphics.blitSprite(InfuserScreen.Companion.TANK, width - 33, 2, 150, 31, 65)
 
-        if (energy.containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
+        if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
         }
         if (ScreenRectangle(40, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {

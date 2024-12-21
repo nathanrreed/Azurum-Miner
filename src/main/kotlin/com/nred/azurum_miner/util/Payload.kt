@@ -14,6 +14,7 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
@@ -126,6 +127,28 @@ class FluidPayloadHandler {
                 screen.fluid = data.fluid
             } else if (screen is InfuserScreen) {
                 screen.fluid = data.fluid
+            }
+        }
+    }
+}
+
+class FilterSetPayload(val item: ItemStack, val idx: Int) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<FilterSetPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "filter_set_client_to_server"))
+        val STREAM_CODEC = StreamCodec.composite(ItemStack.OPTIONAL_STREAM_CODEC, FilterSetPayload::item, ByteBufCodecs.INT, FilterSetPayload::idx, ::FilterSetPayload)
+    }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
+        return TYPE
+    }
+}
+
+class FilterSetPayloadHandler {
+    companion object {
+        fun handleDataOnServer(data: FilterSetPayload, context: IPayloadContext) {
+            val menu = context.player().containerMenu
+            if (menu is MinerMenu) {
+                menu.filterSlots[data.idx].set(data.item)
             }
         }
     }

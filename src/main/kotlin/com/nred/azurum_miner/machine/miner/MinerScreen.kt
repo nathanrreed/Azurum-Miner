@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
-import java.util.Optional
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -47,9 +47,9 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
     lateinit var navigationBar: VerticalTabNavigationBar
 
     private fun resize() {
-        x = (width - imageWidth) / 2 - 51
+        x = (width - imageWidth) / 2
         y = (height - imageHeight) / 2 - 32
-        base = ScreenRectangle(x - 10, y, imageWidth + 57, imageHeight + 30)
+        base = ScreenRectangle(x - 10, y, imageWidth + 57, imageHeight + 33)
         powerButton = ScreenRectangle(base.left() + 4, base.bottom() - 94, 12, 13)
         energy = ScreenRectangle(base.left() + 7, base.top() + 14, 6, 84)
     }
@@ -66,9 +66,9 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         super.init()
 
         resize()
-        this.titleLabelX = -40
+        this.titleLabelX = 8
         this.titleLabelY = -26
-        this.inventoryLabelX = -42
+        this.inventoryLabelX = 10
 
         tabManager.setTabArea(base)
         val mainTab = MainTab(menu)
@@ -77,7 +77,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         val btn = SpriteTabButton(tabManager, mainTab, 12, 18)
         val btn2 = SpriteTabButton(tabManager, optionsTab, 12, 18)
 
-        this.navigationBar = VerticalTabNavigationBar(x - 21, y + 6, tabManager, listOf(btn, btn2))
+        this.navigationBar = VerticalTabNavigationBar(x - 21, base.top() + 6, tabManager, listOf(btn, btn2))
 
         this.addRenderableWidget(navigationBar)
     }
@@ -86,8 +86,8 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
-            guiGraphics.blitSprite(SLOT, slotInfo[1] + x + 50, slotInfo[2] + y + 31, 18, 18)
+        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+            guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() + 9, slotInfo[2] + base.top() + 31, 18, 18)
         }
 
         // Draw Energy
@@ -103,8 +103,8 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
             guiGraphics.blitSprite(PLAY, powerButton.left(), powerButton.top(), powerButton.width, powerButton.height)
         }
 
-        val barGraphs = ScreenRectangle(base.right() - 32, base.bottom() - 81, 13, 75)
-        val tank = ScreenRectangle(base.right() - 49, base.bottom() - 81, 26, 75)
+        val barGraphs = ScreenRectangle(base.right() - 33, base.bottom() - 84, 13, 75)
+        val tank = ScreenRectangle(base.right() - 50, base.bottom() - 84, 26, 75)
 
         // HIT
         var height = barGraphs.top()
@@ -164,8 +164,8 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         }
     }
 
-    private var x = 0
-    private var y = 0
+    var x = 0
+    var y = 0
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         super.render(guiGraphics, mouseX, mouseY, partialTick)

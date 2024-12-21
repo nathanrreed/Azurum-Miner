@@ -24,10 +24,11 @@ class TransmogrifierMenu : AbstractContainerMenu {
     val access: ContainerLevelAccess
     val pos: BlockPos
     val inventory: Inventory
+    val inputSlots = ArrayList<Slot>()
 
     companion object {
-        const val slot_x = 18
-        const val slot_y = 26
+        const val slot_x = 49
+        const val slot_y = 34
     }
 
     // Server Constructor
@@ -39,15 +40,15 @@ class TransmogrifierMenu : AbstractContainerMenu {
         this.pos = pos
 
         // Set Inventory Slot locations
-        for (slotInfo in listPlayerInventoryHotbarPos()) {
+        for (slotInfo in listPlayerInventoryHotbarPos(50)) {
             this.addSlot(Slot(inventory, slotInfo[0], slotInfo[1], slotInfo[2]))
         }
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x - 19, slot_y + 7))
+        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x + 1, slot_y + 1))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandler(this.itemHandler, 1, slot_x + 39, slot_y + 7) {
+        this.addSlot(object : SlotItemHandler(this.itemHandler, 1, slot_x + 59, slot_y + 1) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }

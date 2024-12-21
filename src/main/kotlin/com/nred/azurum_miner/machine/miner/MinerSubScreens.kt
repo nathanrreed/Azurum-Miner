@@ -13,6 +13,7 @@ import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import com.nred.azurum_miner.screen.RenderTab
+import com.nred.azurum_miner.util.FilterSetPayload
 import com.nred.azurum_miner.util.Helpers.compC
 import com.nred.azurum_miner.util.Helpers.compCat
 import com.nred.azurum_miner.util.Helpers.componentSplit
@@ -106,7 +107,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
         FrameLayout.alignInRectangle(this.layout, rectangle, 0.17f, 0.17f)
 
         this.infoBoxLayout.arrangeElements()
-        FrameLayout.alignInRectangle(this.infoBoxLayout, rectangle, 0.985f, 0.05f)
+        FrameLayout.alignInRectangle(this.infoBoxLayout, rectangle, 0.980f, 0.05f)
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -331,10 +332,11 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
     val SPRITES = WidgetSprites(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_disabled"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_highlighted"))
     var ingredients: Ingredient = Ingredient.EMPTY
     val foundTags = ArrayList<TagKey<Item>>()
+    var init = false
 
     init {
         // Update to Server on change
-        this.setResponder { PacketDistributor.sendToServer(MinerFilterPayloadToServer(this.idx, this.value, this.menu.pos)) }
+        this.setResponder { PacketDistributor.sendToServer(MinerFilterPayloadToServer(this.idx, it, this.menu.pos)) }
         PacketDistributor.sendToServer(MinerFilterPayloadToServer(this.idx, this.value, this.menu.pos, true)) // Get saved data
 
         this.setTextColor(0xFFFFFFFF.toInt())
@@ -348,8 +350,9 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.blitSprite(this.SPRITES.get(this.isActive, this.isFocused), this.x, this.y, 0, this.getWidth(), this.getHeight())
 
-        if (this.value == "" && this.menu.filters[this.idx] != "") {
+        if (!init && this.value == "" && this.menu.filters[this.idx] != "") {
             this.value = this.menu.filters[this.idx]
+            init = true
         }
 
         if (ResourceLocation.tryParse(this.value) != null) {
@@ -421,19 +424,32 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
             }
         } else {
             this.dontUse = !this.editBox.ingredients.hasNoItems() && this.editBox.menu.containerData[NUM_FILTERS] > 2
-            if (this.active && this.dontUse) {
-                this.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.filters_has_tag", editBox.value))
-                this.editBox.menu.filterSlots[idx].dontUse = true
-                this.editBox.menu.filterSlots[idx].item.set(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
+            if (this.active) {
+                if (this.dontUse) {
+                    this.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.filters_has_tag", editBox.value))
+                    this.editBox.menu.filterSlots[idx].dontUse = true
+                    this.editBox.menu.filterSlots[idx].item.set(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
+                } else {
+                    this.tooltip = null
+                }
             } else {
                 this.editBox.menu.filterSlots[idx].dontUse = false
                 this.editBox.menu.filterSlots[idx].item.remove(DataComponents.HIDE_TOOLTIP)
-                this.tooltip = null
             }
         }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        if (this.isMouseOver(mouseX, mouseY)) {
+            if (this.editBox.menu.carried != null && this.editBox.menu.filterSlots[idx].mayPlace(this.editBox.menu.carried)) {
+                this.editBox.menu.filterSlots[this.idx].set(this.editBox.menu.carried.copy())
+                this.minecraft.player!!.connection.send(FilterSetPayload(this.editBox.menu.carried.copy(), this.idx))
+            } else {
+                this.editBox.menu.filterSlots[this.idx].set(ItemStack.EMPTY)
+                this.minecraft.player!!.connection.send(FilterSetPayload(ItemStack.EMPTY, this.idx))
+            }
+            return true
+        }
         return false
     }
 

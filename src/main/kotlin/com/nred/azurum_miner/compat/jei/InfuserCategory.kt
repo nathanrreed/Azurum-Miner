@@ -3,12 +3,9 @@ package com.nred.azurum_miner.compat.jei
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
-import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.TANK
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.energy
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.tank
 import com.nred.azurum_miner.recipe.InfuserRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -43,7 +40,7 @@ class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
     }
 
     override fun getHeight(): Int {
-        return energy.height + 4
+        return 69
     }
 
     override fun getRecipeType(): RecipeType<InfuserRecipe> {
@@ -59,22 +56,20 @@ class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
     }
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: InfuserRecipe, focuses: IFocusGroup) {
-        InfuserScreen.resize(width, 0, 0, 0)
-        builder.addInputSlot(InfuserMenu.slot_x + 29, InfuserMenu.slot_y).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
-        builder.addInputSlot(InfuserMenu.slot_x + 52, InfuserMenu.slot_y + 21).addIngredients(recipe.ingredients[1]).setStandardSlotBackground()
-        builder.addInputSlot(energy.right() - 9, tank.top() - 1).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, tank.width, energy.height)
-        builder.addOutputSlot(InfuserMenu.slot_x + 80, InfuserMenu.slot_y).addItemStack(recipe.result).setOutputSlotBackground()
+        builder.addInputSlot(InfuserMenu.slot_x, InfuserMenu.slot_y - 8).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addInputSlot(InfuserMenu.slot_x + 24, InfuserMenu.slot_y + 14).addIngredients(recipe.ingredients[1]).setStandardSlotBackground()
+        builder.addInputSlot(9, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 31, 65)
+        builder.addOutputSlot(InfuserMenu.slot_x + 53, InfuserMenu.slot_y - 8).addItemStack(recipe.result).setOutputSlotBackground()
     }
 
     override fun draw(recipe: InfuserRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {
-        InfuserScreen.resize(width, 0, 0, 0)
-        guiGraphics.blitSprite(ENERGY_BAR, energy.left() - 13, energy.top() - 1, 3, energy.width, energy.height)
-        guiGraphics.blitSprite(ENERGY_INNER, energy.left() - 12, energy.bottom() - energy.height, 4, energy.width - 2, energy.height - 2)
+        guiGraphics.blitSprite(ENERGY_BAR, 0, 2, 3, 6, 65)
+        guiGraphics.blitSprite(ENERGY_INNER, 1, 3, 4, 4, 63)
 
         // TANK
-        guiGraphics.blitSprite(TANK, energy.right() - 9, tank.top() - 1, 150, tank.width, energy.height)
+        guiGraphics.blitSprite(TANK, 9, 2, 150, 31, 65)
 
-        if (ScreenRectangle(energy.left() - 13, energy.top() - 1, energy.width, energy.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {
+        if (ScreenRectangle(0, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt())) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
         }
 

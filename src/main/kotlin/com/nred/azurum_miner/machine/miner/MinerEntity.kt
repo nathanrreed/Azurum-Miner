@@ -157,6 +157,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             }
         }
 
+        override fun setStackInSlot(slot: Int, stack: ItemStack) {
+            super.setStackInSlot(slot, stack.copyWithCount(1))
+        }
+
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             if (slot == OUTPUT) {
                 return true
@@ -167,7 +171,9 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
 
         override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
-            return super.insertItem(slot, stack, simulate)
+            if (simulate)
+                return stack
+            return super.insertItem(slot, stack.copyWithCount(1), false)
         }
 
         override fun getSlotLimit(slot: Int): Int {
@@ -382,7 +388,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         calculateModifiers()
 
         if (this.nextIsMiss == null) {
-            this.nextIsMiss = willNextBeMiss()
+            willNextBeMiss()
         }
         this.loaded = true
     }
@@ -530,7 +536,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                         setChanged(level, pos, state)
                     }
                 }
-                nextIsMiss = willNextBeMiss()
+                willNextBeMiss()
             }
         } else {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
@@ -604,10 +610,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         return options
     }
 
-    fun willNextBeMiss(): Boolean {
+    fun willNextBeMiss() {
         val output = Random.nextInt(100) > data[ACCURACY] // Miss
+        this.nextIsMiss = output
         data[CURRENT_NEEDED] = getTicks(output)
-        return output
     }
 }
 

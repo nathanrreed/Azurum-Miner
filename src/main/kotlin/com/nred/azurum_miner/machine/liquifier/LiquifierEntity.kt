@@ -141,7 +141,7 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         variables = tag.getIntArray("vars")
 
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
-        fluidHandler.readFromNBT(registries, tag.getCompound("fluid"))
+        fluidHandler.readFromNBT(registries, tag)
     }
 
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): LiquifierMenu {
@@ -167,6 +167,9 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                     this.itemStackHandler.extractItem(0, 1, false)
                     data[PROGRESS] = 0
                 }
+            } else {
+                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
+                data[PROGRESS] = 0
             }
         } else {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))

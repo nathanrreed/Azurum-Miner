@@ -148,7 +148,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         variables = tag.getIntArray("vars")
 
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
-        fluidHandler.readFromNBT(registries, tag.getCompound("fluid"))
+        fluidHandler.readFromNBT(registries, tag)
     }
 
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): InfuserMenu {
@@ -180,6 +180,9 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
                 data[PROGRESS] = 0
             }
+        } else {
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
+            data[PROGRESS] = 0
         }
     }
 }
