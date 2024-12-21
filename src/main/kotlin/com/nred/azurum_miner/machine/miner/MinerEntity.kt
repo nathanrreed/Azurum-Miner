@@ -399,10 +399,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         tag.put("inventory", itemStackHandler.serializeNBT(registries))
-
         tag.putIntArray("vars", variables)
         tag.putIntArray("modifierPoints", modifierPoints)
-
         tag.put("energy", energyHandler.serializeNBT(registries))
         fluidHandler.writeToNBT(registries, tag)
 
@@ -421,14 +419,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         super.loadAdditional(tag, registries)
 
         itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
-
-//        variables = arrayListOf(*tag.getIntArray("vars").toTypedArray(), 0).toIntArray() // When change size
         variables = tag.getIntArray("vars")
         modifierPoints = tag.getIntArray("modifierPoints")
-
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
         fluidHandler.readFromNBT(registries, tag)
-
         this.nextIsMiss = tag.getBoolean("nextIsMiss")
 
         for (i in 0..<filters.size) {

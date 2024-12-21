@@ -47,10 +47,10 @@ class ModItemTagProvider(
         }
 
 
-        tag(oreTierTag[0]).addTags(ORES_COAL, ORES_COPPER, OreHelper.ORES["azurum"].ore_tag).addOptionalTags(*addOptionalOres("tin", "bauxite", "aluminium", "lignite_coal"))
-        tag(oreTierTag[1]).addTags(ORES_IRON, ORES_REDSTONE, ORES_LAPIS, OreHelper.ORES["galibium"].ore_tag).addOptionalTags(*addOptionalOres("salt", "nickel", "osmium", "lead"))
-        tag(oreTierTag[2]).addTags(ORES_GOLD, OreHelper.ORES["thelxium"].ore_tag).addOptionalTags(*addOptionalOres("fluorite", "silver", "black_quartz"))
-        tag(oreTierTag[3]).addTags(ORES_QUARTZ, OreHelper.ORES["palestium"].ore_tag).addOptionalTags(*addOptionalOres("uranium", "yellorite", "tungsten", "antimony", "montazite", "titanium"))
+        tag(oreTierTag[0]).addTags(OreHelper.ORES["azurum"].ore_tag, ORES_COAL, ORES_COPPER).addOptionalTags(*addOptionalOres("tin", "bauxite", "aluminium", "lignite_coal"))
+        tag(oreTierTag[1]).addTags(OreHelper.ORES["galibium"].ore_tag, ORES_IRON, ORES_REDSTONE, ORES_LAPIS).addOptionalTags(*addOptionalOres("salt", "nickel", "osmium", "lead"))
+        tag(oreTierTag[2]).addTags(OreHelper.ORES["thelxium"].ore_tag, ORES_GOLD).addOptionalTags(*addOptionalOres("fluorite", "silver", "black_quartz"))
+        tag(oreTierTag[3]).addTags(OreHelper.ORES["palestium"].ore_tag, ORES_QUARTZ).addOptionalTags(*addOptionalOres("uranium", "yellorite", "tungsten", "antimony", "montazite", "titanium"))
         tag(oreTierTag[4]).addTags(ORES_DIAMOND, ORES_EMERALD, ORES_NETHERITE_SCRAP).addOptionalTags(*addOptionalOres("mithril", "iridium", "platinum", "anglesite", "benitoite"))
 
         tag(materialTag).addTags(STONES, COBBLESTONES, COBBLESTONES_DEEPSLATE, GRAVELS, OBSIDIANS, SANDS).add(DIRT, GRASS_BLOCK, COARSE_DIRT, ROOTED_DIRT, BASALT, SMOOTH_BASALT, BLACKSTONE, CALCITE, CLAY, MUD, MUDDY_MANGROVE_ROOTS, PACKED_MUD)

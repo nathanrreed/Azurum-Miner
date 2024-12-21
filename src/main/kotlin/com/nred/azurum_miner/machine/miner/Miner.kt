@@ -5,8 +5,14 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.ENERGY_CAPACITY
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.TOTAL_MODIFIER_POINTS
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.getMinerConfig
+import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
+import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.util.Helpers
 import io.netty.buffer.Unpooled
 import net.minecraft.client.gui.screens.Screen
@@ -15,6 +21,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.CommonColors
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.ItemInteractionResult
@@ -80,8 +87,13 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
 
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
-            val numPoints = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars").getOrElse(TOTAL_MODIFIER_POINTS.ordinal) { _ -> getMinerConfig("numModifierPoints", this.tier) }
-            tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner.extended", this.tier + 1, numPoints))
+            val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
+            val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> getMinerConfig("numModifierPoints", this.tier) }
+            val numUsed = vars.getOrElse(USED_MODIFIER_POINTS) { _ -> 0 }
+            val mb = vars.getOrElse(MOLTEN_ORE_LEVEL) { _ -> 0 }
+            val energy = vars.getOrElse(ENERGY_LEVEL) { _ -> 0 }
+            val energyCap = vars.getOrElse(ENERGY_CAPACITY) { _ -> getMinerConfig("energyCapacity", this.tier) }
+            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.miner.extended", intArrayOf(0xFFa66fbc.toInt(), CommonColors.SOFT_YELLOW, CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), numPoints, numUsed, getFE(energy), getFE(energyCap), getBuckets(mb)))
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner", this.tier + 1))
         }
@@ -97,4 +109,14 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
         return MinerEntity(pos, state, this.tier)
     }
+}
+
+private fun IntArray.getOrElse(e: Enum<*>, function: (Int) -> Int): Int {
+    var idx = 0
+    if (e is MinerVariablesEnum) {
+        idx = e.ordinal
+    } else if (e is MinerEnum) {
+        idx = e.ordinal + MinerVariablesEnum.entries.size
+    }
+    return this.getOrElse(idx, function)
 }

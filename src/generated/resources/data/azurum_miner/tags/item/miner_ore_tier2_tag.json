@@ -1,9 +1,9 @@
 {
   "values": [
+    "#c:ores/galibium",
     "#c:ores/iron",
     "#c:ores/redstone",
     "#c:ores/lapis",
-    "#c:ores/galibium",
     {
       "id": "#c:ores/salt",
       "required": false

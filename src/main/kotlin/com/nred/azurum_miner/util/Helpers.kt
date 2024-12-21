@@ -19,6 +19,10 @@ object Helpers {
         return Component.translatable(tooltip, *objects).string.split("\n").map { text -> Component.literal(text) }
     }
 
+    fun itemComponentSplitColorized(tooltip: String, colors: IntArray, vararg objects: Any): List<MutableComponent> {
+        return Component.translatable(tooltip, *objects).string.split("\n").mapIndexed { idx, text -> Component.literal(text).withColor(colors[idx % colors.size]) }
+    }
+
     fun componentSplit(tooltip: String, vararg objects: Any): List<FormattedCharSequence> {
         return Component.translatable(tooltip, *objects).string.split("\n").map { text -> FormattedCharSequence.forward(text, Style.EMPTY) }
     }
