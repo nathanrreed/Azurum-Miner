@@ -72,7 +72,8 @@ class EmiPlugin : EmiPlugin {
         registry.addExclusionArea(LiquifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(InfuserScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(TransmogrifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
-        registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top(), screen.base.width + 10, screen.base.height)) }
+        registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
+        registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top() + 6, 10, 37)) }
 
         registry.addRecipeHandler(ModMenuTypes.INFUSER_MENU.get(), object : StandardRecipeHandler<InfuserMenu> {
             override fun getInputSources(handler: InfuserMenu): List<Slot> {
@@ -133,6 +134,7 @@ class EmiPlugin : EmiPlugin {
 
         })
 
+        // For Miner filters
         registry.addDragDropHandler(MinerScreen::class.java) { screen, stack, mouseX, mouseY ->
             if (screen.tabManager.currentTab is OptionsTab) {
                 for (slot in screen.menu.filterSlots) {

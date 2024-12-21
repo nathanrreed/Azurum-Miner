@@ -1,8 +1,8 @@
 {
   "values": [
+    "#c:ores/azurum",
     "#c:ores/coal",
     "#c:ores/copper",
-    "#c:ores/azurum",
     {
       "id": "#c:ores/tin",
       "required": false
