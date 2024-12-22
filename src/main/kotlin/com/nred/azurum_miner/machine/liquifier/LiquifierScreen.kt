@@ -54,7 +54,7 @@ class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Co
         base = ScreenRectangle(x, y, imageWidth, imageHeight)
         powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
         energy = ScreenRectangle(base.left() + 5, base.top() + 5, 6, 65)
-        tank = ScreenRectangle(base.right() - 55, base.top() + 5, 31, 77)
+        tank = ScreenRectangle(base.right() - 65, base.top() + 5, 34, 77)
         progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 11, base.top() + 34, 22, 16)
     }
 
@@ -78,7 +78,7 @@ class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Co
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+        for (slotInfo in listPlayerInventoryHotbarPos()) {
             guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() - 1, slotInfo[2] + base.top() - 1, 18, 18)
         }
 

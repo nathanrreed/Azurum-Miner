@@ -88,11 +88,11 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
             val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
-            val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> getMinerConfig("numModifierPoints", this.tier) }
+            val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> 0 }.coerceAtLeast(getMinerConfig("numModifierPoints", this.tier))
             val numUsed = vars.getOrElse(USED_MODIFIER_POINTS) { _ -> 0 }
             val mb = vars.getOrElse(MOLTEN_ORE_LEVEL) { _ -> 0 }
             val energy = vars.getOrElse(ENERGY_LEVEL) { _ -> 0 }
-            val energyCap = vars.getOrElse(ENERGY_CAPACITY) { _ -> getMinerConfig("energyCapacity", this.tier) }
+            val energyCap = vars.getOrElse(ENERGY_CAPACITY) { _ -> 0 }.coerceAtLeast(getMinerConfig("energyCapacity", this.tier))
             tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.miner.extended", intArrayOf(0xFFa66fbc.toInt(), CommonColors.SOFT_YELLOW, CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), numPoints, numUsed, getFE(energy), getFE(energyCap), getBuckets(mb)))
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner", this.tier + 1))

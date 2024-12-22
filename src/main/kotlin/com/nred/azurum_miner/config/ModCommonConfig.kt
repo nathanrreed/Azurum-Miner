@@ -14,15 +14,15 @@ class ModCommonConfig {
         fun build(): ModConfigSpec {
 
             BUILDER.comment("Infuser Settings").push("infuser")
-            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000, 0, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("Liquifier Settings").push("liquifier")
-            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000, 0, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("Transmogrifier Settings").push("transmogrifier")
-            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 50000000, 0, 9223372036854775807)
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("Miner Settings").push("miner")
@@ -41,12 +41,12 @@ class ModCommonConfig {
             BUILDER.comment("FE multiplier").define("1FE", 1.2)
             BUILDER.comment("Speed up when cycle is a miss").defineInRange("2", 50, 0, 100)
             BUILDER.comment("FE multiplier").define("2FE", 1.2)
-            BUILDER.comment("Speed up (% or value)").define("3", "50%")
+            BUILDER.comment("Speed up (% or value)").define("3", "25%")
             BUILDER.comment("FE multiplier").define("3FE", 1.2)
-            BUILDER.comment("Speed up (% or value)").define("4", "50%")
-            BUILDER.comment("FE multiplier").define("4FE", 1.5)
-            BUILDER.comment("Speed up (% or value)").define("5", "50%")
-            BUILDER.comment("FE multiplier").define("5FE", 2)
+            BUILDER.comment("Speed up (% or value)").define("4", "2s")
+            BUILDER.comment("FE multiplier").define("4FE", 2)
+            BUILDER.comment("Speed up (% or value)").define("5", "3s")
+            BUILDER.comment("FE multiplier").define("5FE", 4)
             BUILDER.pop()
 
             BUILDER.push("filter")
@@ -122,8 +122,8 @@ class ModCommonConfig {
             BUILDER.defineInRange("tier1", 10000, 1000, 9223372036854775807)
             BUILDER.defineInRange("tier2", 500000, 1000, 9223372036854775807)
             BUILDER.defineInRange("tier3", 2500000, 1000, 9223372036854775807)
-            BUILDER.defineInRange("tier4", 500000000, 1000, 9223372036854775807)
-            BUILDER.defineInRange("tier5", 1000000000, 1000, 9223372036854775807)
+            BUILDER.defineInRange("tier4", 50000000, 1000, 9223372036854775807)
+            BUILDER.defineInRange("tier5", 100000000, 1000, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("The percentage chance for the miner to output a chosen filter ore instead of all from tier").push("baseFilterChance")

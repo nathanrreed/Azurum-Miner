@@ -77,41 +77,18 @@ repositories {
         url = 'https://thedarkcolour.github.io/KotlinForForge/'
         content { includeGroup "thedarkcolour" }
     }
-    maven {
+    maven { // JEI
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.dev"
-    }
-    maven {
-        url 'https://maven.blakesmods.com'
-    }
-    maven { url 'https://modmaven.dev/' }
     maven { // TOP
         url "https://maven.k-4u.nl"
     }
-    maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
-    maven {
+    maven { // EMI
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2/")
-        credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
-            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-    maven {
+    maven { // Jade
         url "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
@@ -125,30 +102,13 @@ dependencies {
 
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-//    implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
-//    implementation "com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}"
-//    implementation "com.blakebr0.extendedcrafting:ExtendedCrafting:${extendedcrafting_version}"
-
-    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
-    runtimeOnly("mekanism:Mekanism:${mekanism_version}") // Mekanism
-    runtimeOnly("mekanism:Mekanism:${mekanism_version}:additions") // Mekanism: Additions
-    runtimeOnly("mekanism:Mekanism:${mekanism_version}:generators") // Mekanism: Generators
-    runtimeOnly("mekanism:Mekanism:${mekanism_version}:tools") // Mekanism: Tools
-
-//    implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api")
     localRuntime("mcjty.theoneprobe:theoneprobe:${top_version}")
     compileOnly("curse.maven:jade-api-324717:${jade_api_id}")
     localRuntime("curse.maven:jade-324717:${jade_id}")
-
-
-//    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1:${craftTeaker_version}"
-
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
-
-//    implementation "appeng:appliedenergistics2:${ae2_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {

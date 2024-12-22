@@ -5,7 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
+import com.nred.azurum_miner.machine.miner.TRUE
 import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import net.minecraft.core.BlockPos
@@ -27,7 +27,6 @@ import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.ItemStackHandler
-import kotlin.jvm.optionals.getOrNull
 
 open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(InfuserEnum.entries.size)
@@ -105,9 +104,8 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
     }
 
-    override val EXTERN_PROGRESS = PROGRESS
-    override fun getTicks(): Int {
-        return data[TransmogrifierEntity.Companion.TransmogrifierEnum.PROCESSING_TIME]
+    override fun getProgress(): Float {
+        return data[PROGRESS].toFloat() / data[PROCESSING_TIME].toFloat()
     }
 
     companion object {
@@ -167,26 +165,30 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
         if (!this.loaded) return
-        val recipe = level.recipeManager.getRecipeFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1)), level).getOrNull()?.value
-        if (recipe != null) {
-            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
-            data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power / recipe.processingTime && data[IS_ON] == 1 && !itemStackHandler.getStackInSlot(0).isEmpty && !itemStackHandler.getStackInSlot(1).isEmpty && FluidStack.isSameFluidSameComponents(this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE), recipe.inputFluid)) {
-                if (data[PROGRESS] < recipe.processingTime) {
-                    energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
-                    data[PROGRESS]++
-                } else {
-                    this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
-                    this.itemStackHandler.extractItem(0, 1, false)
-                    this.itemStackHandler.extractItem(1, 1, false)
-                    this.itemStackHandler.insertItem(2, recipe.result.copy(), false)
-                    data[PROGRESS] = 0
+        var found = false
+        for (recipe in level.recipeManager.getRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1)), level).map { it.value }) {
+            if (recipe != null) {
+                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
+                data[PROCESSING_TIME] = recipe.processingTime
+
+                if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && FluidStack.isSameFluidSameComponents(this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE), recipe.inputFluid)) {
+                    found = true
+                    if (data[PROGRESS] < recipe.processingTime) {
+                        energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
+                        data[PROGRESS]++
+                    } else {
+                        this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
+                        this.itemStackHandler.extractItem(0, 1, false)
+                        this.itemStackHandler.extractItem(1, 1, false)
+                        this.itemStackHandler.insertItem(2, recipe.result.copy(), false)
+                        data[PROGRESS] = 0
+                    }
+                    break
                 }
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
-                data[PROGRESS] = 0
             }
-        } else {
+        }
+
+        if (!found) {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
             data[PROGRESS] = 0
         }

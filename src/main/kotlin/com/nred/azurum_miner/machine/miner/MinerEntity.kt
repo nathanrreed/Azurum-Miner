@@ -18,6 +18,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.ItemTags
+import net.minecraft.world.Containers
+import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -152,7 +154,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 level!!.sendBlockUpdated(blockPos, getBlockState(), getBlockState(), Block.UPDATE_ALL)
 
                 if (slot != OUTPUT) {
-                    data[HAS_FILTER] = if (getFilterOptions().isNotEmpty()) TRUE else FALSE
+                    data[HAS_FILTER] = hasFilter()
                 }
             }
         }
@@ -181,7 +183,9 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    override val EXTERN_PROGRESS = PROGRESS
+    override fun getProgress(): Float {
+        return data[PROGRESS].toFloat() / getTicks().toFloat()
+    }
 
     companion object {
         const val FLUID_SIZE = 50000
@@ -246,6 +250,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                     return Pair(start.toDouble() * if (additive) (1.0 + percent) else (1.0 - percent), value)
                 } else if (value.endsWith("x")) {
                     return Pair(start.toDouble() * value.substringBefore('x').toDouble(), value)
+                } else if (value.endsWith("s")) {
+                    return Pair(start.toDouble() + if (additive) 1.0 else -1.0 * value.substringBefore('s').toDouble() * 20, value)
                 } else {
                     return Pair(start.toDouble() - value.toDouble(), value)
                 }
@@ -331,6 +337,9 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         if (modifierPoints[1] > 4) {
             data[NUM_FILTERS] = 3
         }
+
+        data[HAS_FILTER] = hasFilter()
+        data[CURRENT_NEEDED] = getTicks()
     }
 
     fun calculateEnergyModifier(): Int {
@@ -369,13 +378,17 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     fun updateFilterData(index: Int, value: String) {
         filters[index] = value
 
-        data[HAS_FILTER] = if (getFilterOptions().isNotEmpty()) TRUE else FALSE
+        data[HAS_FILTER] = hasFilter()
 
         setChanged()
     }
 
     fun getFilterData(index: Int): String {
         return filters[index]
+    }
+
+    fun hasFilter(): Int {
+        return if (data[NUM_FILTERS] > 0 && getFilterOptions().isNotEmpty()) TRUE else FALSE
     }
 
     override fun onLoad() {
@@ -446,12 +459,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         this.invalidAboveCacheBlock = null
     }
 
-    override fun getTicks(): Int {
-        return getTicks(null)
-    }
-
     fun getTicks(willBeNext: Boolean? = null): Int {
-        val output = if (this.nextIsMiss!! || (willBeNext != null && willBeNext == true)) {
+        val output = if ((nextIsMiss != null && this.nextIsMiss!!) || (willBeNext != null && willBeNext == true)) {
             ((data[TICKS_PER_OP] * (data[MISS_TICKS_PER_OP_CHANGE] / 100.0)).toInt())
         } else {
             data[TICKS_PER_OP]
@@ -464,6 +473,12 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             return (data[ENERGY_NEEDED] * (data[MISS_ENERGY_NEEDED_CHANGE] / 100.0)).toInt()
         }
         return data[ENERGY_NEEDED]
+    }
+
+    override fun drops() {
+        val inventory = SimpleContainer(itemStackHandler.slots)
+        inventory.setItem(OUTPUT, itemStackHandler.getStackInSlot(OUTPUT))
+        Containers.dropContents(this.level!!, this.worldPosition, inventory)
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
@@ -482,7 +497,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 val aboveHandler = this.aboveCache!!.capability
                 var valid = false
                 for (slot in 0..<aboveHandler!!.slots) {
-                    if (aboveHandler.insertItem(slot, ItemStack(Blocks.COAL_ORE), true).isEmpty) { //TODO DO BETTER
+                    if (aboveHandler.isItemValid(slot, ItemStack(Blocks.COAL_ORE))) {
                         valid = true
                         break
                     }
@@ -575,7 +590,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         } else { // ORE
             var outputItem = Items.AIR
             val filteredOptions = getFilterOptions()
-            if (filteredOptions.isNotEmpty() && Random.nextInt(100) <= data[FILTER_CHANCE]) { // FILTER
+            if (hasFilter() == TRUE && Random.nextInt(100) <= data[FILTER_CHANCE]) { // FILTER
                 outputItem = filteredOptions.random().item
             } else if (Random.nextInt(100) <= data[HIGHER_TIER_CHANCE]) { // HIGHER TIER
                 for (i in this.tier..0) {
