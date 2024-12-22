@@ -58,7 +58,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     private var filters = mutableListOf("", "", "")
     private var nextIsMiss: Boolean? = null
 
-    private var data: ContainerData = object : ContainerData {
+    override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
             return this@MinerEntity.variables[index]
         }
@@ -164,7 +164,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             if (slot == OUTPUT) {
                 return true
-            } else if (data[NUM_FILTERS] > slot && (this@MinerEntity.foundOres.any { ore -> ore.`is`(stack.item) } || this@MinerEntity.foundMaterials.any { mat -> mat.`is`(stack.item) })) {
+            } else if ((data[NUM_FILTERS] > slot || this@MinerEntity.level!!.isClientSide) && (this@MinerEntity.foundOres.any { ore -> ore.`is`(stack.item) } || this@MinerEntity.foundMaterials.any { mat -> mat.`is`(stack.item) })) {
                 return true
             }
             return false
@@ -180,6 +180,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             return 1
         }
     }
+
+    override val EXTERN_PROGRESS = PROGRESS
 
     companion object {
         const val FLUID_SIZE = 50000
@@ -442,6 +444,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     fun onCapInvalidate() {
         this.aboveCache = null
         this.invalidAboveCacheBlock = null
+    }
+
+    override fun getTicks(): Int {
+        return getTicks(null)
     }
 
     fun getTicks(willBeNext: Boolean? = null): Int {

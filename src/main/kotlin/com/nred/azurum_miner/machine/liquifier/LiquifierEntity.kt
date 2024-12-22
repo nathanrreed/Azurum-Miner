@@ -5,6 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum.*
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.recipe.LiquifierInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import net.minecraft.core.BlockPos
@@ -30,7 +31,7 @@ import kotlin.jvm.optionals.getOrNull
 open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.LIQUIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(LiquifierEnum.entries.size)
 
-    private var data: ContainerData = object : ContainerData {
+    override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
             return this@LiquifierEntity.variables[index]
         }
@@ -94,6 +95,11 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             return level!!.recipeManager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
         }
+    }
+
+    override val EXTERN_PROGRESS = PROGRESS
+    override fun getTicks(): Int {
+        return data[TransmogrifierEntity.Companion.TransmogrifierEnum.PROCESSING_TIME]
     }
 
     companion object {

@@ -5,6 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import net.minecraft.core.BlockPos
@@ -31,7 +32,7 @@ import kotlin.jvm.optionals.getOrNull
 open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(InfuserEnum.entries.size)
 
-    private var data: ContainerData = object : ContainerData {
+    override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
             return this@InfuserEntity.variables[index]
         }
@@ -102,6 +103,11 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
             }
             return false
         }
+    }
+
+    override val EXTERN_PROGRESS = PROGRESS
+    override fun getTicks(): Int {
+        return data[TransmogrifierEntity.Companion.TransmogrifierEnum.PROCESSING_TIME]
     }
 
     companion object {

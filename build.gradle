@@ -111,6 +111,12 @@ repositories {
             password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
         }
     }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 
@@ -130,7 +136,13 @@ dependencies {
     runtimeOnly("mekanism:Mekanism:${mekanism_version}:generators") // Mekanism: Generators
     runtimeOnly("mekanism:Mekanism:${mekanism_version}:tools") // Mekanism: Tools
 
-    implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
+//    implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
+    compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api")
+    localRuntime("mcjty.theoneprobe:theoneprobe:${top_version}")
+    compileOnly("curse.maven:jade-api-324717:${jade_api_id}")
+    localRuntime("curse.maven:jade-324717:${jade_id}")
+
+
 //    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1:${craftTeaker_version}"
 
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"

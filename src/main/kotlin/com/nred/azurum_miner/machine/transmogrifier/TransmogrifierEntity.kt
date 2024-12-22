@@ -28,7 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.TRANSMOGRIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(TransmogrifierEnum.entries.size)
 
-    private var data: ContainerData = object : ContainerData {
+    override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
             return this@TransmogrifierEntity.variables[index]
         }
@@ -86,6 +86,11 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
             }
             return false
         }
+    }
+
+    override val EXTERN_PROGRESS = PROGRESS
+    override fun getTicks(): Int {
+        return data[PROCESSING_TIME]
     }
 
     companion object {
