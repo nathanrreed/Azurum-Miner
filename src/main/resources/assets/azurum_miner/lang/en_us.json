@@ -98,7 +98,6 @@
     "tooltip.azurum_miner.machine.off": "Machine is off",
     "tooltip.azurum_miner.machine.on": "Machine is on",
     "tooltip.azurum_miner.miner": "A Tier %s Miner\nHold §eShift§r for more info",
-    "tooltip.azurum_miner.miner.button.4": "Efficiency Upgrades\n§7Less FE per cycle§r",
     "tooltip.azurum_miner.miner.button.FEChange": "\n%s to %s",
     "tooltip.azurum_miner.miner.button.disabled": "§lTier %s §lrequired§r\n%s",
     "tooltip.azurum_miner.miner.button1": "Speed Upgrades\n§7Finish cycles faster§r",

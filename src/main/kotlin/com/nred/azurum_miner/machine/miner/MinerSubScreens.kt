@@ -221,7 +221,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                             this.tooltip = modifierToolTip()
                         }
                     } else {
-                        this.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.button.disabled", Component.literal("${num + 1}").setStyle(Style.EMPTY.withBold(true)), Component.translatable("tooltip.azurum_miner.miner.button.${num + 1}").withColor((0xFF888888).toInt())))
+                        this.tooltip = Tooltip.create(Component.translatable("tooltip.azurum_miner.miner.button.disabled", Component.literal("${num + 1}").setStyle(Style.EMPTY.withBold(true)), Component.translatable("tooltip.azurum_miner.miner.button${num + 1}").withColor((0xFF888888).toInt())))
                     }
                 }
             }
