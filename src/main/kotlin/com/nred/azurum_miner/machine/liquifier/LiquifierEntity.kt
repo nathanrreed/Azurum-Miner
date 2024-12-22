@@ -5,7 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum.*
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
+import com.nred.azurum_miner.machine.miner.TRUE
 import com.nred.azurum_miner.recipe.LiquifierInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import net.minecraft.core.BlockPos
@@ -97,9 +97,8 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
     }
 
-    override val EXTERN_PROGRESS = PROGRESS
-    override fun getTicks(): Int {
-        return data[TransmogrifierEntity.Companion.TransmogrifierEnum.PROCESSING_TIME]
+    override fun getProgress(): Float {
+        return data[PROGRESS].toFloat() / data[PROCESSING_TIME].toFloat()
     }
 
     companion object {
@@ -163,7 +162,7 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get(), LiquifierInput(state, itemStackHandler.getStackInSlot(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power / recipe.processingTime && data[IS_ON] == 1 && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.fill(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
+            if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.fill(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)

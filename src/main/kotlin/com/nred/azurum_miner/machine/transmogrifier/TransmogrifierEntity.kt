@@ -4,6 +4,7 @@ import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.miner.TRUE
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.recipe.TransmogrifierInput
@@ -88,9 +89,8 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
     }
 
-    override val EXTERN_PROGRESS = PROGRESS
-    override fun getTicks(): Int {
-        return data[PROCESSING_TIME]
+    override fun getProgress(): Float {
+        return data[PROGRESS].toFloat() / data[PROCESSING_TIME].toFloat()
     }
 
     companion object {
@@ -150,7 +150,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         if (recipe != null) {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power / recipe.processingTime && data[IS_ON] == 1 && !itemStackHandler.getStackInSlot(0).isEmpty) {
+            if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
                     data[PROGRESS]++

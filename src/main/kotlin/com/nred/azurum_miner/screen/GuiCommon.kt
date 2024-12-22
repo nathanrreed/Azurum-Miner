@@ -37,7 +37,7 @@ abstract class GuiCommon {
             }
         }
 
-        fun getBuckets(fluidNum: Number): String { //data[TOTAL_MODIFIER_POINTS]
+        fun getBuckets(fluidNum: Number): String {
             val fluid = fluidNum.toDouble()
             return when {
                 fluid >= 10000 -> String.format("%s B", DecimalFormat("#,###.0").format(fluid / 1000.0))
@@ -53,17 +53,17 @@ abstract class GuiCommon {
             time %= 60.0
 
             var str = ""
-            if (hours > 1) {
+            if (hours >= 1) {
                 str += String.format("%.1fh ", hours)
             }
-            if (mins > 1) {
+            if (mins >= 1) {
                 str += String.format("%.1fm ", mins)
             }
             str += String.format("%.1fs", time)
             return str
         }
 
-        fun listPlayerInventoryPos(offset: Int): ArrayList<IntArray> {
+        fun listPlayerInventoryPos(): ArrayList<IntArray> {
             val list = ArrayList<IntArray>()
             for (y in 0..2) {
                 for (x in 0..8) {
@@ -74,7 +74,7 @@ abstract class GuiCommon {
             return list
         }
 
-        fun listPlayerHotbarPos(offset: Int): ArrayList<IntArray> {
+        fun listPlayerHotbarPos(): ArrayList<IntArray> {
             val list = ArrayList<IntArray>()
             for (x in 0..8) {
                 list.add(intArrayOf(x, 8 + x * 18, 142))
@@ -83,8 +83,8 @@ abstract class GuiCommon {
             return list
         }
 
-        fun listPlayerInventoryHotbarPos(offset: Int): List<IntArray> {
-            return (listPlayerInventoryPos(offset) + listPlayerHotbarPos(offset))
+        fun listPlayerInventoryHotbarPos(): List<IntArray> {
+            return (listPlayerInventoryPos() + listPlayerHotbarPos())
         }
     }
 

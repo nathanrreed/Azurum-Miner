@@ -86,7 +86,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+        for (slotInfo in listPlayerInventoryHotbarPos()) {
             guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() + 9, slotInfo[2] + base.top() + 31, 18, 18)
         }
 

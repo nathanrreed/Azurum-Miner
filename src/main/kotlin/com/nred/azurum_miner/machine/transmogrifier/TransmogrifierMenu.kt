@@ -40,7 +40,7 @@ class TransmogrifierMenu : AbstractContainerMenu {
         this.pos = pos
 
         // Set Inventory Slot locations
-        for (slotInfo in listPlayerInventoryHotbarPos(50)) {
+        for (slotInfo in listPlayerInventoryHotbarPos()) {
             this.addSlot(Slot(inventory, slotInfo[0], slotInfo[1], slotInfo[2]))
         }
 

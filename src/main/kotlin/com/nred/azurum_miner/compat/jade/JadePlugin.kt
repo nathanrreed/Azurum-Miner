@@ -1,49 +1,47 @@
 package com.nred.azurum_miner.compat.jade
 
+import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.Infuser
-import com.nred.azurum_miner.machine.liquifier.Liquifier
+import com.nred.azurum_miner.machine.infuser.InfuserEntity
+import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.miner.MinerEntity
-import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.get
-import com.nred.azurum_miner.machine.transmogrifier.Transmogrifier
-import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import snownee.jade.api.*
-import snownee.jade.api.config.IPluginConfig
 import snownee.jade.api.view.*
 
 @WailaPlugin
 class JadePlugin : IWailaPlugin {
     override fun register(registration: IWailaCommonRegistration) {
         registration.registerItemStorage(MinerItemHider.INSTANCE, Miner::class.java)
-        registration.registerBlockDataProvider(MachineProgressTime.INSTANCE, Miner::class.java)
-        registration.registerBlockDataProvider(MachineProgressTime.INSTANCE, Infuser::class.java)
-        registration.registerBlockDataProvider(MachineProgressTime.INSTANCE, Liquifier::class.java)
-        registration.registerBlockDataProvider(MachineProgressTime.INSTANCE, Transmogrifier::class.java)
+        registration.registerProgress(MachineProgressTime.INSTANCE, MinerEntity::class.java)
+        registration.registerProgress(MachineProgressTime.INSTANCE, InfuserEntity::class.java)
+        registration.registerProgress(MachineProgressTime.INSTANCE, LiquifierEntity::class.java)
+        registration.registerProgress(MachineProgressTime.INSTANCE, TransmogrifierEntity::class.java)
+        registration.registerEnergyStorage(MachineEnergy.INSTANCE, MinerEntity::class.java)
+        registration.registerEnergyStorage(MachineEnergy.INSTANCE, InfuserEntity::class.java)
+        registration.registerEnergyStorage(MachineEnergy.INSTANCE, LiquifierEntity::class.java)
+        registration.registerEnergyStorage(MachineEnergy.INSTANCE, TransmogrifierEntity::class.java)
     }
 
     override fun registerClient(registration: IWailaClientRegistration) {
         registration.registerItemStorageClient(MinerItemHider.INSTANCE)
-        registration.registerBlockComponent(MachineProgressTime.INSTANCE, Miner::class.java)
-        registration.registerBlockComponent(MachineProgressTime.INSTANCE, Infuser::class.java)
-        registration.registerBlockComponent(MachineProgressTime.INSTANCE, Liquifier::class.java)
-        registration.registerBlockComponent(MachineProgressTime.INSTANCE, Transmogrifier::class.java)
+        registration.registerProgressClient(MachineProgressTime.INSTANCE)
+        registration.registerEnergyStorageClient(MachineEnergy.INSTANCE)
     }
 }
 
 enum class MinerItemHider : IServerExtensionProvider<ItemStack>, IClientExtensionProvider<ItemStack, ItemView> {
     INSTANCE {
-        override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<ItemStack>>): List<ClientViewGroup<ItemView>> {
-            return emptyList()
+        override fun getUid(): ResourceLocation {
+            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner.hide_filter")
         }
 
-        override fun getUid(): ResourceLocation {
-            return ModMachines.MINER_BLOCK_TIERS[0].id
+        override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<ItemStack>>): List<ClientViewGroup<ItemView>> {
+            return emptyList()
         }
 
         override fun getGroups(accessor: Accessor<*>): List<ViewGroup<ItemStack>> {
@@ -52,23 +50,54 @@ enum class MinerItemHider : IServerExtensionProvider<ItemStack>, IClientExtensio
     }
 }
 
-enum class MachineProgressTime : IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+enum class MachineProgressTime : IClientExtensionProvider<CompoundTag, ProgressView>, IServerExtensionProvider<CompoundTag> {
     INSTANCE {
         override fun getUid(): ResourceLocation {
-            return ModMachines.MINER_BLOCK_TIERS[0].id
+            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "machine.progress")
         }
 
-        override fun appendTooltip(tooltip: ITooltip, accessor: BlockAccessor, config: IPluginConfig) {
-            tooltip.add(Component.translatable("jade.azurum_miner.machine.progress", getTime(accessor.serverData.getInt("progress"))))
+        override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<CompoundTag>>): List<ClientViewGroup<ProgressView>> {
+            return ClientViewGroup.map(groups, ProgressView::read, null)
         }
 
-        override fun appendServerData(data: CompoundTag, accessor: BlockAccessor) {
-            val entity = accessor.blockEntity
-            if (entity is MinerEntity) {
-                data.putInt("progress", entity.getTicks() - entity.data[entity.EXTERN_PROGRESS])
-            } else if (entity is AbstractMachineBlockEntity) {
-                data.putInt("progress", entity.getTicks() - entity.data[entity.EXTERN_PROGRESS.ordinal])
+        override fun getGroups(accessor: Accessor<*>): List<ViewGroup<CompoundTag>>? {
+            val entity = accessor.target
+            return if (entity is AbstractMachineBlockEntity) {
+                listOf(ViewGroup(listOf(ProgressView.create(entity.getProgress()))))
+            } else {
+                null
             }
+        }
+    }
+}
+
+enum class MachineEnergy : IClientExtensionProvider<CompoundTag, EnergyView>, IServerExtensionProvider<CompoundTag> {
+    INSTANCE {
+        override fun getUid(): ResourceLocation {
+            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "machine.energy")
+        }
+
+        override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<CompoundTag>>): List<ClientViewGroup<EnergyView>> {
+            return groups.map { data ->
+                val unit = data.getExtraData().getString("Unit")
+                return@map ClientViewGroup(data.views.map { tag -> EnergyView.read(tag, unit) })
+            }
+        }
+
+        override fun getGroups(accessor: Accessor<*>): List<ViewGroup<CompoundTag>>? {
+            val entity = accessor.target
+            if (entity is AbstractMachineBlockEntity) {
+                val stored = entity.energyHandler.energyStored.toLong()
+                val cap = entity.energyHandler.maxEnergyStored.toLong()
+                val group = if (stored.toDouble() / cap.toDouble() < 0.999999) { // Remove annoying flickering while in use
+                    ViewGroup(listOf(EnergyView.of(stored, cap)))
+                } else {
+                    ViewGroup(listOf(EnergyView.of(cap, cap)))
+                }
+                group.getExtraData().putString("Unit", "FE")
+                return listOf(group)
+            }
+            return null
         }
     }
 }

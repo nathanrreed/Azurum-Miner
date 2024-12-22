@@ -2,7 +2,6 @@
 
 package com.nred.azurum_miner.machine
 
-import com.nred.azurum_miner.machine.miner.OUTPUT
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
@@ -12,7 +11,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.Containers
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.inventory.ContainerData
@@ -34,8 +32,7 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPo
     abstract val itemStackHandler: ItemStackHandler
     abstract val energyHandler: EnergyStorage
     abstract var data: ContainerData
-    abstract val EXTERN_PROGRESS: Enum<*>
-    abstract fun getTicks(): Int
+    abstract fun getProgress(): Float
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
         return null
@@ -67,9 +64,10 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPo
         super.applyImplicitComponents(componentInput)
     }
 
-    fun drops() {
-        val inventory = SimpleContainer(itemStackHandler.slots)
-        inventory.setItem(OUTPUT, itemStackHandler.getStackInSlot(OUTPUT))
-        Containers.dropContents(this.level!!, this.worldPosition, inventory)
+    open fun drops() {
+        val inventory = SimpleContainer(itemStackHandler.getSlots())
+        for (i in 0..<itemStackHandler.getSlots()) {
+            inventory.setItem(i, itemStackHandler.getStackInSlot(i))
+        }
     }
 }

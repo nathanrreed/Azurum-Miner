@@ -72,7 +72,7 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
         // Draw Inventory
-        for (slotInfo in listPlayerInventoryHotbarPos(0)) {
+        for (slotInfo in listPlayerInventoryHotbarPos()) {
             guiGraphics.blitSprite(SLOT, slotInfo[1] + base.left() - 1, slotInfo[2] + base.top() - 1, 18, 18)
         }
 

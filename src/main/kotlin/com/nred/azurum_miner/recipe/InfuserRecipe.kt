@@ -39,7 +39,7 @@ data class InfuserInput(val state: BlockState, val stack: ItemStack, val catalys
 
 class InfuserRecipe(val inputItem: Ingredient, val catalyst: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<InfuserInput> {
     override fun matches(input: InfuserInput, level: Level): Boolean {
-        return this.inputItem.test(input.stack) || this.catalyst.test(input.catalyst)
+        return this.inputItem.test(input.stack) && this.catalyst.test(input.catalyst)
     }
 
     override fun assemble(input: InfuserInput, registries: HolderLookup.Provider): ItemStack {
