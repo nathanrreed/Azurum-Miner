@@ -440,10 +440,12 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (this.isMouseOver(mouseX, mouseY)) {
-            if (this.editBox.menu.carried != null && this.editBox.menu.filterSlots[idx].mayPlace(this.editBox.menu.carried)) {
-                this.editBox.menu.filterSlots[this.idx].set(this.editBox.menu.carried.copy())
-                this.minecraft.player!!.connection.send(FilterSetPayload(this.editBox.menu.carried.copy(), this.idx))
+        if (this.isMouseOver(mouseX, mouseY) && this.editBox.menu.filterSlots[idx].active) {
+            if (!this.editBox.menu.carried.isEmpty) {
+                if (this.editBox.menu.filterSlots[idx].mayPlace(this.editBox.menu.carried)) {
+                    this.editBox.menu.filterSlots[this.idx].set(this.editBox.menu.carried.copy())
+                    this.minecraft.player!!.connection.send(FilterSetPayload(this.editBox.menu.carried.copy(), this.idx))
+                }
             } else {
                 this.editBox.menu.filterSlots[this.idx].set(ItemStack.EMPTY)
                 this.minecraft.player!!.connection.send(FilterSetPayload(ItemStack.EMPTY, this.idx))
