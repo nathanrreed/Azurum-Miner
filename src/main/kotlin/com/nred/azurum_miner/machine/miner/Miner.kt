@@ -88,7 +88,7 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
             val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
-            val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> 0 }.coerceAtLeast(getMinerConfig("numModifierPoints", this.tier))
+            val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> 0 }.coerceAtLeast(getMinerConfig("numModifierPoints", this.tier) + vars.getOrElse(ADDED_MODIFIER_POINTS) { _ -> 0 })
             val numUsed = vars.getOrElse(USED_MODIFIER_POINTS) { _ -> 0 }
             val mb = vars.getOrElse(MOLTEN_ORE_LEVEL) { _ -> 0 }
             val energy = vars.getOrElse(ENERGY_LEVEL) { _ -> 0 }

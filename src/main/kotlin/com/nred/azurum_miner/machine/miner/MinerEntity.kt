@@ -43,6 +43,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
+import kotlin.Number
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.math.pow
@@ -100,6 +101,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     private var invalidAboveCacheBlock: BlockEntity? = null
     private var foundOres = ArrayList<ItemStack>()
     private var foundMaterials = ArrayList<ItemStack>()
+    private var exponentialBase: Double
+    private var minBuckets: Double
 
     private val mBUsedOnMiss = CONFIG.getOptional<Int>("miner.options.mBUsedOnMiss").get()
     private val mBUsedOnHit = CONFIG.getOptional<Int>("miner.options.mBUsedOnHit").get()
@@ -114,8 +117,12 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         data[ENERGY_LEVEL] = 0
         data[MOLTEN_ORE_LEVEL] = 0
         data[USED_MODIFIER_POINTS] = 0
+        data[ADDED_MODIFIER_POINTS] = 0
         data[IS_STOPPED] = TRUE
         data[HAS_FILTER] = FALSE
+
+        exponentialBase = CONFIG.getOptional<Number>("miner.options.fluidNeedExponentialBase").get().toDouble()
+        minBuckets = CONFIG.getOptional<Number>("miner.options.bucketsNeededMin").get().toDouble()
 
         calculateModifiers()
 
@@ -196,7 +203,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
 
         enum class MinerEnum() {
-            IS_ON, ENERGY_LEVEL, MOLTEN_ORE_LEVEL, USED_MODIFIER_POINTS, PROGRESS, IS_STOPPED, MISS_TICKS_PER_OP_CHANGE, NUM_FILTERS, HIGHER_TIER_CHANCE, MISS_ENERGY_NEEDED_CHANGE, HAS_FILTER, FLUID_NEEDED, CURRENT_NEEDED
+            IS_ON, ENERGY_LEVEL, MOLTEN_ORE_LEVEL, USED_MODIFIER_POINTS, PROGRESS, IS_STOPPED, MISS_TICKS_PER_OP_CHANGE, NUM_FILTERS, HIGHER_TIER_CHANCE, MISS_ENERGY_NEEDED_CHANGE, HAS_FILTER, FLUID_NEEDED, CURRENT_NEEDED, ADDED_MODIFIER_POINTS
         }
 
         operator fun ContainerData.get(e: Enum<*>): Int {
@@ -286,9 +293,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    private var exponentialBase = 0.0
-    private var minBuckets = 0.0
-
     fun halfCeil(num: Double): Double {
         return ceil(num * 2.0) / 2.0
     }
@@ -298,8 +302,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     }
 
     fun calculateModifiers() {
-        exponentialBase = CONFIG.getOptional<Number>("miner.options.fluidNeedExponentialBase").get().toDouble()
-        minBuckets = CONFIG.getOptional<Number>("miner.options.bucketsNeededMin").get().toDouble()
         data[NUM_FILTERS] = 0
         data[HIGHER_TIER_CHANCE] = 0
         data[MISS_ENERGY_NEEDED_CHANGE] = 100
@@ -338,6 +340,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             data[NUM_FILTERS] = 3
         }
 
+        data[TOTAL_MODIFIER_POINTS] += data[ADDED_MODIFIER_POINTS]
         data[HAS_FILTER] = hasFilter()
         data[CURRENT_NEEDED] = getTicks()
     }
@@ -572,6 +575,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         if (data[FLUID_NEEDED] <= 0) {
             data[FLUID_NEEDED] += calculateFluidCost()
+            data[ADDED_MODIFIER_POINTS]++
             data[TOTAL_MODIFIER_POINTS]++
         }
     }
