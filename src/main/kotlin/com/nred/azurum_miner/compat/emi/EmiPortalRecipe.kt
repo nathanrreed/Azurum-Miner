@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import kotlin.math.abs
 
-class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output: EmiStack, val processingTime: Int) : BasicEmiRecipe(PORTAL_CATEGORY, id, 128, 95) {
+class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output: EmiStack, val processingTime: Int) : BasicEmiRecipe(PORTAL_CATEGORY, id, 128, 105) {
     val obsidian: ResourceLocation = ResourceLocation.withDefaultNamespace("textures/block/obsidian.png")
 
     init {
@@ -39,5 +39,6 @@ class EmiPortalRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, output:
         widgets.addSlot(outputs[0], 94, 40).large(true).recipeContext(this)
 
         widgets.addText(Component.translatable("tooltip.azurum_miner.portal"), 64, 0, 0xFFFFFFFF.toInt(), true).horizontalAlign(TextWidget.Alignment.CENTER)
+        widgets.addText(Component.translatable("tooltip.azurum_miner.portal_warning"), 64, 95, 0xFFFF0000.toInt(), true).horizontalAlign(TextWidget.Alignment.CENTER)
     }
 }
