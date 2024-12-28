@@ -75,7 +75,7 @@
     "item.azurum_miner.thelxium_nugget": "Thelxium Nugget",
     "item.azurum_miner.void_processor": "Void Processor",
     "jade.azurum_miner.machine.progress": "Time Remaining: %s",
-    "jei.info.azurum_miner.dimensional_matrix": "The Dimensional Matrix is made by throwing a Empty Dimensional Matrix into a Nether Portal and waiting for it to extract the portals energy",
+    "jei.info.azurum_miner.dimensional_matrix": "The Dimensional Matrix is made by throwing a Empty Dimensional Matrix into a Nether Portal anf waiting for it to extract the portals energy. On completion the portal will be destroyed",
     "menu.title.azurum_miner.infuser": "Infuser",
     "menu.title.azurum_miner.liquifier": "Liquifier",
     "menu.title.azurum_miner.miner": "Tier %s Miner",
@@ -180,6 +180,7 @@
     "tooltip.azurum_miner.miner.multi": "Multi: %s%%",
     "tooltip.azurum_miner.miner.multiMinMax": "Min: %s, Max: %s",
     "tooltip.azurum_miner.portal": "Throw in a Nether Portal",
+    "tooltip.azurum_miner.portal_warning": "Portal will be destroyed",
     "tooltip.azurum_miner.transmogrifier": "Changes items into one from a parallel dimension\nHold §eShift§r for more info",
     "tooltip.azurum_miner.transmogrifier.extended": "%s / %s"
 }

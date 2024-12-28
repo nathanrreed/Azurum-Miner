@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
@@ -57,6 +58,7 @@ import org.apache.logging.log4j.Logger
 import thedarkcolour.kotlinforforge.neoforge.forge.LOADING_CONTEXT
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
+import java.util.*
 
 @Mod(AzurumMiner.ID)
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -242,12 +244,19 @@ object AzurumMiner {
 
     fun onEntityTravelToDimension(event: EntityTravelToDimensionEvent) {
         val entity = event.entity
-        if (entity is ItemEntity && entity.item.`is`(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())) {
+        if (entity is ItemEntity && entity.item.`is`(ModItems.EMPTY_DIMENSIONAL_MATRIX.get()) && event.dimension == NETHER) {
             event.isCanceled = true
+
             val tag = CompoundTag()
             entity.save(tag)
             entity.remove(Entity.RemovalReason.KILLED)
-            (entity.level() as ServerLevel).addFreshEntity(EmptyMatrixItemEntity(tag, event.entity.level()))
+
+            (entity.level() as ServerLevel).addFreshEntity(EmptyMatrixItemEntity(tag, entity.level()))
+            if (entity.item.count > 1) {
+                val e = EmptyMatrixItemEntity(tag, entity.level(), entity.item.count - 1)
+                e.uuid = UUID.randomUUID()
+                (entity.level() as ServerLevel).addFreshEntity(e)
+            }
         }
     }
 }
