@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "minecraft:end_stone"
+  },
+  "lasts": 2000,
+  "multiplier": 1.0,
+  "type_name": "base"
+}

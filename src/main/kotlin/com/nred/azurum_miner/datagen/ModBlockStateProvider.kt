@@ -20,6 +20,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
     override fun registerStatesAndModels() {
         blockWithItem(ModBlocks.CONGLOMERATE_OF_ORE_BLOCK)
         blockWithItem(ModBlocks.CONGLOMERATE_OF_ORE)
+        blockWithItem(ModBlocks.ENERGIZED_OBSIDIAN)
 
         for (fluid in FluidHelper.FLUIDS) {
             simpleBlock(fluid.block.get(), models().cubeAll(fluid.block.get().name.string, fluid.client.stillTexture))
@@ -42,6 +43,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
         simpleMachineModel(ModMachines.LIQUIFIER, "liquifier")
         simpleMachineModel(ModMachines.INFUSER, "infuser")
         simpleMachineModel(ModMachines.TRANSMOGRIFIER, "transmogrifier")
+        simpleMachineModel(ModMachines.GENERATOR, "generator")
     }
 
     private fun blockWithItem(deferredBlock: DeferredBlock<Block>) {
@@ -56,6 +58,6 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             deferredBlock.get()
         ) { state -> if (state.getValue(AbstractMachine.MACHINE_ON)) modelOn else modelOff }
 
-        simpleBlockItem(deferredBlock.get(), UncheckedModelFile(modLoc("block/${name}_block_off")))
+        simpleBlockItem(deferredBlock.get(), UncheckedModelFile(modLoc("block/${name}_block_on")))
     }
 }

@@ -4,6 +4,7 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.generator.GeneratorScreen
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
@@ -52,9 +53,11 @@ class EmiPlugin : EmiPlugin {
         val LIQUIFIER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.LIQUIFIER)
         val INFUSER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.INFUSER)
         val TRANSMOGRIFIER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.TRANSMOGRIFIER)
+        val GENERATOR_WORKSTATION: EmiStack = EmiStack.of(ModMachines.GENERATOR)
         val MINER_WORKSTATION: EmiIngredient = EmiIngredient.of(ModMachines.MINER_BLOCK_TIERS.map { EmiIngredient.of(Ingredient.of(it.get())) })
         val LIQUIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier"), LIQUIFIER_WORKSTATION)
         val INFUSER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser"), INFUSER_WORKSTATION)
+        val GENERATOR_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator"), GENERATOR_WORKSTATION)
         val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier"), TRANSMOGRIFIER_WORKSTATION)
         val MINER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner"), MINER_WORKSTATION)
         val PORTAL_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")) { guiGraphics, x, y, _ ->
@@ -68,10 +71,12 @@ class EmiPlugin : EmiPlugin {
         registry.addCategory(TRANSMOGRIFIER_CATEGORY)
         registry.addCategory(MINER_CATEGORY)
         registry.addCategory(PORTAL_CATEGORY)
+        registry.addCategory(GENERATOR_CATEGORY)
 
         registry.addExclusionArea(LiquifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(InfuserScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(TransmogrifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
+        registry.addExclusionArea(GeneratorScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top() + 6, 10, 37)) }
 
@@ -153,6 +158,7 @@ class EmiPlugin : EmiPlugin {
         registry.addWorkstation(INFUSER_CATEGORY, INFUSER_WORKSTATION)
         registry.addWorkstation(TRANSMOGRIFIER_CATEGORY, TRANSMOGRIFIER_WORKSTATION)
         registry.addWorkstation(MINER_CATEGORY, MINER_WORKSTATION)
+        registry.addWorkstation(GENERATOR_CATEGORY, GENERATOR_WORKSTATION)
 
         val manager = registry.recipeManager
 
@@ -176,6 +182,35 @@ class EmiPlugin : EmiPlugin {
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {
             registry.addRecipe(EmiTransmogrifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+        }
+
+        val bases = manager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get()).filter { it.value.typeName == "base" }.map { it.value }
+        val workaround = object : EmiIngredientRecipe() {
+            override fun getIngredient(): EmiIngredient {
+                return EmiIngredient.of(Ingredient.EMPTY)
+            }
+
+            override fun getStacks(): List<EmiStack> {
+                return bases.map { EmiStack.of(it.input) }
+            }
+
+            override fun getRecipeContext(stack: EmiStack?, offset: Int): EmiRecipe? {
+                return null
+            }
+
+            override fun getCategory(): EmiRecipeCategory {
+                return VanillaEmiRecipeCategories.INFO
+            }
+
+            override fun getId(): ResourceLocation {
+                return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator_bases")
+            }
+        }
+        registry.addRecipe(workaround)
+        for (recipe in manager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get())) {
+            if (recipe.value.typeName == "fuel") {
+                registry.addRecipe(GeneratorRecipe(recipe.id, EmiStack.of(recipe.value.input), bases, recipe.value.power, recipe.value.lasts, workaround))
+            }
         }
 
         registry.addRecipe(EmiPortalRecipe(ResourceLocation.parse(AzurumMiner.ID + ":/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))

@@ -34,12 +34,6 @@ abstract class AbstractMachine(properties: Properties) : BaseEntityBlock(propert
             MACHINE_ON, false
         )
     }
-//    val FULL_BLOCK = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0)
-
-    //    abstract fun openContainer(level: Level, pos: BlockPos?, player: Player)
-//    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-//        return FULL_BLOCK
-//    }
 
     override fun getRenderShape(state: BlockState): RenderShape {
         return RenderShape.MODEL

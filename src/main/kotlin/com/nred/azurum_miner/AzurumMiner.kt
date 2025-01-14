@@ -7,10 +7,18 @@ import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
 import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.entity.ModBlockEntities.GENERATOR_ENTITY
+import com.nred.azurum_miner.entity.ModBlockEntities.INFUSER_ENTITY
+import com.nred.azurum_miner.entity.ModBlockEntities.LIQUIFIER_ENTITY
+import com.nred.azurum_miner.entity.ModBlockEntities.MINER_ENTITY_TIERS
+import com.nred.azurum_miner.entity.ModBlockEntities.TRANSMOGRIFIER_ENTITY
 import com.nred.azurum_miner.entity.ModEntities
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.generator.GeneratorEntity
+import com.nred.azurum_miner.machine.generator.GeneratorRenderer
+import com.nred.azurum_miner.machine.generator.GeneratorScreen
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
@@ -25,6 +33,7 @@ import com.nred.azurum_miner.util.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ItemEntityRenderer
 import net.minecraft.nbt.CompoundTag
@@ -156,16 +165,17 @@ object AzurumMiner {
         }
     }
 
-    /**
-     * This is used for initializing client specific
-     * things such as renderers and keymaps
-     * Fired on the mod specific event bus.
-     */
     private fun onClientSetup(event: FMLClientSetupEvent) {
         for (fluid in FluidHelper.FLUIDS) {
             ItemBlockRenderTypes.setRenderLayer(fluid.still.get(), RenderType.TRANSLUCENT)
             ItemBlockRenderTypes.setRenderLayer(fluid.flowing.get(), RenderType.TRANSLUCENT)
         }
+
+        BlockEntityRenderers.register(GENERATOR_ENTITY.get(), ::GeneratorRenderer)
+    }
+
+    private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
+
     }
 
     private fun registerScreens(event: RegisterMenuScreensEvent) {
@@ -173,6 +183,7 @@ object AzurumMiner {
         event.register(ModMenuTypes.LIQUIFIER_MENU.get(), ::LiquifierScreen)
         event.register(ModMenuTypes.INFUSER_MENU.get(), ::InfuserScreen)
         event.register(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), ::TransmogrifierScreen)
+        event.register(ModMenuTypes.GENERATOR_MENU.get(), ::GeneratorScreen)
     }
 
     private fun registerConfig(event: ModConfigEvent.Loading) {
@@ -181,21 +192,24 @@ object AzurumMiner {
 
     private fun registerCapabilities(event: RegisterCapabilitiesEvent) {
         for (i in 0..<5) {
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.itemStackHandler })
-            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.energyHandler })
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.fluidHandler })
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.itemStackHandler })
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.energyHandler })
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.fluidHandler })
         }
 
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.itemStackHandler }
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.energyHandler }
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.fluidHandler }
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.energyHandler }
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.fluidHandler }
 
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.itemStackHandler }
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.energyHandler }
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.fluidHandler }
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.energyHandler }
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.fluidHandler }
 
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.itemStackHandler }
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.energyHandler }
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, TRANSMOGRIFIER_ENTITY.get()) { myBlockEntity: TransmogrifierEntity, _ -> myBlockEntity.energyHandler }
+
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, GENERATOR_ENTITY.get()) { myBlockEntity: GeneratorEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, GENERATOR_ENTITY.get()) { myBlockEntity: GeneratorEntity, _ -> myBlockEntity.energyHandler }
 
         event.registerItem(Capabilities.FluidHandler.ITEM, { stack, _ ->
             object : FluidBucketWrapper(stack) {
@@ -206,19 +220,13 @@ object AzurumMiner {
         }, Items.POWDER_SNOW_BUCKET)
     }
 
-    /**
-     * Fired on the global Forge bus.
-     */
-    private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
-
-    }
-
     @SubscribeEvent
     fun clientToServerUpdate(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
         registrar.playToServer(Payload.TYPE, Payload.STREAM_CODEC, IPayloadHandler(ServerPayloadHandler::handleDataOnNetwork))
         registrar.playToServer(MinerFilterPayloadToServer.TYPE, MinerFilterPayloadToServer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnServer))
         registrar.playToServer(FilterSetPayload.TYPE, FilterSetPayload.STREAM_CODEC, IPayloadHandler(FilterSetPayloadHandler::handleDataOnServer))
+        registrar.playToServer(ClearPayload.TYPE, ClearPayload.STREAM_CODEC, IPayloadHandler(ClearPayloadHandler::handleDataOnServer))
     }
 
     @SubscribeEvent

@@ -4,10 +4,12 @@ import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.ExtendedEnergyStorage
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum.*
-import com.nred.azurum_miner.machine.miner.TRUE
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.recipe.LiquifierInput
 import com.nred.azurum_miner.recipe.ModRecipe
+import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -22,7 +24,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
-import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.ItemStackHandler
@@ -57,19 +58,19 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         data[PROCESSING_TIME] = 0
     }
 
-    override val energyHandler = object : EnergyStorage(data[ENERGY_CAPACITY]) {
+    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
             setChanged()
-            val rtn = super.receiveEnergy(toReceive, simulate)
-            data[ENERGY_LEVEL] = this.energy
-
-            return rtn
+            super.receiveEnergy(toReceive, simulate)
+            data[TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_LEVEL] = this.energy
+            return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
             setChanged()
+            super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return super.extractEnergy(toExtract, simulate)
+            return this.energy
         }
     }
 
@@ -147,6 +148,8 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
         fluidHandler.readFromNBT(registries, tag)
+
+        data[ENERGY_CAPACITY] = CONFIG.getInt("liquifier.energyCapacity")
     }
 
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): LiquifierMenu {

@@ -35,6 +35,7 @@
     "azurum_miner:raw_palestium_block",
     "azurum_miner:raw_thelxium_block",
     "azurum_miner:simple_void_processor",
+    "azurum_miner:generator",
     "azurum_miner:thelxium_block",
     "azurum_miner:thelxium_gear",
     "azurum_miner:thelxium_ingot_from_smelting_thelxium_ore",
@@ -42,6 +43,7 @@
     "azurum_miner:transmogrifier_block",
     "azurum_miner:void_processor",
     "azurum_miner:palestium_ingot_from_smelting_palestium_ore",
+    "azurum_miner:energized_obsidian_block",
     "minecraft:crafter"
   ]
 }

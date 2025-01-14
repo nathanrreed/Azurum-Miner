@@ -19,6 +19,7 @@ import com.nred.azurum_miner.util.Helpers.compCat
 import com.nred.azurum_miner.util.Helpers.componentSplit
 import com.nred.azurum_miner.util.MinerFilterPayloadToServer
 import com.nred.azurum_miner.util.Payload
+import com.nred.azurum_miner.util.TRUE
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics

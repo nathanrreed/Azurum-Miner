@@ -6,8 +6,8 @@
     "B": {
       "item": "azurum_miner:conglomerate_of_ore_block"
     },
-    "D": {
-      "item": "azurum_miner:dimensional_matrix"
+    "E": {
+      "item": "azurum_miner:energized_obsidian_block"
     },
     "G": {
       "item": "azurum_miner:palestium_gear"
@@ -21,8 +21,8 @@
   },
   "pattern": [
     "BPB",
-    "DMD",
-    "GPG"
+    "GMG",
+    "EPE"
   ],
   "result": {
     "count": 1,

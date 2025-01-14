@@ -48,6 +48,16 @@ object ModRecipe {
         }
     )
 
+    val GENERATOR_RECIPE_TYPE = RECIPE_TYPES.register(
+        "generator_recipe", { registryName ->
+            object : RecipeType<GeneratorRecipe> {
+                override fun toString(): String {
+                    return registryName.toString()
+                }
+            }
+        }
+    )
+
     val SHAPED_RECIPE_TRANSFORM_TYPE = RECIPE_TYPES.register(
         "crafting_shaped_transform", { registryName ->
             object : RecipeType<ShapedRecipeWithComponents> {
@@ -109,6 +119,7 @@ object ModRecipe {
     val LIQUIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("liquifier_recipe") { -> LiquifierRecipeSerializer() }
     val INFUSER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("infuser_recipe") { -> InfuserRecipeSerializer() }
     val TRANSMOGRIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("transmogrifier_recipe") { -> TransmogrifierRecipeSerializer() }
+    val GENERATOR_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("generator_recipe") { -> GeneratorRecipeSerializer() }
     val SHAPED_RECIPE_TRANSFORM_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_shaped_transform") { -> ShapedRecipeTransformSerializer() }
     val MINER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("miner_recipe") { -> MinerRecipeSerializer() }
 

@@ -114,7 +114,7 @@ class Ore(name: String, val isGem: Boolean, val isOre: Boolean) {
             tag(BlockTags.NEEDS_DIAMOND_TOOL).add(ore.ore.get(), ore.deepslate_ore.get())
             tag(BlockTags.NEEDS_IRON_TOOL).add(ore.block.get())
 
-            if (ore.isOre && !ore.isGem){
+            if (ore.isOre && !ore.isGem) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.raw_block!!.get())
                 tag(BlockTags.NEEDS_IRON_TOOL).add(ore.raw_block!!.get())
             }

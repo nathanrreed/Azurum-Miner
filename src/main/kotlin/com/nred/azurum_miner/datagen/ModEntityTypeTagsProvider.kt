@@ -10,6 +10,6 @@ import java.util.concurrent.CompletableFuture
 
 class ModEntityTypeTagsProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>, existingFileHelper: ExistingFileHelper) : EntityTypeTagsProvider(output, registries, AzurumMiner.ID, existingFileHelper) {
     override fun addTags(provider: HolderLookup.Provider) {
-        tag(ModItems.EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE).add(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE. get())
+        tag(ModItems.EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE).add(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get())
     }
 }

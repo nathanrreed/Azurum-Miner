@@ -22,8 +22,10 @@
     "azurum_miner:miner_block_tier_5",
     "azurum_miner:conglomerate_of_ore",
     "azurum_miner:conglomerate_of_ore_block",
+    "azurum_miner:energized_obsidian_block",
     "azurum_miner:infuser_block",
     "azurum_miner:liquifier_block",
-    "azurum_miner:transmogrifier_block"
+    "azurum_miner:transmogrifier_block",
+    "azurum_miner:generator_block"
   ]
 }

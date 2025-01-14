@@ -3,6 +3,7 @@ package com.nred.azurum_miner.datagen
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
+import com.nred.azurum_miner.block.ModBlocks.ENERGIZED_OBSIDIAN
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
@@ -11,10 +12,12 @@ import com.nred.azurum_miner.item.ModItems.DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ELABORATE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
+import com.nred.azurum_miner.item.ModItems.ENERGY_SHARD
 import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
 import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.VOID_PROCESSOR
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.GENERATOR
 import com.nred.azurum_miner.recipe.*
 import com.nred.azurum_miner.util.FluidHelper.Companion.FLUIDS
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
@@ -36,9 +39,8 @@ import net.neoforged.neoforge.fluids.FluidStack
 import java.util.concurrent.CompletableFuture
 
 class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>) : RecipeProvider(output, registries), IConditionBuilder {
-
     fun <T : AbstractCookingRecipe> smelting(
-        recipeOutput: RecipeOutput, pSmeltingSerializer: RecipeSerializer<T>, factory: AbstractCookingRecipe.Factory<T>, ingredients: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, pRecipeName: String
+        recipeOutput: RecipeOutput, pSmeltingSerializer: RecipeSerializer<T>, factory: AbstractCookingRecipe.Factory<T>, ingredients: List<ItemLike>, pCategory: RecipeCategory, pResult: ItemLike, pExp: Float, pSmeltTime: Int, pGroup: String, pRecipeName: String,
     ) {
         for (itemLike in ingredients) {
             SimpleCookingRecipeBuilder.generic(
@@ -193,12 +195,34 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[1]), has(ModMachines.MINER_BLOCK_TIERS[1])).save(recipeOutput)
 
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GDG").pattern("SMS").pattern("GPG")
-            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', DIAMOND_BLOCK).define('P', ELABORATE_VOID_PROCESSOR).define('G', ORES["thelxium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[2])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GEG").pattern("SMS").pattern("GPG")
+            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('E', ENERGY_SHARD).define('P', ELABORATE_VOID_PROCESSOR).define('G', ORES["thelxium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[2])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[2]), has(ModMachines.MINER_BLOCK_TIERS[2])).save(recipeOutput)
 
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[4], 1, 4).pattern("BPB").pattern("DMD").pattern("GPG")
-            .define('B', CONGLOMERATE_OF_ORE_BLOCK).define('D', DIMENSIONAL_MATRIX).define('P', COMPLEX_VOID_PROCESSOR).define('G', ORES["palestium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[3])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[4], 1, 4).pattern("BPB").pattern("GMG").pattern("EPE")
+            .define('B', CONGLOMERATE_OF_ORE_BLOCK).define('G', ORES["palestium"].gear!!).define('P', COMPLEX_VOID_PROCESSOR).define('E', ENERGIZED_OBSIDIAN).define('M', ModMachines.MINER_BLOCK_TIERS[3])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[3]), has(ModMachines.MINER_BLOCK_TIERS[3])).save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(BUILDING_BLOCKS, GENERATOR).pattern("GCG").pattern("VEV").pattern("OOO")
+            .define('E', END_CRYSTAL).define('O', OBSIDIAN).define('V', VOID_PROCESSOR).define('C', CONGLOMERATE_OF_ORE_BLOCK).define('G', TINTED_GLASS)
+            .unlockedBy(getHasName(ENERGY_SHARD), has(ENERGY_SHARD)).save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(BUILDING_BLOCKS, ENERGIZED_OBSIDIAN).pattern(" E ").pattern("EOE").pattern(" E ")
+            .define('E', ENERGY_SHARD).define('O', OBSIDIAN)
+            .unlockedBy(getHasName(ENERGY_SHARD), has(ENERGY_SHARD)).save(recipeOutput)
+
+        // Bases
+        GeneratorRecipeBuilder(NETHERRACK, 0.7f, 200).save(recipeOutput)
+        GeneratorRecipeBuilder(END_STONE, 1f, 2000).save(recipeOutput)
+        GeneratorRecipeBuilder(OBSIDIAN, 1.2f, 5000).save(recipeOutput)
+        GeneratorRecipeBuilder(CRYING_OBSIDIAN, 1.5f, 10000).save(recipeOutput)
+        GeneratorRecipeBuilder(ENERGIZED_OBSIDIAN.asItem(), 3f, 2000).save(recipeOutput)
+
+        // Fuels
+        GeneratorRecipeBuilder(ORES["azurum"].gem!!.asItem(), 3000, 100).save(recipeOutput)
+        GeneratorRecipeBuilder(ORES["azurum"].ingot!!.asItem(), 5000, 500).save(recipeOutput)
+        GeneratorRecipeBuilder(ORES["galibium"].ingot!!.asItem(), 7000, 5000).save(recipeOutput)
+        GeneratorRecipeBuilder(ORES["thelxium"].ingot!!.asItem(), 15000, 800).save(recipeOutput)
+        GeneratorRecipeBuilder(ORES["palestium"].ingot!!.asItem(), 48000, 500).save(recipeOutput)
     }
 }

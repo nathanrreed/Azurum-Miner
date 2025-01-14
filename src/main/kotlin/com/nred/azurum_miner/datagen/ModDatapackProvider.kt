@@ -24,7 +24,6 @@ class ModDatapackProvider(output: PackOutput, registries: CompletableFuture<Hold
             .add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
 
-
             .add(Registries.DAMAGE_TYPE) { bootstrap ->
                 for (fluid in FluidHelper.FLUIDS) {
                     bootstrap.register(fluid.damageType, DamageType(fluid.damageType.location().toString(), DamageScaling.NEVER, 0.1f, DamageEffects.BURNING, DeathMessageType.DEFAULT))

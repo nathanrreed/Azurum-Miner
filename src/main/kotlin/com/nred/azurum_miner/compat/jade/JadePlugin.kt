@@ -2,6 +2,7 @@ package com.nred.azurum_miner.compat.jade
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.miner.Miner
@@ -62,7 +63,7 @@ enum class MachineProgressTime : IClientExtensionProvider<CompoundTag, ProgressV
 
         override fun getGroups(accessor: Accessor<*>): List<ViewGroup<CompoundTag>>? {
             val entity = accessor.target
-            return if (entity is AbstractMachineBlockEntity) {
+            return if (entity is AbstractMachineBlockEntity && entity !is GeneratorEntity) {
                 listOf(ViewGroup(listOf(ProgressView.create(entity.getProgress()))))
             } else {
                 null

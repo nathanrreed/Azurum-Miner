@@ -72,7 +72,7 @@ class MinerMenu : AbstractContainerMenu {
 
     // Client Constructor
     constructor (containerId: Int, inventory: Inventory, extraData: FriendlyByteBuf) :
-            this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size), SimpleContainerData(5), extraData.readInt())
+            this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size + 1), SimpleContainerData(5), extraData.readInt())
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
         return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 0) // No quick move for filters

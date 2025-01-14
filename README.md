@@ -9,6 +9,7 @@
 <a href="https://github.com/nathanrreed/Azurum-Miner/releases/latest">
 <img src="https://img.shields.io/github/downloads/nathanrreed/Azurum-Miner/total?style=for-the-badge&logo=github&logoSize=auto" alt="GitHub Downloads" /></a>
 </div>
+<br />
 
 Build using [KotlinForForge](https://github.com/thedarkcolour/KotlinForForge) for Minecraft 1.21.1
 

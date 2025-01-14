@@ -24,13 +24,19 @@ import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 
+open class ExtendedEnergyStorage(capacity: Int) : EnergyStorage(capacity) {
+    open fun addEnergy(toReceive: Int, simulate: Boolean): Int {
+        return 0
+    }
+}
+
 @Suppress("UsePropertyAccessSyntax")
 abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) : BlockEntity(type, pos, blockState), MenuProvider {
 
     var loaded = false
     protected var capCache: BlockCapabilityCache<IItemHandler, Direction>? = null
     abstract val itemStackHandler: ItemStackHandler
-    abstract val energyHandler: EnergyStorage
+    abstract val energyHandler: ExtendedEnergyStorage
     abstract var data: ContainerData
     abstract fun getProgress(): Float
 

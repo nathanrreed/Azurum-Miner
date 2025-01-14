@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.*
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 
-
 @JvmRecord
 data class TransmogrifierInput(val state: BlockState, val stack: ItemStack) : RecipeInput {
     override fun getItem(slot: Int): ItemStack {

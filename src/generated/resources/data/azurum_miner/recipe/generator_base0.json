@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "minecraft:netherrack"
+  },
+  "lasts": 200,
+  "multiplier": 0.7,
+  "type_name": "base"
+}

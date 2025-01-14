@@ -1,6 +1,13 @@
 package com.nred.azurum_miner.util
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.machine.generator.BASE_SLOT_SAVE
+import com.nred.azurum_miner.machine.generator.FUEL_SLOT_SAVE
+import com.nred.azurum_miner.machine.generator.GeneratorEntity
+import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum.HAS_BASE
+import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum.HAS_FUEL
+import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.set
+import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
@@ -149,6 +156,48 @@ class FilterSetPayloadHandler {
             val menu = context.player().containerMenu
             if (menu is MinerMenu) {
                 menu.filterSlots[data.idx].set(data.item)
+            }
+        }
+    }
+}
+
+class ClearPayload(val idx: Int, val pos: BlockPos) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<ClearPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "clear_client_to_server"))
+        val STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, ClearPayload::idx, BlockPos.STREAM_CODEC, ClearPayload::pos, ::ClearPayload)
+    }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
+        return TYPE
+    }
+}
+
+class ClearPayloadHandler {
+    companion object {
+        fun handleDataOnServer(data: ClearPayload, context: IPayloadContext) {
+            val menu = context.player().containerMenu
+            if (menu is GeneratorMenu) {
+                when (data.idx) {
+                    BASE_SLOT_SAVE -> {
+                        val entity = context.player().level().getBlockEntity(data.pos)
+                        if (entity is GeneratorEntity) {
+                            entity.currBaseRecipe = null
+                            menu.itemHandler.extractItem(BASE_SLOT_SAVE, 1, false)
+                            entity.data[HAS_BASE] = FALSE
+                        }
+                    }
+
+                    FUEL_SLOT_SAVE -> {
+                        val entity = context.player().level().getBlockEntity(data.pos)
+                        if (entity is GeneratorEntity) {
+                            entity.currFuelRecipe = null
+                            menu.itemHandler.extractItem(FUEL_SLOT_SAVE, 1, false)
+                            entity.data[HAS_FUEL] = FALSE
+                        }
+                    }
+
+                    else -> {}
+                }
             }
         }
     }

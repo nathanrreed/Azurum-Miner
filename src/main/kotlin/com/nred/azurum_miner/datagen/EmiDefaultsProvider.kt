@@ -60,6 +60,7 @@ class EmiDefaultsProvider(val output: PackOutput, val registries: CompletableFut
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "raw_palestium_block")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "raw_thelxium_block")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "simple_void_processor")
+        recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "thelxium_block")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "thelxium_gear")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "thelxium_ingot_from_smelting_thelxium_ore")
@@ -67,6 +68,7 @@ class EmiDefaultsProvider(val output: PackOutput, val registries: CompletableFut
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier_block")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "void_processor")
         recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "palestium_ingot_from_smelting_palestium_ore")
+        recipes += ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "energized_obsidian_block")
 
         recipes += ResourceLocation.withDefaultNamespace("crafter")
     }
