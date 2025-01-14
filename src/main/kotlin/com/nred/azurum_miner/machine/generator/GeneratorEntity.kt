@@ -5,6 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedEnergyStorage
+import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum.*
 import com.nred.azurum_miner.recipe.GeneratorInput
 import com.nred.azurum_miner.recipe.GeneratorRecipe
@@ -31,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.energy.IEnergyStorage
-import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.random.Random
 
 const val FUEL_SLOT = 0
@@ -43,8 +43,6 @@ const val BASE_SLOT_SAVE = 5
 
 open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.GENERATOR_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(GeneratorEnum.entries.size)
-    private var fuelCurr: Int = 0
-    private var baseCurr: Int = 0
 
     var currFuelRecipe: GeneratorRecipe? = null
     var currBaseRecipe: GeneratorRecipe? = null
@@ -91,6 +89,9 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.extractEnergy(toExtract, simulate)
+            }
             setChanged()
             super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
@@ -98,7 +99,7 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(6) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(6) {
         override fun onContentsChanged(slot: Int) {
             if (slot == MATRIX_SLOT && !this.getStackInSlot(slot).isEmpty) {
                 if (matrixFinish > 0 && this.getStackInSlot(slot).maxDamage != matrixFinish)
@@ -125,18 +126,25 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                 return level!!.recipeManager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get()).filter { it.value.typeName == "base" }.any { it.value.input.`is`(stack.item) }
             } else if (slot == MATRIX_SLOT) {
                 return stack.`is`(ModItems.DIMENSIONAL_MATRIX.get())
-            }else if (slot == OUTPUT_SLOT) {
+            } else if (slot == OUTPUT_SLOT) {
                 return stack.`is`(ModItems.ENERGY_SHARD.get())
             }
             energyHandler
 
             return false
         }
+
+        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            if (slot == OUTPUT_SLOT) {
+                return super.extractItem(slot, amount, simulate)
+            }
+            return ItemStack.EMPTY
+        }
     }
 
     companion object {
         enum class GeneratorEnum() {
-            ENERGY_LEVEL, ENERGY_CAPACITY, HAS_BASE, HAS_FUEL, FUEL_POWER, BASE_MULT
+            ENERGY_LEVEL, ENERGY_CAPACITY, HAS_BASE, HAS_FUEL, FUEL_POWER, BASE_MULT, FUEL_CURR, BASE_CURR, FUEL_LASTS, BASE_LASTS
         }
 
         operator fun ContainerData.get(e: Enum<*>): Int {
@@ -162,8 +170,6 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         tag.put("inventory", itemStackHandler.serializeNBT(registries))
 
         tag.putIntArray("vars", variables)
-        tag.putInt("fuelCurr", fuelCurr)
-        tag.putInt("baseCurr", baseCurr)
         tag.put("energy", energyHandler.serializeNBT(registries))
 
         super.saveAdditional(tag, registries)
@@ -174,8 +180,6 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
         itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
         variables = tag.getIntArray("vars")
-        fuelCurr = tag.getInt("fuelCurr")
-        baseCurr = tag.getInt("baseCurr")
 
         data[ENERGY_CAPACITY] = CONFIG.getInt("generator.energyCapacity")
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
@@ -216,19 +220,21 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
         if ((currFuelRecipe != null || needNewFuel) && needNewBase) { // New base
             currBaseRecipe = level.recipeManager.getRecipeFor(ModRecipe.GENERATOR_RECIPE_TYPE.get(), GeneratorInput(state, itemStackHandler.getStackInSlot(BASE_SLOT), "base"), level).get().value
-            baseCurr = 0
+            data[BASE_CURR] = 0
             itemStackHandler.setStackInSlot(BASE_SLOT_SAVE, itemStackHandler.getStackInSlot(BASE_SLOT).split(1))
             data[HAS_BASE] = TRUE
             val buffer = Unpooled.buffer()
             ByteBufCodecs.FLOAT.encode(buffer, currBaseRecipe!!.multiplier)
             data[BASE_MULT] = buffer.getInt(0)
+            data[BASE_LASTS] = currBaseRecipe!!.lasts
         }
         if ((currBaseRecipe != null || needNewBase) && needNewFuel) { // New fuel
             currFuelRecipe = level.recipeManager.getRecipeFor(ModRecipe.GENERATOR_RECIPE_TYPE.get(), GeneratorInput(state, itemStackHandler.getStackInSlot(FUEL_SLOT), "fuel"), level).get().value
-            fuelCurr = 0
             itemStackHandler.setStackInSlot(FUEL_SLOT_SAVE, itemStackHandler.getStackInSlot(FUEL_SLOT).split(1))
+            data[FUEL_CURR] = 0
             data[HAS_FUEL] = TRUE
             data[FUEL_POWER] = currFuelRecipe!!.power
+            data[FUEL_LASTS] = currFuelRecipe!!.lasts
         }
 
         if (currFuelRecipe != null && currBaseRecipe != null) {
@@ -242,14 +248,14 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                 }
             }
 
-            fuelCurr++
-            baseCurr++
+            data[FUEL_CURR]++
+            data[BASE_CURR]++
 
-            if (fuelCurr > currFuelRecipe!!.lasts) {
+            if (data[FUEL_CURR] > currFuelRecipe!!.lasts) {
                 currFuelRecipe = null
                 itemStackHandler.setStackInSlot(FUEL_SLOT_SAVE, ItemStack.EMPTY)
             }
-            if (baseCurr > currBaseRecipe!!.lasts) {
+            if (data[BASE_CURR] > currBaseRecipe!!.lasts) {
                 currBaseRecipe = null
                 itemStackHandler.setStackInSlot(BASE_SLOT_SAVE, ItemStack.EMPTY)
             }

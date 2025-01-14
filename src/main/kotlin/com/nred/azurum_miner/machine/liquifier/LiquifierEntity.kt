@@ -5,8 +5,8 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedEnergyStorage
+import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum.*
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.recipe.LiquifierInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.util.TRUE
@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
-import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.jvm.optionals.getOrNull
 
 open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.LIQUIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
@@ -60,13 +59,19 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
     override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.receiveEnergy(toReceive, simulate)
+            }
             setChanged()
             super.receiveEnergy(toReceive, simulate)
-            data[TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_LEVEL] = this.energy
+            data[ENERGY_LEVEL] = this.energy
             return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.extractEnergy(toExtract, simulate)
+            }
             setChanged()
             super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
@@ -85,7 +90,7 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(1) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(1) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -95,6 +100,10 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             return level!!.recipeManager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
+        }
+
+        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            return ItemStack.EMPTY
         }
     }
 
@@ -172,7 +181,7 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                     data[PROGRESS]++
                 } else {
                     this.fluidHandler.fill(recipe.result, IFluidHandler.FluidAction.EXECUTE)
-                    this.itemStackHandler.extractItem(0, 1, false)
+                    this.itemStackHandler.decrement(0)
                     data[PROGRESS] = 0
                 }
             } else {

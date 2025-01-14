@@ -23,6 +23,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
 
@@ -182,7 +183,7 @@ class ClearPayloadHandler {
                         val entity = context.player().level().getBlockEntity(data.pos)
                         if (entity is GeneratorEntity) {
                             entity.currBaseRecipe = null
-                            menu.itemHandler.extractItem(BASE_SLOT_SAVE, 1, false)
+                            (menu.itemHandler as ItemStackHandler).setStackInSlot(BASE_SLOT_SAVE, ItemStack.EMPTY)
                             entity.data[HAS_BASE] = FALSE
                         }
                     }
@@ -191,7 +192,7 @@ class ClearPayloadHandler {
                         val entity = context.player().level().getBlockEntity(data.pos)
                         if (entity is GeneratorEntity) {
                             entity.currFuelRecipe = null
-                            menu.itemHandler.extractItem(FUEL_SLOT_SAVE, 1, false)
+                            (menu.itemHandler as ItemStackHandler).setStackInSlot(FUEL_SLOT_SAVE, ItemStack.EMPTY)
                             entity.data[HAS_FUEL] = FALSE
                         }
                     }

@@ -30,12 +30,18 @@ open class ExtendedEnergyStorage(capacity: Int) : EnergyStorage(capacity) {
     }
 }
 
+open class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) {
+    open fun decrement(slot: Int, amount: Int = 1) {
+        super.extractItem(slot, amount, false)
+    }
+}
+
 @Suppress("UsePropertyAccessSyntax")
 abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) : BlockEntity(type, pos, blockState), MenuProvider {
 
     var loaded = false
     protected var capCache: BlockCapabilityCache<IItemHandler, Direction>? = null
-    abstract val itemStackHandler: ItemStackHandler
+    abstract val itemStackHandler: ExtendedItemStackHandler
     abstract val energyHandler: ExtendedEnergyStorage
     abstract var data: ContainerData
     abstract fun getProgress(): Float

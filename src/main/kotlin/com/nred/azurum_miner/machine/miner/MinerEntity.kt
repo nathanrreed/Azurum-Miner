@@ -6,16 +6,15 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedEnergyStorage
+import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import com.nred.azurum_miner.util.FALSE
 import com.nred.azurum_miner.util.FluidHelper
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -33,19 +32,14 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache
-import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.common.Tags
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
-import net.neoforged.neoforge.items.IItemHandler
-import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.math.pow
@@ -95,8 +89,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    private var aboveCache: BlockCapabilityCache<IItemHandler, Direction>? = null
-    private var invalidAboveCacheBlock: BlockEntity? = null
     private var foundOres = ArrayList<ItemStack>()
     private var foundMaterials = ArrayList<ItemStack>()
     private var exponentialBase: Double
@@ -130,13 +122,19 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.receiveEnergy(toReceive, simulate)
+            }
             setChanged()
             super.receiveEnergy(toReceive, simulate)
-            data[TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_LEVEL] = this.energy
+            data[ENERGY_LEVEL] = this.energy
             return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.extractEnergy(toExtract, simulate)
+            }
             setChanged()
             super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
@@ -152,7 +150,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(4) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(4) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -181,6 +179,13 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             if (simulate)
                 return stack
             return super.insertItem(slot, stack.copyWithCount(1), false)
+        }
+
+        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            if (slot == OUTPUT) {
+                return super.extractItem(slot, amount, simulate)
+            }
+            return ItemStack.EMPTY
         }
 
         override fun getSlotLimit(slot: Int): Int {
@@ -455,8 +460,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     //This is where you can react to capability changes, removals, or appearances.
     fun onCapInvalidate() {
-        this.aboveCache = null
-        this.invalidAboveCacheBlock = null
     }
 
     fun getTicks(willBeNext: Boolean? = null): Int {
@@ -484,31 +487,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
         if (!this.loaded) return
         if (energyHandler.energyStored > getFE() / getTicks() && data[IS_ON] == TRUE) {
-            if (this.aboveCache == null) {
-                if (level.getBlockEntity(blockPos.above()) == null || level.getBlockEntity(blockPos.above()) == this.invalidAboveCacheBlock) {
-                    level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
-                    data[IS_STOPPED] = TRUE
-                    return
-                }
-
-                this.invalidAboveCacheBlock = null
-                this.aboveCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, level as ServerLevel, blockPos.above(), Direction.DOWN, { -> !this.isRemoved }, { -> onCapInvalidate() })
-
-                val aboveHandler = this.aboveCache!!.capability
-                var valid = false
-                for (slot in 0..<aboveHandler!!.slots) {
-                    if (aboveHandler.isItemValid(slot, ItemStack(Blocks.COAL_ORE))) {
-                        valid = true
-                        break
-                    }
-                }
-                if (!valid) {
-                    this.invalidAboveCacheBlock = level.getBlockEntity(blockPos.above()) // Above has no slots valid for the block
-                    this.aboveCache = null
-                    return
-                }
-            }
-
             if (data[PROGRESS] < getTicks()) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 energyHandler.extractEnergy(getFE() / getTicks(), false)
@@ -518,40 +496,19 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 if (nextIsMiss!! && data[ACCURACY] != 100) { // MISS
                     useFluid()
                     data[PROGRESS] = 0
+                    willNextBeMiss()
                 } else { // HIT
                     if (itemStackHandler.getStackInSlot(OUTPUT).isEmpty) {
                         itemStackHandler.setStackInSlot(OUTPUT, calculateNext()) // OUTPUT
                         useFluid()
+                        data[PROGRESS] = 0
+                        willNextBeMiss()
                         setChanged(level, pos, state)
-                    }
-                    val aboveHandler = aboveCache!!.capability
-                    if (aboveHandler != null) {
-                        var notMoved = true
-                        val handler = capCache!!.capability
-                        val stack = handler!!.extractItem(OUTPUT, 1, false)
-
-                        for (slot in 0..<aboveHandler.slots) {
-                            if (aboveHandler.insertItem(slot, stack, true).isEmpty) {
-                                if (aboveHandler.insertItem(slot, stack, false).isEmpty)
-                                    data[PROGRESS] = 0
-                                notMoved = false
-                                break
-                            }
-                        }
-
-                        if (notMoved) {
-                            data[IS_STOPPED] = TRUE
-                            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
-                            itemStackHandler.insertItem(OUTPUT, stack, false) // Put item back
-                            return
-                        }
-                    } else if (state.getValue(AbstractMachine.MACHINE_ON)) {
-                        data[IS_STOPPED] = TRUE
+                    } else {
                         level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
-                        setChanged(level, pos, state)
+                        data[IS_STOPPED] = TRUE
                     }
                 }
-                willNextBeMiss()
             }
         } else {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))

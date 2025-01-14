@@ -15,12 +15,15 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenAxis
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.CommonColors
 import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.network.PacketDistributor
 import kotlin.math.ceil
 
@@ -94,16 +97,24 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         guiGraphics.renderFakeItem(ModItems.DIMENSIONAL_MATRIX.toStack(), base.left() + base.width / 6 * 5 - 8, base.top() + 20)
         guiGraphics.setColor(1f, 1f, 1f, 1f)
 
-        val fuelSlotSave = menu.itemHandler.getStackInSlot(FUEL_SLOT_SAVE)
+        val fuelSlotSave = menu.itemHandler.getStackInSlot(FUEL_SLOT_SAVE).copy()
+        fuelSlotSave.set(DataComponents.MAX_DAMAGE, menu.containerData[FUEL_LASTS])
+        fuelSlotSave.set(DataComponents.DAMAGE, menu.containerData[FUEL_CURR])
+
         if (!fuelSlotSave.isEmpty) {
             guiGraphics.renderFakeItem(fuelSlotSave, fuelRect.left(), fuelRect.top())
+            guiGraphics.renderItemDecorations(font, fuelSlotSave, fuelRect.left(), fuelRect.top())
             guiGraphics.blitSprite(LOCK, fuelRect.left() + 13, fuelRect.top() + 12, 151, 6, 8)
             if (fuelRect.containsPoint(mouseX, mouseY)) {
                 guiGraphics.renderComponentTooltip(font, Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear"), mouseX, mouseY)
             }
         }
-        if (!menu.itemHandler.getStackInSlot(BASE_SLOT_SAVE).isEmpty) {
-            guiGraphics.renderFakeItem(menu.itemHandler.getStackInSlot(BASE_SLOT_SAVE), baseRect.left(), baseRect.top())
+        val baseSlotSave = menu.itemHandler.getStackInSlot(BASE_SLOT_SAVE).copy()
+        baseSlotSave.set(DataComponents.MAX_DAMAGE, menu.containerData[BASE_LASTS])
+        baseSlotSave.set(DataComponents.DAMAGE, menu.containerData[BASE_CURR])
+        if (!baseSlotSave.isEmpty) {
+            guiGraphics.renderFakeItem(baseSlotSave, baseRect.left(), baseRect.top())
+            guiGraphics.renderItemDecorations(font, baseSlotSave, baseRect.left(), baseRect.top())
             guiGraphics.blitSprite(LOCK, baseRect.left() + 13, baseRect.top() + 12, 151, 6, 8)
             if (baseRect.containsPoint(mouseX, mouseY)) {
                 guiGraphics.renderComponentTooltip(font, Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear"), mouseX, mouseY)
@@ -164,10 +175,10 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         if (button == 0 && hasControlDown()) {
             if (fuelRect.containsPoint(mouseX.toInt(), mouseY.toInt())) {
                 PacketDistributor.sendToServer(ClearPayload(FUEL_SLOT_SAVE, menu.pos))
-                menu.itemHandler.extractItem(FUEL_SLOT_SAVE, 1, false)
+                (menu.itemHandler as ItemStackHandler).setStackInSlot(FUEL_SLOT_SAVE, ItemStack.EMPTY)
             }
             if (baseRect.containsPoint(mouseX.toInt(), mouseY.toInt())) {
-                menu.itemHandler.extractItem(BASE_SLOT_SAVE, 1, false)
+                (menu.itemHandler as ItemStackHandler).setStackInSlot(BASE_SLOT_SAVE, ItemStack.EMPTY)
                 PacketDistributor.sendToServer(ClearPayload(BASE_SLOT_SAVE, menu.pos))
             }
         }

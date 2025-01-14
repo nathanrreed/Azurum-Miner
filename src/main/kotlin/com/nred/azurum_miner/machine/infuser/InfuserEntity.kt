@@ -5,7 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedEnergyStorage
-import com.nred.azurum_miner.machine.generator.GeneratorEntity
+import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
 import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
@@ -27,7 +27,6 @@ import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
-import net.neoforged.neoforge.items.ItemStackHandler
 
 open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     private var variables = IntArray(InfuserEnum.entries.size)
@@ -60,16 +59,23 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
 
     override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.receiveEnergy(toReceive, simulate)
+            }
             setChanged()
             super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
+
             return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.extractEnergy(toExtract, simulate)
+            }
             setChanged()
             super.extractEnergy(toExtract, simulate)
-            data[GeneratorEntity.Companion.GeneratorEnum.ENERGY_LEVEL] = this.energy
+            data[ENERGY_LEVEL] = this.energy
             return this.energy
         }
     }
@@ -85,7 +91,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(3) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(3) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -102,6 +108,13 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                 return level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).map { it.value.result }.any { it.`is`(stack.item) }
             }
             return false
+        }
+
+        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            if (slot == 2) {
+                return super.extractItem(slot, amount, simulate)
+            }
+            return ItemStack.EMPTY
         }
     }
 
@@ -181,8 +194,8 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                         data[PROGRESS]++
                     } else {
                         this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
-                        this.itemStackHandler.extractItem(0, 1, false)
-                        this.itemStackHandler.extractItem(1, 1, false)
+                        this.itemStackHandler.decrement(0)
+                        this.itemStackHandler.decrement(1)
                         this.itemStackHandler.insertItem(2, recipe.result.copy(), false)
                         data[PROGRESS] = 0
                     }

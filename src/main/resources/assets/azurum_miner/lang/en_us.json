@@ -173,6 +173,8 @@
     "tooltip.azurum_miner.miner.chance1": "%s%% §bchance to get a material§r",
     "tooltip.azurum_miner.miner.chance2": "%s%% §5chance to get raw instead of ore§r",
     "tooltip.azurum_miner.miner.chance3": "%s%% §achance to get ore§r",
+    "tooltip.azurum_miner.miner.error.no_power": "Error: Not enough FE",
+    "tooltip.azurum_miner.miner.error.no_space": "Error: Internal buffer full, use hopper / pipe to empty",
     "tooltip.azurum_miner.miner.extended": "Points Unlocked: %s\nPoints Used: %s\n%s / %s\nMolten Ore: %s",
     "tooltip.azurum_miner.miner.filter": "Filter: %s%%",
     "tooltip.azurum_miner.miner.filters_has_tag": "Disabled while tag \"%s\" is in use",

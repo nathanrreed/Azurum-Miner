@@ -5,6 +5,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedEnergyStorage
+import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.recipe.TransmogrifierInput
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
-import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.jvm.optionals.getOrNull
 
 open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.TRANSMOGRIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
@@ -57,6 +57,9 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
 
     override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.receiveEnergy(toReceive, simulate)
+            }
             setChanged()
             super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
@@ -64,6 +67,9 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
+            if (simulate) {
+                return super.extractEnergy(toExtract, simulate)
+            }
             setChanged()
             super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
@@ -71,7 +77,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
     }
 
-    override val itemStackHandler = object : ItemStackHandler(2) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(2) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -86,6 +92,13 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
                 return level!!.recipeManager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get()).map { it.value.result }.any { it.`is`(stack.item) }
             }
             return false
+        }
+
+        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            if (slot == 1) {
+                return super.extractItem(slot, amount, simulate)
+            }
+            return ItemStack.EMPTY
         }
     }
 
@@ -157,7 +170,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
                     data[PROGRESS]++
                 } else {
-                    this.itemStackHandler.extractItem(0, 1, false)
+                    this.itemStackHandler.decrement(0)
                     this.itemStackHandler.insertItem(1, recipe.result.copy(), false)
                     data[PROGRESS] = 0
                 }
