@@ -88,13 +88,18 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
-        var str = ""
+        var error: Component? = null
         if (data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble() > data[ENERGY_LEVEL]) {
-            str += "Error: Not enough FE"
+            error = Component.translatable("tooltip.azurum_miner.miner.error.no_power")
         } else if (data[IS_STOPPED] == 1) {
-            str += "Error: No space for item"
+            error = Component.translatable("tooltip.azurum_miner.miner.error.no_space")
         }
-        guiGraphics.drawString(font, str, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 80, 0xFF0000)
+
+        if (error != null) {
+            for ((idx, line) in  font.split(error, 150).withIndex()) {
+                guiGraphics.drawString(font, line, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 76 + idx * 9, 0xFF0000, true)
+            }
+        }
     }
 
     override fun onSwap() {
@@ -384,6 +389,11 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
     var frame = 0
     var dontUse = false
     val minecraft: Minecraft = Minecraft.getInstance()
+
+    init {
+        editBox.menu.filterSlots[idx].active = false
+    }
+
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.blitSprite(SLOT, this.x, this.y, 18, 18)
 

@@ -46,6 +46,10 @@ abstract class GuiCommon {
         }
 
         fun getTime(ticks: Number): String {
+            if (ticks == 0){
+                return "0s"
+            }
+
             var time = max(ticks.toDouble() / 20.0, 0.0)
             val hours = time / 360.0
             time %= 360.0

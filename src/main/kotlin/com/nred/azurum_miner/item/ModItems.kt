@@ -21,7 +21,7 @@ object ModItems {
     val SIMPLE_VOID_PROCESSOR: DeferredItem<Item> = ITEMS.register("simple_void_processor") { -> Item(Properties()) }
     val VOID_PROCESSOR: DeferredItem<Item> = ITEMS.register("void_processor") { -> Item(Properties()) }
     val ELABORATE_VOID_PROCESSOR: DeferredItem<Item> = ITEMS.register("elaborate_void_processor") { -> Item(Properties()) }
-    val COMPLEX_VOID_PROCESSOR: DeferredItem<Item> = ITEMS.register("compDlex_void_processor") { -> Item(Properties()) }
+    val COMPLEX_VOID_PROCESSOR: DeferredItem<Item> = ITEMS.register("complex_void_processor") { -> Item(Properties()) }
 
     val CONGLOMERATE_OF_ORE_SHARD: DeferredItem<Item> = ITEMS.register("conglomerate_of_ore_shard") { -> Item(Properties()) }
     val NETHER_DIAMOND: DeferredItem<Item> = ITEMS.register("nether_diamond") { -> Item(Properties()) }
