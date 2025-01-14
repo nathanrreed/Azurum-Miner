@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "azurum_miner:azurum"
+  },
+  "lasts": 100,
+  "power": 3000,
+  "type_name": "fuel"
+}

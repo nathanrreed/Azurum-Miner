@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "minecraft:obsidian"
+  },
+  "lasts": 5000,
+  "multiplier": 1.2,
+  "type_name": "base"
+}

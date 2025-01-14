@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "azurum_miner:block/energized_obsidian_block"
+  }
+}

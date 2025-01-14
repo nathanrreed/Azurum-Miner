@@ -4,10 +4,12 @@ import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.ExtendedEnergyStorage
+import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
-import com.nred.azurum_miner.machine.miner.TRUE
 import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
+import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -22,7 +24,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
-import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
@@ -57,19 +58,19 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         data[PROCESSING_TIME] = 0
     }
 
-    override val energyHandler = object : EnergyStorage(data[ENERGY_CAPACITY]) {
+    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
             setChanged()
-            val rtn = super.receiveEnergy(toReceive, simulate)
+            super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
-
-            return rtn
+            return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
             setChanged()
-            data[ENERGY_LEVEL] = this.energy
-            return super.extractEnergy(toExtract, simulate)
+            super.extractEnergy(toExtract, simulate)
+            data[GeneratorEntity.Companion.GeneratorEnum.ENERGY_LEVEL] = this.energy
+            return this.energy
         }
     }
 
@@ -153,6 +154,8 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
 
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
         fluidHandler.readFromNBT(registries, tag)
+
+        data[ENERGY_CAPACITY] = CONFIG.getInt("infuser.energyCapacity")
     }
 
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): InfuserMenu {

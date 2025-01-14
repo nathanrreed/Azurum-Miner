@@ -3,8 +3,8 @@
   "category": "misc",
   "index": 4,
   "key": {
-    "D": {
-      "item": "minecraft:diamond_block"
+    "E": {
+      "item": "azurum_miner:energy_shard"
     },
     "G": {
       "item": "azurum_miner:thelxium_gear"
@@ -20,7 +20,7 @@
     }
   },
   "pattern": [
-    "GDG",
+    "GEG",
     "SMS",
     "GPG"
   ],

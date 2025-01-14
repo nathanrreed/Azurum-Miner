@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_energy_shard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:energy_shard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:generator_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_energy_shard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:generator_block"
+    ]
+  }
+}

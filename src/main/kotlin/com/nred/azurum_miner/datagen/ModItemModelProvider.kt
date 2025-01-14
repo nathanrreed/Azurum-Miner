@@ -23,6 +23,7 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         basicItem(ModItems.ENDER_DIAMOND.get())
         basicItem(ModItems.DIMENSIONAL_MATRIX.get())
         basicItem(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())
+        basicItem(ModItems.ENERGY_SHARD.get())
 
         for (ore in OreHelper.ORES) {
             if (ore.isOre) {

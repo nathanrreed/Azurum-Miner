@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.datagen
 
 import com.nred.azurum_miner.AzurumMiner.ID
+import com.nred.azurum_miner.block.ModBlocks
 import com.nred.azurum_miner.util.FluidHelper
 import com.nred.azurum_miner.util.Ore
 import com.nred.azurum_miner.util.OreHelper
@@ -46,6 +47,7 @@ class ModItemTagProvider(
             return list.toTypedArray()
         }
 
+        tag(OBSIDIANS).add(ModBlocks.ENERGIZED_OBSIDIAN.asItem())
 
         tag(oreTierTag[0]).addTags(OreHelper.ORES["azurum"].ore_tag, ORES_COAL, ORES_COPPER).addOptionalTags(*addOptionalOres("tin", "bauxite", "aluminium", "lignite_coal"))
         tag(oreTierTag[1]).addTags(OreHelper.ORES["galibium"].ore_tag, ORES_IRON, ORES_REDSTONE, ORES_LAPIS).addOptionalTags(*addOptionalOres("salt", "nickel", "osmium", "lead"))
@@ -53,7 +55,7 @@ class ModItemTagProvider(
         tag(oreTierTag[3]).addTags(OreHelper.ORES["palestium"].ore_tag, ORES_QUARTZ).addOptionalTags(*addOptionalOres("uranium", "yellorite", "tungsten", "antimony", "montazite", "titanium"))
         tag(oreTierTag[4]).addTags(ORES_DIAMOND, ORES_EMERALD, ORES_NETHERITE_SCRAP).addOptionalTags(*addOptionalOres("mithril", "iridium", "platinum", "anglesite", "benitoite"))
 
-        tag(materialTag).addTags(STONES, COBBLESTONES, COBBLESTONES_DEEPSLATE, GRAVELS, OBSIDIANS, SANDS).add(DIRT, GRASS_BLOCK, COARSE_DIRT, ROOTED_DIRT, BASALT, SMOOTH_BASALT, BLACKSTONE, CALCITE, CLAY, MUD, MUDDY_MANGROVE_ROOTS, PACKED_MUD)
+        tag(materialTag).addTags(STONES, COBBLESTONES, COBBLESTONES_DEEPSLATE, GRAVELS, OBSIDIANS_NORMAL, SANDS).add(DIRT, GRASS_BLOCK, COARSE_DIRT, ROOTED_DIRT, BASALT, SMOOTH_BASALT, BLACKSTONE, CALCITE, CLAY, MUD, MUDDY_MANGROVE_ROOTS, PACKED_MUD)
     }
 
 }

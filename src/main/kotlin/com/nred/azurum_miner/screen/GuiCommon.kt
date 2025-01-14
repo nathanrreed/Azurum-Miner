@@ -59,8 +59,11 @@ abstract class GuiCommon {
             if (mins >= 1) {
                 str += String.format("%.1fm ", mins)
             }
-            str += String.format("%.1fs", time)
-            return str
+            if (time >= 1) {
+                str += String.format("%.1fs", time)
+            }
+
+            return str.trim()
         }
 
         fun listPlayerInventoryPos(): ArrayList<IntArray> {

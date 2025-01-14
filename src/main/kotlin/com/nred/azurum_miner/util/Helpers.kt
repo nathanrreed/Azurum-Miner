@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredRegister
 
+const val TRUE = 1
+const val FALSE = 0
 
 object Helpers {
     fun itemComponentSplit(tooltip: String, vararg objects: Any): List<MutableComponent> {

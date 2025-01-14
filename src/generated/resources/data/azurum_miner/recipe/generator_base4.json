@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "azurum_miner:energized_obsidian_block"
+  },
+  "lasts": 2000,
+  "multiplier": 3.0,
+  "type_name": "base"
+}

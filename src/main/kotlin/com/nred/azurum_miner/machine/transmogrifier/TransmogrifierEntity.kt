@@ -4,10 +4,11 @@ import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.miner.TRUE
+import com.nred.azurum_miner.machine.ExtendedEnergyStorage
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.recipe.TransmogrifierInput
+import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
-import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.items.ItemStackHandler
 import kotlin.jvm.optionals.getOrNull
 
@@ -48,26 +48,26 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
     }
 
     init {
-        data[IS_ON] = 1
+        data[IS_ON] = TRUE
         data[ENERGY_LEVEL] = 0
         data[PROGRESS] = 0
         data[ENERGY_CAPACITY] = CONFIG.getInt("transmogrifier.energyCapacity")
         data[PROCESSING_TIME] = 0
     }
 
-    override val energyHandler = object : EnergyStorage(data[ENERGY_CAPACITY]) {
+    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
             setChanged()
-            val rtn = super.receiveEnergy(toReceive, simulate)
+            super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
-
-            return rtn
+            return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
             setChanged()
+            super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return super.extractEnergy(toExtract, simulate)
+            return this.energy
         }
     }
 
@@ -134,6 +134,8 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         variables = tag.getIntArray("vars")
 
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
+
+        data[ENERGY_CAPACITY] = CONFIG.getInt("transmogrifier.energyCapacity")
     }
 
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): TransmogrifierMenu {

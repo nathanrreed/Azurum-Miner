@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.screen
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.miner.MinerMenu
@@ -19,6 +20,7 @@ class ModMenuTypes {
         val LIQUIFIER_MENU = MENUS.register("liquifier_menu", { -> IMenuTypeExtension.create(::LiquifierMenu) })
         val INFUSER_MENU = MENUS.register("infuser_menu", { -> IMenuTypeExtension.create(::InfuserMenu) })
         val TRANSMOGRIFIER_MENU = MENUS.register("transmogrifier_menu", { -> IMenuTypeExtension.create(::TransmogrifierMenu) })
+        val GENERATOR_MENU = MENUS.register("generator_menu", { -> IMenuTypeExtension.create(::GeneratorMenu) })
 
         fun register(eventBus: IEventBus) {
             MENUS.register(eventBus)

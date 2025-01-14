@@ -25,6 +25,12 @@ class ModCommonConfig {
             BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
             BUILDER.pop()
 
+            BUILDER.comment("Generator Settings").push("generator")
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000000, 0, 9223372036854775807)
+            BUILDER.comment("How many ticks the matrix lasts for (0 for infinite)").define("matrixDurability", 0)
+            BUILDER.comment("Energy Shard chance per tick").define("shardChance", 0.0005)
+            BUILDER.pop()
+
             BUILDER.comment("Miner Settings").push("miner")
 
             BUILDER.comment("Setting for Tiered Machines").push("options")

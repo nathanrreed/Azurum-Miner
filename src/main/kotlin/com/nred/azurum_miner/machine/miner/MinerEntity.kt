@@ -5,11 +5,15 @@ import com.nred.azurum_miner.datagen.ModItemTagProvider
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.ExtendedEnergyStorage
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
+import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
+import com.nred.azurum_miner.util.FALSE
 import com.nred.azurum_miner.util.FluidHelper
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
+import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
@@ -38,20 +42,15 @@ import net.neoforged.neoforge.capabilities.BlockCapabilityCache
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.common.Tags
-import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
-import kotlin.Number
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.reflect.KCallable
-
-const val TRUE = 1
-const val FALSE = 0
 
 const val OUTPUT = 3
 
@@ -85,7 +84,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 if ((this@MinerEntity.data[TOTAL_MODIFIER_POINTS] - this@MinerEntity.data[USED_MODIFIER_POINTS]) - (value - this@MinerEntity.modifierPoints[index]) < 0) { // Make sure the point can be added
                     return
                 }
-
             }
             this@MinerEntity.data[USED_MODIFIER_POINTS] -= this@MinerEntity.modifierPoints[index] - value
             this@MinerEntity.modifierPoints[index] = value
@@ -130,19 +128,19 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         data[CURRENT_NEEDED] = data[TICKS_PER_OP]
     }
 
-    override val energyHandler = object : EnergyStorage(data[ENERGY_CAPACITY]) {
+    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
         override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
             setChanged()
-            val rtn = super.receiveEnergy(toReceive, simulate)
-            data[ENERGY_LEVEL] = this.energy
-
-            return rtn
+            super.receiveEnergy(toReceive, simulate)
+            data[TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_LEVEL] = this.energy
+            return this.energy
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
             setChanged()
+            super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return super.extractEnergy(toExtract, simulate)
+            return this.energy
         }
     }
 
@@ -363,7 +361,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         return base.toInt()
     }
-
 
     fun updateModifierPoints(index: Int, value: Int) {
         this.modifierPointsData.set(index, value)

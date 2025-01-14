@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture
 class ModBlockTagProvider(
     output: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    existingFileHelper: ExistingFileHelper?
+    existingFileHelper: ExistingFileHelper?,
 ) : BlockTagsProvider(output, lookupProvider, AzurumMiner.ID, existingFileHelper) {
 
     override fun addTags(provider: HolderLookup.Provider) {
@@ -25,10 +25,13 @@ class ModBlockTagProvider(
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(ModMachines.MINER_BLOCK_TIERS[0].get(), ModMachines.MINER_BLOCK_TIERS[1].get(), ModMachines.MINER_BLOCK_TIERS[2].get(), ModMachines.MINER_BLOCK_TIERS[3].get(), ModMachines.MINER_BLOCK_TIERS[4].get())
-            .add(ModBlocks.CONGLOMERATE_OF_ORE.get(), ModBlocks.CONGLOMERATE_OF_ORE_BLOCK.get(), ModMachines.INFUSER.get(), ModMachines.LIQUIFIER.get(), ModMachines.TRANSMOGRIFIER.get())
+            .add(ModBlocks.CONGLOMERATE_OF_ORE.get(), ModBlocks.CONGLOMERATE_OF_ORE_BLOCK.get(), ModBlocks.ENERGIZED_OBSIDIAN.get(), ModMachines.INFUSER.get(), ModMachines.LIQUIFIER.get(), ModMachines.TRANSMOGRIFIER.get(), ModMachines.GENERATOR.get())
 
         tag(BlockTags.NEEDS_IRON_TOOL)
             .add(ModMachines.MINER_BLOCK_TIERS[0].get(), ModMachines.MINER_BLOCK_TIERS[1].get(), ModMachines.MINER_BLOCK_TIERS[2].get(), ModMachines.MINER_BLOCK_TIERS[3].get(), ModMachines.MINER_BLOCK_TIERS[4].get())
-            .add(ModBlocks.CONGLOMERATE_OF_ORE.get(), ModBlocks.CONGLOMERATE_OF_ORE_BLOCK.get(), ModMachines.INFUSER.get(), ModMachines.LIQUIFIER.get(), ModMachines.TRANSMOGRIFIER.get())
+            .add(ModBlocks.CONGLOMERATE_OF_ORE.get(), ModBlocks.CONGLOMERATE_OF_ORE_BLOCK.get(), ModMachines.INFUSER.get(), ModMachines.LIQUIFIER.get(), ModMachines.TRANSMOGRIFIER.get(), ModMachines.GENERATOR.get())
+
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
+            .add(ModBlocks.ENERGIZED_OBSIDIAN.get())
     }
 }

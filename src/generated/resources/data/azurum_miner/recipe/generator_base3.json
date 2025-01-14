@@ -1,0 +1,10 @@
+{
+  "type": "azurum_miner:generator_recipe",
+  "input": {
+    "count": 1,
+    "id": "minecraft:crying_obsidian"
+  },
+  "lasts": 10000,
+  "multiplier": 1.5,
+  "type_name": "base"
+}

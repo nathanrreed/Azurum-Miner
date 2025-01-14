@@ -12,8 +12,9 @@ import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModBlocks {
     val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(AzurumMiner.ID)
-    val BLOCK_TYPES: DeferredRegister<MapCodec<out Block?>?> = DeferredRegister.create(BuiltInRegistries.BLOCK_TYPE, AzurumMiner.ID)
+    val BLOCK_TYPES: DeferredRegister<MapCodec<out Block>> = DeferredRegister.create(BuiltInRegistries.BLOCK_TYPE, AzurumMiner.ID)
 
+    val ENERGIZED_OBSIDIAN = Helpers.registerBlock("energized_obsidian_block", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(50.0F, 1200.0F).lightLevel { 15 }) }
     val CONGLOMERATE_OF_ORE = Helpers.registerBlock("conglomerate_of_ore", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(50.0F, 1200.0F)) }
     val CONGLOMERATE_OF_ORE_BLOCK = Helpers.registerBlock("conglomerate_of_ore_block", BLOCKS) { Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 1200.0F)) }
 
