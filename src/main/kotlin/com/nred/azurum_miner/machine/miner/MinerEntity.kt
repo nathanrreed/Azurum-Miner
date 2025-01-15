@@ -49,7 +49,8 @@ import kotlin.reflect.KCallable
 const val OUTPUT = 3
 
 open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), pos, blockState), IMenuProviderExtension {
-    private var variables = IntArray(MinerVariablesEnum.entries.size + MinerEnum.entries.size)
+    override var variables = IntArray(MinerVariablesEnum.entries.size + MinerEnum.entries.size)
+    override var variablesSize = MinerVariablesEnum.entries.size + MinerEnum.entries.size
     private var modifierPoints = intArrayOf(0, 0, 0, 0, 0)
     private var filters = mutableListOf("", "", "")
     private var nextIsMiss: Boolean? = null

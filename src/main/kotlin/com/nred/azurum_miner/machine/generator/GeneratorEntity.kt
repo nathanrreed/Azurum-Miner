@@ -42,7 +42,8 @@ const val FUEL_SLOT_SAVE = 4
 const val BASE_SLOT_SAVE = 5
 
 open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.GENERATOR_ENTITY.get(), pos, blockState), IMenuProviderExtension {
-    private var variables = IntArray(GeneratorEnum.entries.size)
+    override var variables = IntArray(GeneratorEnum.entries.size)
+    override var variablesSize = GeneratorEnum.entries.size
 
     var currFuelRecipe: GeneratorRecipe? = null
     var currBaseRecipe: GeneratorRecipe? = null
@@ -129,13 +130,11 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
             } else if (slot == OUTPUT_SLOT) {
                 return stack.`is`(ModItems.ENERGY_SHARD.get())
             }
-            energyHandler
-
             return false
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (slot == OUTPUT_SLOT) {
+            if (slot == OUTPUT_SLOT || (slot == MATRIX_SLOT && !simulate)) {
                 return super.extractItem(slot, amount, simulate)
             }
             return ItemStack.EMPTY

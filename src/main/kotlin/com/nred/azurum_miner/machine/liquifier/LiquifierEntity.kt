@@ -29,7 +29,8 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import kotlin.jvm.optionals.getOrNull
 
 open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.LIQUIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
-    private var variables = IntArray(LiquifierEnum.entries.size)
+    override var variables = IntArray(LiquifierEnum.entries.size)
+    override var variablesSize = LiquifierEnum.entries.size
 
     override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
@@ -103,6 +104,9 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+            if (!simulate){
+                return super.extractItem(slot, amount, simulate)
+            }
             return ItemStack.EMPTY
         }
     }

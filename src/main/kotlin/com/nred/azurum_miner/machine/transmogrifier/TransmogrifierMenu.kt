@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.transmogrifier
 
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.SlotItemHandlerWithPickup
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
@@ -15,7 +16,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.items.IItemHandler
-import net.neoforged.neoforge.items.SlotItemHandler
 
 class TransmogrifierMenu : AbstractContainerMenu {
     val itemHandler: IItemHandler
@@ -39,16 +39,16 @@ class TransmogrifierMenu : AbstractContainerMenu {
         this.access = access
         this.pos = pos
 
-        // Set Inventory Slot locations
+        // Set Inventory Slot locationsF
         for (slotInfo in listPlayerInventoryHotbarPos()) {
             this.addSlot(Slot(inventory, slotInfo[0], slotInfo[1], slotInfo[2]))
         }
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x + 1, slot_y + 1))
+        inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 0, slot_x + 1, slot_y + 1))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandler(this.itemHandler, 1, slot_x + 59, slot_y + 1) {
+        this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 59, slot_y + 1) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }

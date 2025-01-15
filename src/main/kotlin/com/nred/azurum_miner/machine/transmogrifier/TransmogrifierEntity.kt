@@ -27,7 +27,8 @@ import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import kotlin.jvm.optionals.getOrNull
 
 open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.TRANSMOGRIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
-    private var variables = IntArray(TransmogrifierEnum.entries.size)
+    override var variables = IntArray(TransmogrifierEnum.entries.size)
+    override var variablesSize = TransmogrifierEnum.entries.size
 
     override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
@@ -95,7 +96,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (slot == 1) {
+            if (slot == 1 || !simulate) {
                 return super.extractItem(slot, amount, simulate)
             }
             return ItemStack.EMPTY

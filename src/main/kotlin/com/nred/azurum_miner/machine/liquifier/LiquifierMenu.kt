@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.liquifier
 
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.SlotItemHandlerWithPickup
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
@@ -18,7 +19,6 @@ import net.minecraft.world.level.Level
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.items.IItemHandler
-import net.neoforged.neoforge.items.SlotItemHandler
 import net.neoforged.neoforge.network.PacketDistributor
 
 class LiquifierMenu : AbstractContainerMenu {
@@ -50,7 +50,7 @@ class LiquifierMenu : AbstractContainerMenu {
         }
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x + 1, slot_y + 1))
+        inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 0, slot_x + 1, slot_y + 1))
 
         this.fluidHandler = inventory.player.level().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.NORTH)!!
 
