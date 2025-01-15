@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.infuser
 
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.SlotItemHandlerWithPickup
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
@@ -18,7 +19,6 @@ import net.minecraft.world.level.Level
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.items.IItemHandler
-import net.neoforged.neoforge.items.SlotItemHandler
 import net.neoforged.neoforge.network.PacketDistributor
 
 class InfuserMenu : AbstractContainerMenu {
@@ -50,11 +50,11 @@ class InfuserMenu : AbstractContainerMenu {
         }
 
         this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
-        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 0, slot_x + 1, slot_y + 1))
-        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, 1, slot_x + 25, slot_y + 23))
+        inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 0, slot_x + 1, slot_y + 1))
+        inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 25, slot_y + 23))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandler(this.itemHandler, 2, slot_x + 49, slot_y + 1) {
+        this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, 2, slot_x + 49, slot_y + 1) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }

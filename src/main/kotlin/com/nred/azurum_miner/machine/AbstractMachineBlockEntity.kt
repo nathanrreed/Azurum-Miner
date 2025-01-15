@@ -38,13 +38,15 @@ open class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) 
 
 @Suppress("UsePropertyAccessSyntax")
 abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) : BlockEntity(type, pos, blockState), MenuProvider {
-
     var loaded = false
     protected var capCache: BlockCapabilityCache<IItemHandler, Direction>? = null
+    abstract var variables: IntArray
+    abstract var variablesSize: Int
     abstract val itemStackHandler: ExtendedItemStackHandler
     abstract val energyHandler: ExtendedEnergyStorage
     abstract var data: ContainerData
     abstract fun getProgress(): Float
+
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
         return null
@@ -58,6 +60,11 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPo
 
     override fun onLoad() {
         super.onLoad()
+
+        if (variables.size < variablesSize) {
+            val temp = IntArray(variablesSize) { _ -> 0 }
+            variables = variables.copyInto(temp)
+        }
 
         if (!level!!.isClientSide) {
             capCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, level as ServerLevel, blockPos, Direction.NORTH)

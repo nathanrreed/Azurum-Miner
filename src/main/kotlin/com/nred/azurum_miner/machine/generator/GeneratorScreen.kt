@@ -69,7 +69,7 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
 
         resize(width, imageWidth, height, imageHeight)
         font.width(this.title.string)
-        this.titleLabelX = base.width / 2 - font.width(this.title.string) / 2
+        this.titleLabelX = base.width / 2 - font.width(this.title.string) / 2 - 5
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {

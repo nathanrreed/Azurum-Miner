@@ -29,7 +29,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 
 open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
-    private var variables = IntArray(InfuserEnum.entries.size)
+    override var variables = IntArray(InfuserEnum.entries.size)
+    override var variablesSize = InfuserEnum.entries.size
 
     override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
@@ -111,7 +112,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (slot == 2) {
+            if (slot == 2 || !simulate) {
                 return super.extractItem(slot, amount, simulate)
             }
             return ItemStack.EMPTY

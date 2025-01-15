@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.generator
 
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.SlotItemHandlerWithPickup
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
@@ -58,27 +59,22 @@ class GeneratorMenu : AbstractContainerMenu {
 
         inputSlots += this.addSlot(FakeSlotEmptyItemHandler(this.itemHandler, FUEL_SLOT, slot_x + 1, slot_y + 1))
         inputSlots += this.addSlot(FakeSlotEmptyItemHandler(this.itemHandler, BASE_SLOT, slot_x + 1, slot_y + 28))
-        inputSlots += this.addSlot(SlotItemHandler(this.itemHandler, MATRIX_SLOT, 137, slot_y + 1))
+        inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, MATRIX_SLOT, 137, slot_y + 1))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandler(this.itemHandler, OUTPUT_SLOT, 137, slot_y + 28) {
+        this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, OUTPUT_SLOT, 137, slot_y + 28) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }
         })
-        class FakeSlotItemHandler(itemHandler: IItemHandler, index: Int) : SlotItemHandler(itemHandler, index, 0, 0) {
+        class FakeSlotItemHandler(itemHandler: IItemHandler, index: Int) : SlotItemHandlerWithPickup(itemHandler, index, 0, 0, false) {
             override fun isActive(): Boolean {
-                return false
-            }
-
-            override fun mayPickup(playerIn: Player): Boolean {
                 return false
             }
         }
 
         inputSlots += this.addSlot(FakeSlotItemHandler(this.itemHandler, FUEL_SLOT_SAVE))
         inputSlots += this.addSlot(FakeSlotItemHandler(this.itemHandler, BASE_SLOT_SAVE))
-
 
         this.addDataSlots(this.containerData)
     }

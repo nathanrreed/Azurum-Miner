@@ -7,9 +7,12 @@ import com.nred.azurum_miner.machine.liquifier.Liquifier
 import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.transmogrifier.Transmogrifier
 import com.nred.azurum_miner.util.Helpers
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.bus.api.IEventBus
+import net.neoforged.neoforge.items.IItemHandler
+import net.neoforged.neoforge.items.SlotItemHandler
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModMachines {
@@ -29,5 +32,11 @@ object ModMachines {
 
     fun register(eventBus: IEventBus) {
         MACHINES.register(eventBus)
+    }
+
+    open class SlotItemHandlerWithPickup(itemHandler: IItemHandler, slot: Int, x: Int, y: Int, val mayPickup: Boolean = true) : SlotItemHandler(itemHandler, slot, x, y) {
+        override fun mayPickup(playerIn: Player): Boolean {
+            return mayPickup
+        }
     }
 }
