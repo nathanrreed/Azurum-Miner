@@ -34,8 +34,8 @@ class MinerPeripheral(private val miner: MinerEntity) : MachinePeripheral(miner)
     }
 
     @LuaFunction(mainThread = true)
-    fun getProgress(): Int {
-        return miner.data[CURRENT_NEEDED]
+    fun getProgress(): Double {
+        return miner.data[PROGRESS].toDouble() / miner.data[CURRENT_NEEDED].toDouble() * 100
     }
 
     @LuaFunction(mainThread = true)
@@ -59,8 +59,8 @@ class MinerPeripheral(private val miner: MinerEntity) : MachinePeripheral(miner)
     }
 
     @LuaFunction(mainThread = true)
-    fun isOn(): Int {
-        return miner.data[IS_ON]
+    fun isOn(): Boolean {
+        return miner.data[IS_ON] == TRUE
     }
 
     @LuaFunction(mainThread = true)
@@ -69,8 +69,8 @@ class MinerPeripheral(private val miner: MinerEntity) : MachinePeripheral(miner)
     }
 
     @LuaFunction(mainThread = true)
-    fun getFilters(): Map<Int, String> {
-        return listOf(0, 1, 2).map { it to miner.filters[it] }.associate { it }
+    fun getFilters(): Map<Int, List<String>> {
+        return listOf(0, 1, 2).map { it + 1 to (if (miner.filters[it].isEmpty()) listOf(miner.itemStackHandler.getStackInSlot(it).itemHolder.registeredName.replace("minecraft:air", ""), "item") else listOf(miner.filters[it], "tag")) }.associate { it }
     }
 
     @LuaFunction(mainThread = true)
