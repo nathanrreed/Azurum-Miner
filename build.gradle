@@ -94,6 +94,12 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
 }
 
 
@@ -107,8 +113,12 @@ dependencies {
 
     compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api")
     localRuntime("mcjty.theoneprobe:theoneprobe:${top_version}")
-    compileOnly("curse.maven:jade-api-324717:${jade_api_id}")
+    compileOnly("curse.maven:jade-api-324717:${jade_id}")
     localRuntime("curse.maven:jade-324717:${jade_id}")
+    localRuntime("curse.maven:jade-addons-583345:${jade_addons_id}")
+
+    compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cctVersion}")
+    runtimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cctVersion}")
 }
 
 tasks.withType(ProcessResources).configureEach {

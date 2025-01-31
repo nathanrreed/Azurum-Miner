@@ -2,6 +2,7 @@ package com.nred.azurum_miner
 
 import com.electronwill.nightconfig.core.CommentedConfig
 import com.nred.azurum_miner.block.ModBlocks
+import com.nred.azurum_miner.compat.cct.RegisterPeripherals.registerPeripherals
 import com.nred.azurum_miner.config.ModCommonConfig
 import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
@@ -44,6 +45,7 @@ import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.config.ModConfig
@@ -218,6 +220,10 @@ object AzurumMiner {
                 }
             }
         }, Items.POWDER_SNOW_BUCKET)
+
+        if(ModList.get().isLoaded("computercraft")){
+            registerPeripherals(event)
+        }
     }
 
     @SubscribeEvent
