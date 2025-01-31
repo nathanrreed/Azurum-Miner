@@ -96,7 +96,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
         }
 
         if (error != null) {
-            for ((idx, line) in  font.split(error, 150).withIndex()) {
+            for ((idx, line) in font.split(error, 150).withIndex()) {
                 guiGraphics.drawString(font, line, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 76 + idx * 9, 0xFF0000, true)
             }
         }
@@ -416,7 +416,11 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
 
             if (ScreenRectangle(this.x, this.y, 16, 16).containsPoint(mouseX, mouseY) && this.tooltip == null) {
                 if (this.editBox.ingredients.hasNoItems()) {
-                    guiGraphics.renderTooltip(minecraft.font, Component.translatable("tooltip.azurum_miner.miner.filters_no_tag", editBox.value), mouseX, mouseY)
+                    if (!editBox.value.isEmpty()) {
+                        guiGraphics.renderTooltip(minecraft.font, Component.translatable("tooltip.azurum_miner.miner.filters_no_tag_for", editBox.value), mouseX, mouseY)
+                    } else {
+                        guiGraphics.renderTooltip(minecraft.font, Component.translatable("tooltip.azurum_miner.miner.filters_no_tag"), mouseX, mouseY)
+                    }
                 } else {
                     // Max size is 8 x 8 (64 items)
                     val size = Vector2i((if (editBox.ingredients.items.size < 8) editBox.ingredients.items.size else 8) * 16, min(ceil(editBox.ingredients.items.size / 8.0).toInt(), 8) * 16)

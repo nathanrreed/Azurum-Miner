@@ -51,8 +51,8 @@ const val OUTPUT = 3
 open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), pos, blockState), IMenuProviderExtension {
     override var variables = IntArray(MinerVariablesEnum.entries.size + MinerEnum.entries.size)
     override var variablesSize = MinerVariablesEnum.entries.size + MinerEnum.entries.size
-    private var modifierPoints = intArrayOf(0, 0, 0, 0, 0)
-    private var filters = mutableListOf("", "", "")
+    var modifierPoints = intArrayOf(0, 0, 0, 0, 0)
+    var filters = mutableListOf("", "", "")
     private var nextIsMiss: Boolean? = null
 
     override var data: ContainerData = object : ContainerData {
@@ -570,6 +570,15 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 ItemStack(outputItem, 1)
             }
         }
+    }
+
+    fun getFilterOptions(index: Int): List<ItemStack> {
+        if (index < 0 || index > filters.size) return listOf()
+
+        if (!itemStackHandler.getStackInSlot(index).isEmpty) {
+            return listOf(itemStackHandler.getStackInSlot(index))
+        }
+        return listOf(*Ingredient.of(ItemTags.create(ResourceLocation.parse(filters[index]))).items.filter { it -> (foundOres + foundMaterials).any { tag -> it.`is`(tag.item) } }.toTypedArray())
     }
 
     fun getFilterOptions(): List<ItemStack> {
