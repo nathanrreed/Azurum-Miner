@@ -149,7 +149,10 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         guiGraphics.blitSprite(TANK, tank.left() - 1, tank.top() - 1, 4, 45, tank.height + 2)
 
         if (energy.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+            if (hasShiftDown())
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+            else
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
         }
         if (powerButton.containsPoint(mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[IS_ON] == 1) "on" else "off"), mouseX, mouseY)

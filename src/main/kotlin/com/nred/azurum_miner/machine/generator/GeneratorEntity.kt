@@ -84,9 +84,9 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
         override fun addEnergy(toReceive: Int, simulate: Boolean): Int {
             setChanged()
-            super.receiveEnergy(toReceive, simulate)
+            val received = super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return this.energy
+            return received
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
@@ -94,9 +94,9 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                 return super.extractEnergy(toExtract, simulate)
             }
             setChanged()
-            super.extractEnergy(toExtract, simulate)
+            val extracted = super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return this.energy
+            return extracted
         }
     }
 
