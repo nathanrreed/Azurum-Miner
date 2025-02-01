@@ -79,7 +79,9 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
 
     override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
         val cap = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, hitResult.direction)!!
-        if (FluidUtil.tryEmptyContainer(stack, cap, cap.getTankCapacity(0) - cap.getFluidInTank(0).amount, player, true).isSuccess) {
+        val fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, cap, player.getCapability(Capabilities.ItemHandler.ENTITY)!!, Integer.MAX_VALUE, player, true)
+        if (fluidActionResult.isSuccess) {
+            player.setItemInHand(hand, fluidActionResult.getResult())
             return ItemInteractionResult.SUCCESS
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult)

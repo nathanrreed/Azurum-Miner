@@ -71,7 +71,7 @@ class Liquifier(properties: Properties) : AbstractMachine(properties) {
 
     override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
         val cap = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, hitResult.direction)!!
-        if (FluidUtil.tryFillContainer(stack, cap, cap.getFluidInTank(0).amount, player, true).isSuccess) {
+        if (FluidUtil.interactWithFluidHandler(player, hand, cap)) {
             return ItemInteractionResult.SUCCESS
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
