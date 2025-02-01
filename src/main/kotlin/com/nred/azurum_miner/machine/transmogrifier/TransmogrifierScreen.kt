@@ -96,7 +96,10 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         guiGraphics.blit(ARROW_FILLED, progressBar.left(), progressBar.top(), 4, 0f, 0f, floor(menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble() * (progressBar.width.toDouble())).toInt(), progressBar.height, progressBar.width, progressBar.height)
 
         if (energy.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+            if (hasShiftDown())
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+            else
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
         }
         if (powerButton.containsPoint(mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[MinerEnum.IS_ON] == 1) "on" else "off"), mouseX, mouseY)

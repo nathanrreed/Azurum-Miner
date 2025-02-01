@@ -167,7 +167,10 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         }
 
         if (energy.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+            if (hasShiftDown())
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+            else
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
         }
     }
 

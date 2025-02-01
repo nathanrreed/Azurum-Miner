@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundEvents.LAVA_EXTINGUISH
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.BucketItem
 import net.minecraft.world.item.Item.Properties
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.LiquidBlock
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -34,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
+import net.neoforged.neoforge.common.SoundActions
 import net.neoforged.neoforge.fluids.BaseFlowingFluid
 import net.neoforged.neoforge.fluids.FluidType
 import net.neoforged.neoforge.registries.DeferredHolder
@@ -54,7 +57,7 @@ class FluidHelper(name: String, tint: Int, still: ResourceLocation = ResourceLoc
 }
 
 class Fluid(val name: String, val tint: Int, still: ResourceLocation, flow: ResourceLocation) {
-    val type: DeferredHolder<FluidType?, FluidType?> = FLUID_TYPES.register(name + "_type") { -> FluidType(FluidType.Properties.create().lightLevel(3).temperature(1300).viscosity(100000).density(100000).motionScale(0.00001).fallDistanceModifier(0.05f)) }
+    val type: DeferredHolder<FluidType?, FluidType?> = FLUID_TYPES.register(name + "_type") { -> FluidType(FluidType.Properties.create().lightLevel(3).temperature(1300).viscosity(100000).density(100000).motionScale(0.00001).fallDistanceModifier(0.05f).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA)) }
     val still = ModFluids.FLUIDS.register(name) { -> BaseFlowingFluid.Source(this.properties) }
     val flowing = ModFluids.FLUIDS.register(name + "flowing") { -> BaseFlowingFluid.Flowing(this.properties) }
     val properties: BaseFlowingFluid.Properties = BaseFlowingFluid.Properties({ -> this.type.get() }, { -> this.still.get() }, { -> this.flowing.get() }).bucket({ this.bucket.get() }).block({ this.block.get() }).tickRate(100).levelDecreasePerBlock(2)
@@ -94,7 +97,7 @@ class Fluid(val name: String, val tint: Int, still: ResourceLocation, flow: Reso
         }
     }
 
-    val bucket = ITEMS.register(name + "_bucket") { -> BucketItem(this.still.get(), Properties().stacksTo(1)) }
+    val bucket = ITEMS.register(name + "_bucket") { -> BucketItem(this.still.get(), Properties().craftRemainder(Items.BUCKET).stacksTo(1)) }
 
     val client = object : IClientFluidTypeExtensions {
         override fun getFlowingTexture(): ResourceLocation {

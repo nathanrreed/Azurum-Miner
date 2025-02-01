@@ -127,9 +127,9 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 return super.receiveEnergy(toReceive, simulate)
             }
             setChanged()
-            super.receiveEnergy(toReceive, simulate)
+            val received = super.receiveEnergy(toReceive, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return this.energy
+            return received
         }
 
         override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
@@ -137,9 +137,9 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                 return super.extractEnergy(toExtract, simulate)
             }
             setChanged()
-            super.extractEnergy(toExtract, simulate)
+            val extracted = super.extractEnergy(toExtract, simulate)
             data[ENERGY_LEVEL] = this.energy
-            return this.energy
+            return extracted
         }
     }
 
@@ -357,7 +357,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         val modifierFEReduction = if (modifierPoints[3] > 2) CONFIG.getOptional<Double>("miner.modifiers.efficiency.3").get() else 0.0 // Reduce if unlocked
 
-        data[MISS_ENERGY_NEEDED_CHANGE] = if (modifierPoints[3] > 1) getModifierVal("efficiency.2").toInt() else 0
+        data[MISS_ENERGY_NEEDED_CHANGE] = if (modifierPoints[3] > 1) getModifierVal("efficiency.2").toInt() else 100
 
         for (modifierCategory in listOf(Pair(0, "speed"), Pair(1, "filter"), Pair(2, "accuracy"), Pair(4, "production"))) { // Category 3 is efficiency and doesn't add any FE on upgrade
             for (i in 1..modifierPoints[modifierCategory.first]) {
@@ -490,7 +490,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         if (energyHandler.energyStored > getFE() / getTicks() && data[IS_ON] == TRUE) {
             if (data[PROGRESS] < getTicks()) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
-                energyHandler.extractEnergy(getFE() / getTicks(), false)
+                println(energyHandler.extractEnergy(getFE() / getTicks(), false))
                 data[PROGRESS]++
                 data[IS_STOPPED] = FALSE
             } else { // Cycle Done
@@ -498,6 +498,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                     useFluid()
                     data[PROGRESS] = 0
                     willNextBeMiss()
+                    setChanged(level, pos, state)
                 } else { // HIT
                     if (itemStackHandler.getStackInSlot(OUTPUT).isEmpty) {
                         itemStackHandler.setStackInSlot(OUTPUT, calculateNext()) // OUTPUT

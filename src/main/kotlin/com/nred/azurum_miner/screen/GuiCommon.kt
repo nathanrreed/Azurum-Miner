@@ -46,7 +46,7 @@ abstract class GuiCommon {
         }
 
         fun getTime(ticks: Number): String {
-            if (ticks == 0){
+            if (ticks.toDouble() <= 0){
                 return "0s"
             }
 
@@ -63,7 +63,7 @@ abstract class GuiCommon {
             if (mins >= 1) {
                 str += String.format("%.1fm ", mins)
             }
-            if (time >= 1) {
+            if (time >= 0) {
                 str += String.format("%.1fs", time)
             }
 
