@@ -9,6 +9,7 @@ import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
+import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.miner.MinerScreen
 import com.nred.azurum_miner.machine.miner.OptionsTab
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
@@ -121,7 +122,6 @@ class EmiPlugin : EmiPlugin {
             override fun supportsRecipe(recipe: EmiRecipe): Boolean {
                 return (recipe.category == LIQUIFIER_CATEGORY)
             }
-
         })
 
         registry.addRecipeHandler(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), object : StandardRecipeHandler<TransmogrifierMenu> {
@@ -136,7 +136,20 @@ class EmiPlugin : EmiPlugin {
             override fun supportsRecipe(recipe: EmiRecipe): Boolean {
                 return (recipe.category == TRANSMOGRIFIER_CATEGORY)
             }
+        })
 
+        registry.addRecipeHandler(ModMenuTypes.MINER_MENU.get(), object : StandardRecipeHandler<MinerMenu> {
+            override fun getInputSources(handler: MinerMenu): List<Slot?>? {
+                return listOf()
+            }
+
+            override fun getCraftingSlots(handler: MinerMenu): List<Slot?>? {
+                return handler.filterSlots
+            }
+
+            override fun supportsRecipe(recipe: EmiRecipe): Boolean {
+                return false
+            }
         })
 
         // For Miner filters
