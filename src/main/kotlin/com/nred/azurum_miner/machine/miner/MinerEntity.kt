@@ -490,7 +490,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         if (energyHandler.energyStored > getFE() / getTicks() && data[IS_ON] == TRUE) {
             if (data[PROGRESS] < getTicks()) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
-                println(energyHandler.extractEnergy(getFE() / getTicks(), false))
                 data[PROGRESS]++
                 data[IS_STOPPED] = FALSE
             } else { // Cycle Done
