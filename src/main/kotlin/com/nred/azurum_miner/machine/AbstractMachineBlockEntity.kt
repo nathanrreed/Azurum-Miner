@@ -21,6 +21,9 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.energy.EnergyStorage
+import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 
@@ -33,6 +36,16 @@ open class ExtendedEnergyStorage(capacity: Int) : EnergyStorage(capacity) {
 open class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) {
     open fun decrement(slot: Int, amount: Int = 1) {
         super.extractItem(slot, amount, false)
+    }
+}
+
+open class ExtendedFluidTank(capacity: Int, function: (FluidStack) -> Boolean) : FluidTank(capacity, function) {
+    fun internalDrain(maxDrain: Int, action: IFluidHandler.FluidAction): FluidStack {
+        return super.drain(maxDrain, action)
+    }
+
+    fun internalDrain(resource: FluidStack, action: IFluidHandler.FluidAction): FluidStack {
+        return if (!resource.isEmpty() && FluidStack.isSameFluidSameComponents(resource, this.fluid)) this.internalDrain(resource.getAmount(), action) else FluidStack.EMPTY
     }
 }
 

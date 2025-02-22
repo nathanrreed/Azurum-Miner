@@ -8,7 +8,7 @@ import net.minecraft.data.tags.EntityTypeTagsProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
-class ModEntityTypeTagsProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>, existingFileHelper: ExistingFileHelper) : EntityTypeTagsProvider(output, registries, AzurumMiner.ID, existingFileHelper) {
+class ModEntityTypeTagProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>, existingFileHelper: ExistingFileHelper) : EntityTypeTagsProvider(output, registries, AzurumMiner.ID, existingFileHelper) {
     override fun addTags(provider: HolderLookup.Provider) {
         tag(ModItems.EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE).add(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get())
     }

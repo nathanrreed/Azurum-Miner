@@ -9,6 +9,7 @@ import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.blitTile
+import com.nred.azurum_miner.util.ClearPayload
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.InventoryMenu
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
 import kotlin.math.ceil
@@ -122,7 +124,7 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[MinerEnum.IS_ON] == 1) "on" else "off"), mouseX, mouseY)
         }
         if (tank.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.infuser.info.tank", fluid.fluidType.description, DecimalFormat("#,###").format(fluid.amount)), mouseX, mouseY)
+            guiGraphics.renderComponentTooltip(font, listOf(Component.translatable("tooltip.azurum_miner.infuser.info.tank", fluid.fluidType.description, DecimalFormat("#,###").format(fluid.amount)), Component.translatable("tooltip.azurum_miner.shift_clear")), mouseX, mouseY)
         }
     }
 
@@ -136,6 +138,10 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         if (button == 0 && powerButton.containsPoint(mouseX.toInt(), mouseY.toInt())) {
             PacketDistributor.sendToServer(Payload(IS_ON, (menu.containerData[IS_ON]).xor(1), "ENUM", "infuser", menu.pos))
             return true
+        } else if (hasShiftDown() && button == 0 && tank.containsPoint(mouseX.toInt(), mouseY.toInt())) {
+            fluid = FluidStack.EMPTY
+            menu.fluidHandler.drain(menu.fluidHandler.getFluidInTank(0), IFluidHandler.FluidAction.EXECUTE)
+            PacketDistributor.sendToServer(ClearPayload(0, menu.pos))
         }
         return super.mouseClicked(mouseX, mouseY, button)
     }

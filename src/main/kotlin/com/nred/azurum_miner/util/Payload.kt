@@ -9,6 +9,7 @@ import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.Generat
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.set
 import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
+import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
@@ -23,6 +24,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
@@ -198,6 +200,11 @@ class ClearPayloadHandler {
                     }
 
                     else -> {}
+                }
+            } else if (menu is InfuserMenu) {
+                val entity = context.player().level().getBlockEntity(data.pos)
+                if (entity is InfuserEntity) {
+                    entity.fluidHandler.internalDrain(entity.fluidHandler.getFluidInTank(data.idx), IFluidHandler.FluidAction.EXECUTE)
                 }
             }
         }

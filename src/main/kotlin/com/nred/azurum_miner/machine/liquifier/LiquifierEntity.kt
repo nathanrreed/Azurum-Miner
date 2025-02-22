@@ -137,10 +137,6 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         this.loaded = true
     }
 
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        super.handleUpdateTag(tag, lookupProvider)
-    }
-
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         tag.put("inventory", itemStackHandler.serializeNBT(registries))
 

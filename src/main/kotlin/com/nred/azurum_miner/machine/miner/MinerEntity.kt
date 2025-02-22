@@ -3,10 +3,7 @@ package com.nred.azurum_miner.machine.miner
 import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.datagen.ModItemTagProvider
 import com.nred.azurum_miner.entity.ModBlockEntities
-import com.nred.azurum_miner.machine.AbstractMachine
-import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.ExtendedEnergyStorage
-import com.nred.azurum_miner.machine.ExtendedItemStackHandler
+import com.nred.azurum_miner.machine.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -38,8 +35,8 @@ import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.common.Tags
+import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.math.pow
@@ -143,11 +140,15 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    val fluidHandler = object : FluidTank(FLUID_SIZE, { it.`is`(FluidHelper.FLUIDS["molten_ore"].still) }) {
+    val fluidHandler = object : ExtendedFluidTank(FLUID_SIZE, { it.`is`(FluidHelper.FLUIDS["molten_ore"].still) }) {
         override fun onContentsChanged() {
             setChanged()
             super.onContentsChanged()
             data[MOLTEN_ORE_LEVEL] = this.fluidAmount
+        }
+
+        override fun drain(maxDrain: Int, action: IFluidHandler.FluidAction): FluidStack {
+            return FluidStack.EMPTY
         }
     }
 
@@ -521,10 +522,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     fun useFluid() {
         if (!nextIsMiss!! && fluidHandler.fluidAmount >= this.mBUsedOnHit) {
-            fluidHandler.drain(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE)
+            fluidHandler.internalDrain(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE)
             data[FLUID_NEEDED] -= this.mBUsedOnHit
         } else if (nextIsMiss!! && fluidHandler.fluidAmount >= this.mBUsedOnMiss) {
-            fluidHandler.drain(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE)
+            fluidHandler.internalDrain(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE)
             data[FLUID_NEEDED] -= this.mBUsedOnMiss
         }
 
