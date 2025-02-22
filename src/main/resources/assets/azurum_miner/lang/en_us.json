@@ -179,8 +179,8 @@
     "tooltip.azurum_miner.miner.filter": "Filter: %s%%",
     "tooltip.azurum_miner.miner.filters_has_tag": "Disabled while tag \"%s\" is in use",
     "tooltip.azurum_miner.miner.filters_item": "Filter by Item",
-    "tooltip.azurum_miner.miner.filters_no_tag_for": "No items found for tag: \"%s\"",
     "tooltip.azurum_miner.miner.filters_no_tag": "No tag set",
+    "tooltip.azurum_miner.miner.filters_no_tag_for": "No items found for tag: \"%s\"",
     "tooltip.azurum_miner.miner.filters_required": "Not enough modifier points in filter to unlock this",
     "tooltip.azurum_miner.miner.higher": "High Tier: %s%%",
     "tooltip.azurum_miner.miner.info.tank": "Molten Ore: %s mB\nUsed to make modifier points",
@@ -198,6 +198,7 @@
     "tooltip.azurum_miner.miner.multiMinMax": "Min: %s, Max: %s",
     "tooltip.azurum_miner.portal": "Throw in a Nether Portal",
     "tooltip.azurum_miner.portal_warning": "Portal will be destroyed",
+    "tooltip.azurum_miner.shift_clear": "§eShift + Click§r to clear",
     "tooltip.azurum_miner.transmogrifier": "Changes items into one from a parallel dimension\nHold §eShift§r for more info",
     "tooltip.azurum_miner.transmogrifier.extended": "%s / %s"
 }

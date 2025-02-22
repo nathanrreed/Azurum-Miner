@@ -9,110 +9,38 @@ import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.material.Fluid
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModRecipe {
     val RECIPE_TYPES: DeferredRegister<RecipeType<*>?> = DeferredRegister.create(Registries.RECIPE_TYPE, AzurumMiner.ID)
-    val LIQUIFIER_RECIPE_TYPE = RECIPE_TYPES.register(
-        "liquifier_recipe", { registryName ->
-            object : RecipeType<LiquifierRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
 
-    val INFUSER_RECIPE_TYPE = RECIPE_TYPES.register(
-        "infuser_recipe", { registryName ->
-            object : RecipeType<InfuserRecipe> {
+    private fun <T : Recipe<*>> register(identifier: String): DeferredHolder<RecipeType<*>?, out RecipeType<T>> {
+        return RECIPE_TYPES.register(identifier) { registryName ->
+            object : RecipeType<T> {
                 override fun toString(): String {
                     return registryName.toString()
                 }
             }
         }
-    )
+    }
 
-    val TRANSMOGRIFIER_RECIPE_TYPE = RECIPE_TYPES.register(
-        "transmogrifier_recipe", { registryName ->
-            object : RecipeType<TransmogrifierRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-
-    val GENERATOR_RECIPE_TYPE = RECIPE_TYPES.register(
-        "generator_recipe", { registryName ->
-            object : RecipeType<GeneratorRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-
-    val SHAPED_RECIPE_TRANSFORM_TYPE = RECIPE_TYPES.register(
-        "crafting_shaped_transform", { registryName ->
-            object : RecipeType<ShapedRecipeWithComponents> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-
-    val MINER_TIER1_RECIPE_TYPE = RECIPE_TYPES.register(
-        "miner_recipe_tier1", { registryName ->
-            object : RecipeType<MinerRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-    val MINER_TIER2_RECIPE_TYPE = RECIPE_TYPES.register(
-        "miner_recipe_tier2", { registryName ->
-            object : RecipeType<MinerRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-    val MINER_TIER3_RECIPE_TYPE = RECIPE_TYPES.register(
-        "miner_recipe_tier3", { registryName ->
-            object : RecipeType<MinerRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-    val MINER_TIER4_RECIPE_TYPE = RECIPE_TYPES.register(
-        "miner_recipe_tier4", { registryName ->
-            object : RecipeType<MinerRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
-    val MINER_TIER5_RECIPE_TYPE = RECIPE_TYPES.register(
-        "miner_recipe_tier5", { registryName ->
-            object : RecipeType<MinerRecipe> {
-                override fun toString(): String {
-                    return registryName.toString()
-                }
-            }
-        }
-    )
+    val LIQUIFIER_RECIPE_TYPE = register<LiquifierRecipe>("liquifier_recipe")
+    val INFUSER_RECIPE_TYPE = register<InfuserRecipe>("infuser_recipe")
+    val TRANSMOGRIFIER_RECIPE_TYPE = register<TransmogrifierRecipe>("transmogrifier_recipe")
+    val GENERATOR_RECIPE_TYPE = register<GeneratorRecipe>("generator_recipe")
+    val SHAPED_RECIPE_TRANSFORM_TYPE = register<ShapedRecipeWithComponents>("crafting_shaped_transform")
+    val MINER_TIER1_RECIPE_TYPE = register<MinerRecipe>("miner_recipe_tier1")
+    val MINER_TIER2_RECIPE_TYPE = register<MinerRecipe>("miner_recipe_tier2")
+    val MINER_TIER3_RECIPE_TYPE = register<MinerRecipe>("miner_recipe_tier3")
+    val MINER_TIER4_RECIPE_TYPE = register<MinerRecipe>("miner_recipe_tier4")
+    val MINER_TIER5_RECIPE_TYPE = register<MinerRecipe>("miner_recipe_tier5")
 
     val RECIPE_SERIALIZERS: DeferredRegister<RecipeSerializer<*>?> = DeferredRegister.create(Registries.RECIPE_SERIALIZER, AzurumMiner.ID)
 

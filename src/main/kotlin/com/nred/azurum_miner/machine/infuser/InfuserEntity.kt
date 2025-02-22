@@ -2,10 +2,7 @@ package com.nred.azurum_miner.machine.infuser
 
 import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
-import com.nred.azurum_miner.machine.AbstractMachine
-import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.ExtendedEnergyStorage
-import com.nred.azurum_miner.machine.ExtendedItemStackHandler
+import com.nred.azurum_miner.machine.*
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
 import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
@@ -26,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank
 
 open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.INFUSER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
     override var variables = IntArray(InfuserEnum.entries.size)
@@ -81,7 +77,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
     }
 
-    val fluidHandler = object : FluidTank(FLUID_SIZE, { true }) {
+    val fluidHandler = object : ExtendedFluidTank(FLUID_SIZE, { true }) {
         override fun onContentsChanged() {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -89,6 +85,10 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
             }
 
             super.onContentsChanged()
+        }
+
+        override fun drain(maxDrain: Int, action: IFluidHandler.FluidAction): FluidStack {
+            return FluidStack.EMPTY
         }
     }
 
@@ -188,13 +188,13 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 data[PROCESSING_TIME] = recipe.processingTime
 
-                if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && FluidStack.isSameFluidSameComponents(this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE), recipe.inputFluid)) {
+                if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && FluidStack.isSameFluidSameComponents(this.fluidHandler.internalDrain(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE), recipe.inputFluid)) {
                     found = true
                     if (data[PROGRESS] < recipe.processingTime) {
                         energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
                         data[PROGRESS]++
                     } else {
-                        this.fluidHandler.drain(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
+                        this.fluidHandler.internalDrain(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
                         this.itemStackHandler.decrement(0)
                         this.itemStackHandler.decrement(1)
                         this.itemStackHandler.insertItem(2, recipe.result.copy(), false)
