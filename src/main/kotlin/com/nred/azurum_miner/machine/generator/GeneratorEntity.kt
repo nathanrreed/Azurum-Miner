@@ -4,7 +4,6 @@ import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.ExtendedEnergyStorage
 import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum.*
 import com.nred.azurum_miner.recipe.GeneratorInput
@@ -15,10 +14,7 @@ import com.nred.azurum_miner.util.TRUE
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.core.HolderLookup
 import net.minecraft.core.component.DataComponents
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
@@ -41,7 +37,7 @@ const val OUTPUT_SLOT = 3
 const val FUEL_SLOT_SAVE = 4
 const val BASE_SLOT_SAVE = 5
 
-open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.GENERATOR_ENTITY.get(), pos, blockState), IMenuProviderExtension {
+open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.GENERATOR_ENTITY.get(), "generator", pos, blockState), IMenuProviderExtension {
     override var variables = IntArray(GeneratorEnum.entries.size)
     override var variablesSize = GeneratorEnum.entries.size
 
@@ -69,35 +65,10 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
     }
 
     init {
-        data[ENERGY_LEVEL] = 0
         data[HAS_BASE] = FALSE
         data[HAS_FUEL] = FALSE
-        data[ENERGY_CAPACITY] = CONFIG.getInt("generator.energyCapacity")
         matrixFinish = CONFIG.getInt("generator.matrixDurability")
         shardChance = CONFIG.get("generator.shardChance")
-    }
-
-    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
-        override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
-            return 0
-        }
-
-        override fun addEnergy(toReceive: Int, simulate: Boolean): Int {
-            setChanged()
-            val received = super.receiveEnergy(toReceive, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return received
-        }
-
-        override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
-            if (simulate) {
-                return super.extractEnergy(toExtract, simulate)
-            }
-            setChanged()
-            val extracted = super.extractEnergy(toExtract, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return extracted
-        }
     }
 
     override val itemStackHandler = object : ExtendedItemStackHandler(6) {
@@ -143,7 +114,7 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
     companion object {
         enum class GeneratorEnum() {
-            ENERGY_LEVEL, ENERGY_CAPACITY, HAS_BASE, HAS_FUEL, FUEL_POWER, BASE_MULT, FUEL_CURR, BASE_CURR, FUEL_LASTS, BASE_LASTS
+            HAS_BASE, HAS_FUEL, FUEL_POWER, BASE_MULT, FUEL_CURR, BASE_CURR, FUEL_LASTS, BASE_LASTS
         }
 
         operator fun ContainerData.get(e: Enum<*>): Int {
@@ -155,41 +126,8 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
     }
 
-    override fun onLoad() {
-        super.onLoad()
-
-        this.loaded = true
-    }
-
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        super.handleUpdateTag(tag, lookupProvider)
-    }
-
-    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        tag.put("inventory", itemStackHandler.serializeNBT(registries))
-
-        tag.putIntArray("vars", variables)
-        tag.put("energy", energyHandler.serializeNBT(registries))
-
-        super.saveAdditional(tag, registries)
-    }
-
-    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.loadAdditional(tag, registries)
-
-        itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
-        variables = tag.getIntArray("vars")
-
-        data[ENERGY_CAPACITY] = CONFIG.getInt("generator.energyCapacity")
-        energyHandler.deserializeNBT(registries, tag.get("energy")!!)
-    }
-
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): GeneratorMenu {
         return GeneratorMenu(containerId, playerInventory, ContainerLevelAccess.create(level!!, blockPos), blockPos, this.data)
-    }
-
-    override fun getDisplayName(): Component {
-        return Component.translatable("menu.title.azurum_miner.generator")
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
@@ -202,7 +140,7 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
                 energyHandler.extractEnergy(extracted, false)
                 val actual = storage.receiveEnergy(extracted, false)
                 if (extracted != actual) {
-                    energyHandler.addEnergy(extracted - actual, false)
+                    energyHandler.internalInsertEnergy(extracted - actual, false)
                 }
             }
         }
@@ -237,7 +175,7 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         }
 
         if (currFuelRecipe != null && currBaseRecipe != null) {
-            energyHandler.addEnergy((currFuelRecipe!!.power * currBaseRecipe!!.multiplier).toInt(), false)
+            energyHandler.internalInsertEnergy((currFuelRecipe!!.power * currBaseRecipe!!.multiplier).toInt(), false)
 
             if (matrixFinish > 0) {
                 if (itemStackHandler.getStackInSlot(MATRIX_SLOT).damageValue >= matrixFinish) {

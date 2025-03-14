@@ -7,12 +7,12 @@ import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
+import com.nred.azurum_miner.util.CustomFluidStackHandler
 import com.nred.azurum_miner.util.Helpers
 import io.netty.buffer.Unpooled
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.CommonColors
@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.fluids.FluidUtil
 
 
@@ -70,20 +70,32 @@ class Infuser(properties: Properties) : AbstractMachine(properties) {
     }
 
     override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
+        if (level.isClientSide) {
+            return ItemInteractionResult.SUCCESS
+        }
+        if (!FluidUtil.getFluidContained(stack).isPresent) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+        }
+
         val cap = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, hitResult.direction)!!
         if (FluidUtil.interactWithFluidHandler(player, hand, cap)) {
             return ItemInteractionResult.SUCCESS
+        } else {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+//            super.useItemOn(stack, state, level, pos, player, hand, hitResult)
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }
 
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
-            val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
-            val fluid = FluidStack.parseOptional(context.registries()!!, stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getCompound("Fluid"))
-            val energy = vars.getOrElse(InfuserEntity.Companion.InfuserEnum.ENERGY_LEVEL.ordinal) { _ -> 0 }
-            val energyCap = vars.getOrElse(InfuserEntity.Companion.InfuserEnum.ENERGY_CAPACITY.ordinal) { _ -> CONFIG.getInt("infuser.energyCapacity") }
-            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.infuser.extended", intArrayOf(CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), getFE(energy), getFE(energyCap), if (fluid.fluid.fluidType.isAir) Component.translatable("fluid_type.azurum_miner.empty").string else fluid.fluid.fluidType.description, getBuckets(fluid.amount)))
+            val tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
+            val fluids = CustomFluidStackHandler.listFromNBT(context.registries()!!, tag.getCompound("fluids"))
+            val energyHandler = EnergyStorage(CONFIG.getInt("infuser.energyCapacity"))
+            if (tag.contains("energy"))
+                energyHandler.deserializeNBT(context.registries()!!, tag.get("energy")!!)
+
+            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.infuser.extended", intArrayOf(CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), getFE(energyHandler.energyStored), getFE(energyHandler.maxEnergyStored), if (fluids.isEmpty() || fluids[0].fluid.fluidType.isAir) Component.translatable("fluid_type.azurum_miner.empty").string else fluids[0].fluid.fluidType.description, getBuckets(if (fluids.isEmpty()) 0 else fluids[0].amount)))
+            Helpers.addItemsTooltip(context, tooltipComponents, tag)
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.infuser"))
         }
@@ -93,7 +105,7 @@ class Infuser(properties: Properties) : AbstractMachine(properties) {
     override fun <T : BlockEntity?> getTicker(level: Level, state: BlockState, blockEntityType: BlockEntityType<T>): BlockEntityTicker<T>? {
         if (level.isClientSide) return null
 
-        return createTickerHelper(blockEntityType, ModBlockEntities.INFUSER_ENTITY.get(), { level1, pos, state1, blockEntity -> blockEntity.tick(level1, pos, state1, blockEntity) })
+        return createTickerHelper(blockEntityType, ModBlockEntities.INFUSER_ENTITY.get()) { level1, pos, state1, blockEntity -> blockEntity.tick(level1, pos, state1, blockEntity) }
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

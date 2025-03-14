@@ -1,9 +1,5 @@
 package com.nred.azurum_miner.machine
 
-import net.minecraft.network.chat.Component
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
@@ -13,7 +9,6 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.DirectionProperty
-
 
 abstract class AbstractMachine(properties: Properties) : BaseEntityBlock(properties) {
     companion object {
@@ -37,9 +32,5 @@ abstract class AbstractMachine(properties: Properties) : BaseEntityBlock(propert
 
     override fun getRenderShape(state: BlockState): RenderShape {
         return RenderShape.MODEL
-    }
-
-    override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)
     }
 }

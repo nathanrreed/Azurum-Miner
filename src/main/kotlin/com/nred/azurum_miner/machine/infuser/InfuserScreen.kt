@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.InventoryMenu
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
-import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
@@ -40,8 +39,6 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         val ARROW: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/arrow")
         val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
     }
-
-    lateinit var fluid: FluidStack
 
     var base: ScreenRectangle = ScreenRectangle.empty()
     var powerButton: ScreenRectangle = ScreenRectangle.empty()
@@ -70,8 +67,6 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
     override fun init() {
         super.init()
 
-        this.fluid = FluidStack.EMPTY
-
         resize(width, imageWidth, height, imageHeight)
         this.titleLabelX = 16
         this.inventoryLabelX = 10
@@ -90,7 +85,7 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         guiGraphics.blitSprite(SLOT, base.left() + slot_x + 24, base.top() + slot_y + 22, 18, 18)
 
         // Draw Energy
-        val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * (energy.height.toDouble() - 2)).toInt()
+        val varLen = ceil(menu.energyStorage!!.energyStored / menu.energyStorage!!.maxEnergyStored * (energy.height.toDouble() - 2)).toInt()
         guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top(), 3, energy.width, energy.height)
         guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - 1 - varLen, 4, energy.width - 2, varLen)
 
@@ -106,9 +101,9 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         guiGraphics.blit(ARROW_FILLED, progressBar.left(), progressBar.top(), 4, 0f, 0f, floor(menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble() * (progressBar.width.toDouble())).toInt(), progressBar.height, progressBar.width, progressBar.height)
 
         // FLUID
-        if (!fluid.isEmpty) {
-            val varMoltenLen = floor(fluid.amount.toDouble() / InfuserEntity.FLUID_SIZE.toDouble() * (tank.height - 2)).toInt()
-            blitTile(guiGraphics, Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(IClientFluidTypeExtensions.of(fluid.fluid).stillTexture), tank.left(), tank.bottom() - varMoltenLen - 2, tank.width - 2, varMoltenLen, 16, 16, IClientFluidTypeExtensions.of(fluid.fluid).tintColor)
+        if (menu.fluidHandler != null && !menu.fluidHandler!!.getFluidInTank(0).isEmpty) {
+            val varMoltenLen = floor(menu.fluidHandler!!.getFluidAmount(0).toDouble() / InfuserEntity.FLUID_SIZE.toDouble() * (tank.height - 2)).toInt()
+            blitTile(guiGraphics, Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(0).fluid).stillTexture), tank.left(), tank.bottom() - varMoltenLen - 2, tank.width - 2, varMoltenLen, 16, 16, IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(0).fluid).tintColor)
         }
 
         // TANK
@@ -116,15 +111,15 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
 
         if (energy.containsPoint(mouseX, mouseY)) {
             if (hasShiftDown())
-                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.energyStorage!!.energyStored)), mouseX, mouseY)
             else
-                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.energyStorage!!.energyStored)), mouseX, mouseY)
         }
         if (powerButton.containsPoint(mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[MinerEnum.IS_ON] == 1) "on" else "off"), mouseX, mouseY)
         }
         if (tank.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderComponentTooltip(font, listOf(Component.translatable("tooltip.azurum_miner.infuser.info.tank", fluid.fluidType.description, DecimalFormat("#,###").format(fluid.amount)), Component.translatable("tooltip.azurum_miner.shift_clear")), mouseX, mouseY)
+            guiGraphics.renderComponentTooltip(font, listOf(Component.translatable("tooltip.azurum_miner.infuser.info.tank", menu.fluidHandler!!.getFluidInTank(0).fluidType.description, DecimalFormat("#,###").format(menu.fluidHandler!!.getFluidAmount(0))), Component.translatable("tooltip.azurum_miner.shift_clear")), mouseX, mouseY)
         }
     }
 
@@ -139,8 +134,7 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
             PacketDistributor.sendToServer(Payload(IS_ON, (menu.containerData[IS_ON]).xor(1), "ENUM", "infuser", menu.pos))
             return true
         } else if (hasShiftDown() && button == 0 && tank.containsPoint(mouseX.toInt(), mouseY.toInt())) {
-            fluid = FluidStack.EMPTY
-            menu.fluidHandler.drain(menu.fluidHandler.getFluidInTank(0), IFluidHandler.FluidAction.EXECUTE)
+            menu.fluidHandler!!.internalExtractFluid(menu.fluidHandler!!.getFluidInTank(0), IFluidHandler.FluidAction.EXECUTE)
             PacketDistributor.sendToServer(ClearPayload(0, menu.pos))
         }
         return super.mouseClicked(mouseX, mouseY, button)

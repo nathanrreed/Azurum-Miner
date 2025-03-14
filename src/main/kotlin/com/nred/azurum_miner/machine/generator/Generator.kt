@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
-import net.neoforged.neoforge.items.ItemStackHandler
+import net.neoforged.neoforge.energy.EnergyStorage
 
 
 class Generator(properties: Properties) : AbstractMachine(properties) {
@@ -67,18 +67,12 @@ class Generator(properties: Properties) : AbstractMachine(properties) {
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
             val tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag()
-            val vars = tag.getIntArray("vars")
-            val energy = vars.getOrElse(GeneratorEntity.Companion.GeneratorEnum.ENERGY_LEVEL.ordinal) { _ -> 0 }
-            val energyCap = vars.getOrElse(GeneratorEntity.Companion.GeneratorEnum.ENERGY_CAPACITY.ordinal) { _ -> CONFIG.getInt("generator.energyCapacity") }
-            val list = ArrayList(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.generator.extended", intArrayOf(CommonColors.SOFT_RED), getFE(energy), getFE(energyCap)))
-            val itemHandler = ItemStackHandler()
-            itemHandler.deserializeNBT(context.registries()!!, tag.getCompound("inventory"))
-            for (i in 0..itemHandler.slots - 1) {
-                if (!itemHandler.getStackInSlot(i).isEmpty) {
-                    list.add(itemHandler.getStackInSlot(i).getHoverName().copy().append(" x " + itemHandler.getStackInSlot(i).count).withColor(CommonColors.SOFT_YELLOW))
-                }
-            }
-            tooltipComponents.addAll(list)
+            val energyHandler = EnergyStorage(CONFIG.getInt("generator.energyCapacity"))
+            if (tag.contains("energy"))
+                energyHandler.deserializeNBT(context.registries()!!, tag.get("energy")!!)
+
+            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.generator.extended", intArrayOf(CommonColors.SOFT_RED), getFE(energyHandler.energyStored), getFE(energyHandler.maxEnergyStored)))
+            Helpers.addItemsTooltip(context, tooltipComponents, tag)
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.generator"))
         }

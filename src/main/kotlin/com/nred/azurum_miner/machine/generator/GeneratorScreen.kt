@@ -38,8 +38,6 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         val EMPTY_INGOT = Minecraft.getInstance().getTextureAtlas(ResourceLocation.withDefaultNamespace("textures/atlas/blocks.png")).apply(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     }
 
-    lateinit var fluid: FluidStack
-
     var base: ScreenRectangle = ScreenRectangle.empty()
     var energy: ScreenRectangle = ScreenRectangle.empty()
     var details: ScreenRectangle = ScreenRectangle.empty()
@@ -87,17 +85,17 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
 
         val hasBase = menu.containerData[HAS_BASE]
         val hasFuel = menu.containerData[HAS_FUEL]
-        val matrixSlot = menu.itemHandler.getStackInSlot(MATRIX_SLOT)
+        val matrixSlot = menu.itemHandler!!.getStackInSlot(MATRIX_SLOT)
 
         guiGraphics.setColor(1f, 1f, 1f, 0.4f) // Ghosts
 
-        if (hasFuel == FALSE && menu.itemHandler.getStackInSlot(FUEL_SLOT).isEmpty)
+        if (hasFuel == FALSE && menu.itemHandler!!.getStackInSlot(FUEL_SLOT).isEmpty)
             guiGraphics.blit(base.left() + base.width / 6 - 8, base.top() + 20, 0, 16, 16, EMPTY_INGOT)
 
         guiGraphics.renderFakeItem(ModItems.DIMENSIONAL_MATRIX.toStack(), base.left() + base.width / 6 * 5 - 8, base.top() + 20)
         guiGraphics.setColor(1f, 1f, 1f, 1f)
 
-        val fuelSlotSave = menu.itemHandler.getStackInSlot(FUEL_SLOT_SAVE).copy()
+        val fuelSlotSave = menu.itemHandler!!.getStackInSlot(FUEL_SLOT_SAVE).copy()
         fuelSlotSave.set(DataComponents.MAX_DAMAGE, menu.containerData[FUEL_LASTS])
         fuelSlotSave.set(DataComponents.DAMAGE, menu.containerData[FUEL_CURR])
 
@@ -109,7 +107,7 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
                 guiGraphics.renderComponentTooltip(font, Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear"), mouseX, mouseY)
             }
         }
-        val baseSlotSave = menu.itemHandler.getStackInSlot(BASE_SLOT_SAVE).copy()
+        val baseSlotSave = menu.itemHandler!!.getStackInSlot(BASE_SLOT_SAVE).copy()
         baseSlotSave.set(DataComponents.MAX_DAMAGE, menu.containerData[BASE_LASTS])
         baseSlotSave.set(DataComponents.DAMAGE, menu.containerData[BASE_CURR])
         if (!baseSlotSave.isEmpty) {
@@ -122,7 +120,7 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         }
 
         // Draw Energy
-        val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * (energy.height.toDouble() - 2)).toInt()
+        val varLen = ceil(menu.energyStorage!!.energyStored.toDouble() / menu.energyStorage!!.maxEnergyStored.toDouble() * (energy.height.toDouble() - 2)).toInt()
         guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top(), 3, energy.width, energy.height)
         guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - 1 - varLen, 4, energy.width - 2, varLen)
 
@@ -130,7 +128,7 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         guiGraphics.renderOutline(details.left(), details.top(), details.width, details.height, 0xFF8B8B8B.toInt())
         guiGraphics.fill(details.left() + 1, details.top() + 1, details.left() + details.width - 1, details.top() + details.height - 1, 0xFF282828.toInt())
 
-        if (hasFuel == FALSE || hasBase == FALSE || matrixSlot.isEmpty || menu.containerData[ENERGY_LEVEL] >= menu.containerData[ENERGY_CAPACITY]) {
+        if (hasFuel == FALSE || hasBase == FALSE || matrixSlot.isEmpty || menu.energyStorage!!.energyStored >= menu.energyStorage!!.maxEnergyStored) {
             guiGraphics.drawCenteredString(font, "Error {!}", details.getCenterInAxis(ScreenAxis.HORIZONTAL), details.top() + 19, 0xFFFF0000.toInt())
             if (details.containsPoint(mouseX, mouseY)) {
                 val list = ArrayList<Component>()
@@ -138,17 +136,17 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
                     list += Component.translatable("tooltip.azurum_miner.generator.error_matrix").withColor(0xFFFF0000.toInt())
                     guiGraphics.renderOutline(base.left() + base.width / 6 * 5 - 9, base.top() + 19, 18, 18, 0xFFFF0000.toInt())
                 }
-                if (hasBase == FALSE && menu.itemHandler.getStackInSlot(BASE_SLOT).isEmpty) {
+                if (hasBase == FALSE && menu.itemHandler!!.getStackInSlot(BASE_SLOT).isEmpty) {
                     list += Component.translatable("tooltip.azurum_miner.generator.error_base").withColor(0xFFFF0000.toInt())
                     guiGraphics.renderOutline(base.left() + base.width / 6 - 9, base.top() + 46, 18, 18, 0xFFFF0000.toInt())
                 }
 
-                if (hasFuel == FALSE && menu.itemHandler.getStackInSlot(FUEL_SLOT).isEmpty) {
+                if (hasFuel == FALSE && menu.itemHandler!!.getStackInSlot(FUEL_SLOT).isEmpty) {
                     list += Component.translatable("tooltip.azurum_miner.generator.error_fuel").withColor(0xFFFF0000.toInt())
                     guiGraphics.renderOutline(base.left() + base.width / 6 - 9, base.top() + 19, 18, 18, 0xFFFF0000.toInt())
                 }
 
-                if (menu.containerData[ENERGY_LEVEL] >= menu.containerData[ENERGY_CAPACITY]) {
+                if (menu.energyStorage!!.energyStored >= menu.energyStorage!!.maxEnergyStored) {
                     list += Component.translatable("tooltip.azurum_miner.generator.error_full").withColor(0xFFFF0000.toInt())
                 }
 
@@ -168,9 +166,9 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
 
         if (energy.containsPoint(mouseX, mouseY)) {
             if (hasShiftDown())
-                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.energyStorage!!.energyStored)), mouseX, mouseY)
             else
-                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.energyStorage!!.energyStored.toDouble())), mouseX, mouseY)
         }
     }
 

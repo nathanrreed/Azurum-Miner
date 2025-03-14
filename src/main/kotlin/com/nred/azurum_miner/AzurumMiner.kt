@@ -174,6 +174,7 @@ object AzurumMiner {
         }
 
         BlockEntityRenderers.register(GENERATOR_ENTITY.get(), ::GeneratorRenderer)
+        EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
     }
 
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
@@ -194,9 +195,9 @@ object AzurumMiner {
 
     private fun registerCapabilities(event: RegisterCapabilitiesEvent) {
         for (i in 0..<5) {
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.itemStackHandler })
-            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.energyHandler })
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, MINER_ENTITY_TIERS[i].get(), { myBlockEntity: MinerEntity, _ -> myBlockEntity.fluidHandler })
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MINER_ENTITY_TIERS[i].get()) { myBlockEntity: MinerEntity, _ -> myBlockEntity.itemStackHandler }
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, MINER_ENTITY_TIERS[i].get()) { myBlockEntity: MinerEntity, _ -> myBlockEntity.energyHandler }
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, MINER_ENTITY_TIERS[i].get()) { myBlockEntity: MinerEntity, _ -> myBlockEntity.fluidHandler }
         }
 
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.itemStackHandler }
@@ -238,7 +239,6 @@ object AzurumMiner {
     @SubscribeEvent
     fun serverToClientUpdate(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
-        registrar.playToClient(FluidPayload.TYPE, FluidPayload.STREAM_CODEC, IPayloadHandler(FluidPayloadHandler::handleDataOnNetwork))
         registrar.playToClient(MinerFilterPayloadToPlayer.TYPE, MinerFilterPayloadToPlayer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnPlayer))
     }
 
@@ -253,7 +253,6 @@ object AzurumMiner {
 
     @SubscribeEvent
     fun onCommonSetup(event: FMLCommonSetupEvent) {
-        EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
     }
 
     fun onEntityTravelToDimension(event: EntityTravelToDimensionEvent) {

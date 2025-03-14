@@ -104,7 +104,7 @@ repositories {
 
 
 dependencies {
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.5.0'
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.7.0'
 
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")

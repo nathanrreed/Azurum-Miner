@@ -34,8 +34,6 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
     }
 
-    lateinit var fluid: FluidStack
-
     var base: ScreenRectangle = ScreenRectangle.empty()
     var powerButton: ScreenRectangle = ScreenRectangle.empty()
     var energy: ScreenRectangle = ScreenRectangle.empty()
@@ -61,8 +59,6 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
     override fun init() {
         super.init()
 
-        this.fluid = FluidStack.EMPTY
-
         resize(width, imageWidth, height, imageHeight)
         this.titleLabelX = 16
         this.inventoryLabelX = 10
@@ -80,7 +76,7 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
         guiGraphics.blitSprite(SLOT, base.left() + slot_x + 58, base.top() + slot_y, 18, 18)
 
         // Draw Energy
-        val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * (energy.height.toDouble() - 2)).toInt()
+        val varLen = ceil(menu.energyStorage!!.energyStored.toDouble() / menu.energyStorage!!.maxEnergyStored.toDouble() * (energy.height.toDouble() - 2)).toInt()
         guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top(), 3, energy.width, energy.height)
         guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - 1 - varLen, 4, energy.width - 2, varLen)
 
@@ -97,9 +93,9 @@ class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory,
 
         if (energy.containsPoint(mouseX, mouseY)) {
             if (hasShiftDown())
-                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.energyStorage!!.energyStored)), mouseX, mouseY)
             else
-                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.energyStorage!!.energyStored.toDouble())), mouseX, mouseY)
         }
         if (powerButton.containsPoint(mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[MinerEnum.IS_ON] == 1) "on" else "off"), mouseX, mouseY)

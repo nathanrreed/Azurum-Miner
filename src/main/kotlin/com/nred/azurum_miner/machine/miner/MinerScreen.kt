@@ -91,7 +91,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         }
 
         // Draw Energy
-        val varLen = ceil(menu.containerData[ENERGY_LEVEL].toDouble() / menu.containerData[ENERGY_CAPACITY].toDouble() * 82.0).toInt()
+        val varLen = ceil(menu.energyStorage.energyStored.toDouble() / menu.energyStorage.maxEnergyStored.toDouble() * 82.0).toInt()
 
         guiGraphics.blitSprite(ENERGY_BAR, energy.left(), energy.top(), 3, energy.width, energy.height)
         guiGraphics.blitSprite(ENERGY_INNER, energy.left() + 1, energy.bottom() - 1 - varLen, 4, energy.width - 2, varLen)
@@ -142,7 +142,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         guiGraphics.setColor(1f, 1f, 1f, 1f)
 
         // MOLTEN ORE
-        val varMoltenLen = floor(menu.containerData[MOLTEN_ORE_LEVEL].toDouble() / MinerEntity.FLUID_SIZE.toDouble() * tank.height).toInt()
+        val varMoltenLen = floor(menu.fluidHandler.getFluidAmount(0).toDouble() / MinerEntity.FLUID_SIZE.toDouble() * tank.height).toInt()
         guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/molten_ore_still"), tank.left(), tank.bottom() - varMoltenLen, tank.width, varMoltenLen)
 
         // TANK
@@ -150,15 +150,15 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
 
         if (energy.containsPoint(mouseX, mouseY)) {
             if (hasShiftDown())
-                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.containerData[ENERGY_LEVEL])), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(String.format("%,d FE", menu.energyStorage.energyStored)), mouseX, mouseY)
             else
-                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.containerData[ENERGY_LEVEL].toDouble())), mouseX, mouseY)
+                guiGraphics.renderTooltip(font, Component.literal(getFE(menu.energyStorage.energyStored.toDouble())), mouseX, mouseY)
         }
         if (powerButton.containsPoint(mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[IS_ON] == 1) "on" else "off"), mouseX, mouseY)
         }
         if (tank.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, componentSplit("tooltip.azurum_miner.miner.info.tank", listOf(Style.EMPTY, Style.EMPTY.withColor(0xAAAAAA)), DecimalFormat("#,###").format(menu.containerData[MOLTEN_ORE_LEVEL])), mouseX, mouseY)
+            guiGraphics.renderTooltip(font, componentSplit("tooltip.azurum_miner.miner.info.tank", listOf(Style.EMPTY, Style.EMPTY.withColor(0xAAAAAA)), DecimalFormat("#,###").format(menu.fluidHandler.getFluidAmount(0))), mouseX, mouseY)
         }
         for ((idx, bar) in barRects.withIndex()) {
             if (bar.containsPoint(mouseX, mouseY)) {

@@ -51,8 +51,8 @@ abstract class GuiCommon {
             }
 
             var time = max(ticks.toDouble() / 20.0, 0.0)
-            val hours = time / 360.0
-            time %= 360.0
+            val hours = time / 3600.0
+            time %= 3600.0
             val mins = time / 60.0
             time %= 60.0
 

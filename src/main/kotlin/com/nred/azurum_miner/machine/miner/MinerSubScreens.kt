@@ -89,7 +89,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
         var error: Component? = null
-        if (data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble() > data[ENERGY_LEVEL]) {
+        if (data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble() > menu.energyStorage.energyStored) {
             error = Component.translatable("tooltip.azurum_miner.miner.error.no_power")
         } else if (data[IS_STOPPED] == 1) {
             error = Component.translatable("tooltip.azurum_miner.miner.error.no_space")

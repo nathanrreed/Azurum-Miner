@@ -7,6 +7,7 @@ import com.nred.azurum_miner.machine.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
+import com.nred.azurum_miner.util.CustomEnergyHandler
 import com.nred.azurum_miner.util.FALSE
 import com.nred.azurum_miner.util.FluidHelper
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
@@ -45,7 +46,7 @@ import kotlin.reflect.KCallable
 
 const val OUTPUT = 3
 
-open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), pos, blockState), IMenuProviderExtension {
+open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: Int) : AbstractMachineBlockEntity(ModBlockEntities.MINER_ENTITY_TIERS[tier].get(), "miner", pos, blockState), IMenuProviderExtension {
     override var variables = IntArray(MinerVariablesEnum.entries.size + MinerEnum.entries.size)
     override var variablesSize = MinerVariablesEnum.entries.size + MinerEnum.entries.size
     var modifierPoints = intArrayOf(0, 0, 0, 0, 0)
@@ -102,8 +103,6 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         data[IS_ON] = TRUE
         data[PROGRESS] = 0
-        data[ENERGY_LEVEL] = 0
-        data[MOLTEN_ORE_LEVEL] = 0
         data[USED_MODIFIER_POINTS] = 0
         data[ADDED_MODIFIER_POINTS] = 0
         data[IS_STOPPED] = TRUE
@@ -118,38 +117,17 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         data[CURRENT_NEEDED] = data[TICKS_PER_OP]
     }
 
-    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
-        override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
-            if (simulate) {
-                return super.receiveEnergy(toReceive, simulate)
-            }
+    override val energyHandler = object : CustomEnergyHandler(CONFIG.getInt("miner.tiers.energyCapacity.tier${tier + 1}"), true, false) {
+        override fun onContentsChanged() {
             setChanged()
-            val received = super.receiveEnergy(toReceive, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return received
-        }
-
-        override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
-            if (simulate) {
-                return super.extractEnergy(toExtract, simulate)
+            if (level != null && !level!!.isClientSide()) {
+                level!!.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL)
             }
-            setChanged()
-            val extracted = super.extractEnergy(toExtract, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return extracted
         }
     }
 
-    val fluidHandler = object : ExtendedFluidTank(FLUID_SIZE, { it.`is`(FluidHelper.FLUIDS["molten_ore"].still) }) {
-        override fun onContentsChanged() {
-            setChanged()
-            super.onContentsChanged()
-            data[MOLTEN_ORE_LEVEL] = this.fluidAmount
-        }
-
-        override fun drain(maxDrain: Int, action: IFluidHandler.FluidAction): FluidStack {
-            return FluidStack.EMPTY
-        }
+    override fun validFluidSlot(stack: FluidStack): Boolean {
+        return stack.`is`(FluidHelper.FLUIDS["molten_ore"].still)
     }
 
     override val itemStackHandler = object : ExtendedItemStackHandler(4) {
@@ -204,11 +182,11 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         enum class MinerVariablesEnum {
             TOTAL_MODIFIER_POINTS, NUM_MODIFIER_SLOTS, TICKS_PER_OP, RESET_PER_TICK_CHANCE, ENERGY_NEEDED, ACCURACY,
-            MATERIAL_CHANCE, RAW_CHANCE, FILTER_CHANCE, ENERGY_CAPACITY, MULTI_CHANCE, MULTI_MIN, MULTI_MAX
+            MATERIAL_CHANCE, RAW_CHANCE, FILTER_CHANCE, MULTI_CHANCE, MULTI_MIN, MULTI_MAX
         }
 
         enum class MinerEnum() {
-            IS_ON, ENERGY_LEVEL, MOLTEN_ORE_LEVEL, USED_MODIFIER_POINTS, PROGRESS, IS_STOPPED, MISS_TICKS_PER_OP_CHANGE, NUM_FILTERS, HIGHER_TIER_CHANCE, MISS_ENERGY_NEEDED_CHANGE, HAS_FILTER, FLUID_NEEDED, CURRENT_NEEDED, ADDED_MODIFIER_POINTS
+            IS_ON, USED_MODIFIER_POINTS, PROGRESS, IS_STOPPED, MISS_TICKS_PER_OP_CHANGE, NUM_FILTERS, HIGHER_TIER_CHANCE, MISS_ENERGY_NEEDED_CHANGE, HAS_FILTER, FLUID_NEEDED, CURRENT_NEEDED, ADDED_MODIFIER_POINTS
         }
 
         operator fun ContainerData.get(e: Enum<*>): Int {
@@ -312,7 +290,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         data[MISS_ENERGY_NEEDED_CHANGE] = 100
         data[MISS_TICKS_PER_OP_CHANGE] = 100
 
-        for ((idx, string) in listOf("numModifierPoints", "numModifierSlots", "baseTicksPerOp", "baseResetChance", "baseEnergyNeeded", "baseAccuracy", "baseMaterialChance", "baseRawChance", "baseFilterChance", "energyCapacity", "baseMultiChance", "baseMultiMin", "baseMultiMax").withIndex()) {
+        for ((idx, string) in listOf("numModifierPoints", "numModifierSlots", "baseTicksPerOp", "baseResetChance", "baseEnergyNeeded", "baseAccuracy", "baseMaterialChance", "baseRawChance", "baseFilterChance", "baseMultiChance", "baseMultiMin", "baseMultiMax").withIndex()) {
             data[idx] = getMinerConfig(string, this.tier)
         }
 
@@ -415,16 +393,12 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         this.loaded = true
     }
 
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        super.handleUpdateTag(tag, lookupProvider)
-    }
-
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         tag.put("inventory", itemStackHandler.serializeNBT(registries))
+        tag.put("fluids", fluidHandler.serializeNBT(registries))
         tag.putIntArray("vars", variables)
         tag.putIntArray("modifierPoints", modifierPoints)
         tag.put("energy", energyHandler.serializeNBT(registries))
-        fluidHandler.writeToNBT(registries, tag)
 
         for (i in 0..<filters.size) {
             tag.putString("filter_$i", filters[i])
@@ -441,10 +415,14 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         super.loadAdditional(tag, registries)
 
         itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
-        variables = tag.getIntArray("vars")
+        fluidHandler.deserializeNBT(registries, tag.getCompound("fluids"))
+
+        if (tag.getIntArray("vars").size == variablesSize) {
+            variables = tag.getIntArray("vars")
+        }
+
         modifierPoints = tag.getIntArray("modifierPoints")
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
-        fluidHandler.readFromNBT(registries, tag)
         this.nextIsMiss = tag.getBoolean("nextIsMiss")
 
         for (i in 0..<filters.size) {
@@ -521,11 +499,11 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     }
 
     fun useFluid() {
-        if (!nextIsMiss!! && fluidHandler.fluidAmount >= this.mBUsedOnHit) {
-            fluidHandler.internalDrain(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE)
+        if (!nextIsMiss!! && fluidHandler.getFluidAmount(0) >= this.mBUsedOnHit) {
+            fluidHandler.internalExtractFluid(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE)
             data[FLUID_NEEDED] -= this.mBUsedOnHit
-        } else if (nextIsMiss!! && fluidHandler.fluidAmount >= this.mBUsedOnMiss) {
-            fluidHandler.internalDrain(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE)
+        } else if (nextIsMiss!! && fluidHandler.getFluidAmount(0) >= this.mBUsedOnMiss) {
+            fluidHandler.internalExtractFluid(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE)
             data[FLUID_NEEDED] -= this.mBUsedOnMiss
         }
 

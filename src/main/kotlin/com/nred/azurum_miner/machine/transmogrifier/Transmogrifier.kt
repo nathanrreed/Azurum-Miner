@@ -11,7 +11,6 @@ import io.netty.buffer.Unpooled
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.CommonColors
@@ -28,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
+import net.neoforged.neoforge.energy.EnergyStorage
 
 
 class Transmogrifier(properties: Properties) : AbstractMachine(properties) {
@@ -65,10 +65,12 @@ class Transmogrifier(properties: Properties) : AbstractMachine(properties) {
 
     override fun appendHoverText(stack: ItemStack, context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
         if (Screen.hasShiftDown()) {
-            val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
-            val energy = vars.getOrElse(TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_LEVEL.ordinal) { _ -> 0 }
-            val energyCap = vars.getOrElse(TransmogrifierEntity.Companion.TransmogrifierEnum.ENERGY_CAPACITY.ordinal) { _ -> CONFIG.getInt("transmogrifier.energyCapacity") }
-            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.transmogrifier.extended", intArrayOf(CommonColors.SOFT_RED), getFE(energy), getFE(energyCap)))
+            val tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
+            val energyHandler = EnergyStorage(CONFIG.getInt("transmogrifier.energyCapacity"))
+            if (tag.contains("energy"))
+                energyHandler.deserializeNBT(context.registries()!!, tag.get("energy")!!)
+            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.transmogrifier.extended", intArrayOf(CommonColors.SOFT_RED), getFE(energyHandler.energyStored), getFE(energyHandler.maxEnergyStored)))
+            Helpers.addItemsTooltip(context, tooltipComponents, tag)
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.transmogrifier"))
         }
