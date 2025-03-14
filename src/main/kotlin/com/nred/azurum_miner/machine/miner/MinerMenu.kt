@@ -5,9 +5,10 @@ import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
+import com.nred.azurum_miner.util.CustomFluidStackHandler
 import com.nred.azurum_miner.util.Helpers
+import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
@@ -20,11 +21,14 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.Level
 import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.energy.IEnergyStorage
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.SlotItemHandler
 
 class MinerMenu : AbstractContainerMenu {
     val itemHandler: IItemHandler
+    val energyStorage: IEnergyStorage
+    val fluidHandler: CustomFluidStackHandler
     var level: Level
     var containerData: ContainerData
     var pointsContainerData: ContainerData
@@ -56,7 +60,9 @@ class MinerMenu : AbstractContainerMenu {
         this.addDataSlots(this.pointsContainerData)
         this.addDataSlots(this.containerData)
 
-        this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.NORTH)!!
+        this.itemHandler = inventory.player.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, null)!!
+        this.energyStorage = inventory.player.level().getCapability(Capabilities.EnergyStorage.BLOCK, pos, null)!!
+        this.fluidHandler = inventory.player.level().getCapability(Capabilities.FluidHandler.BLOCK, pos, null) as CustomFluidStackHandler
         this.filterSlots += FilterSlot(this.itemHandler, 0, 11, -10, this)
         this.addSlot(this.filterSlots.last())
         this.filterSlots += FilterSlot(this.itemHandler, 1, 11, 15, this)
@@ -72,7 +78,7 @@ class MinerMenu : AbstractContainerMenu {
 
     // Client Constructor
     constructor (containerId: Int, inventory: Inventory, extraData: FriendlyByteBuf) :
-            this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size + 1), SimpleContainerData(5), extraData.readInt())
+            this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size), SimpleContainerData(5), extraData.readInt())
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
         return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 0) // No quick move for filters

@@ -1,19 +1,14 @@
 package com.nred.azurum_miner.machine.transmogrifier
 
-import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
-import com.nred.azurum_miner.machine.ExtendedEnergyStorage
 import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.recipe.TransmogrifierInput
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
-import net.minecraft.core.HolderLookup
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -26,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
 import kotlin.jvm.optionals.getOrNull
 
-open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.TRANSMOGRIFIER_ENTITY.get(), pos, blockState), IMenuProviderExtension {
+open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMachineBlockEntity(ModBlockEntities.TRANSMOGRIFIER_ENTITY.get(), "transmogrifier", pos, blockState), IMenuProviderExtension {
     override var variables = IntArray(TransmogrifierEnum.entries.size)
     override var variablesSize = TransmogrifierEnum.entries.size
 
@@ -50,32 +45,8 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
 
     init {
         data[IS_ON] = TRUE
-        data[ENERGY_LEVEL] = 0
         data[PROGRESS] = 0
-        data[ENERGY_CAPACITY] = CONFIG.getInt("transmogrifier.energyCapacity")
         data[PROCESSING_TIME] = 0
-    }
-
-    override val energyHandler = object : ExtendedEnergyStorage(data[ENERGY_CAPACITY]) {
-        override fun receiveEnergy(toReceive: Int, simulate: Boolean): Int {
-            if (simulate) {
-                return super.receiveEnergy(toReceive, simulate)
-            }
-            setChanged()
-            val received = super.receiveEnergy(toReceive, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return received
-        }
-
-        override fun extractEnergy(toExtract: Int, simulate: Boolean): Int {
-            if (simulate) {
-                return super.extractEnergy(toExtract, simulate)
-            }
-            setChanged()
-            val extracted =super.extractEnergy(toExtract, simulate)
-            data[ENERGY_LEVEL] = this.energy
-            return extracted
-        }
     }
 
     override val itemStackHandler = object : ExtendedItemStackHandler(2) {
@@ -109,7 +80,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
 
     companion object {
         enum class TransmogrifierEnum() {
-            IS_ON, ENERGY_LEVEL, PROGRESS, ENERGY_CAPACITY, PROCESSING_TIME
+            IS_ON, PROGRESS, PROCESSING_TIME
         }
 
         operator fun ContainerData.get(e: Enum<*>): Int {
@@ -121,43 +92,8 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         }
     }
 
-    override fun onLoad() {
-        super.onLoad()
-
-        this.loaded = true
-    }
-
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        super.handleUpdateTag(tag, lookupProvider)
-    }
-
-    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        tag.put("inventory", itemStackHandler.serializeNBT(registries))
-
-        tag.putIntArray("vars", variables)
-
-        tag.put("energy", energyHandler.serializeNBT(registries))
-
-        super.saveAdditional(tag, registries)
-    }
-
-    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.loadAdditional(tag, registries)
-
-        itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
-        variables = tag.getIntArray("vars")
-
-        energyHandler.deserializeNBT(registries, tag.get("energy")!!)
-
-        data[ENERGY_CAPACITY] = CONFIG.getInt("transmogrifier.energyCapacity")
-    }
-
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): TransmogrifierMenu {
         return TransmogrifierMenu(containerId, playerInventory, ContainerLevelAccess.create(level!!, blockPos), blockPos, this.data)
-    }
-
-    override fun getDisplayName(): Component {
-        return Component.translatable("menu.title.azurum_miner.transmogrifier")
     }
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {

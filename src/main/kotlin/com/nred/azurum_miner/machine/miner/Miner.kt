@@ -3,16 +3,18 @@ package com.nred.azurum_miner.machine.miner
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
-import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.ADDED_MODIFIER_POINTS
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.USED_MODIFIER_POINTS
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum
-import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.ENERGY_CAPACITY
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.TOTAL_MODIFIER_POINTS
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.getMinerConfig
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
+import com.nred.azurum_miner.util.CustomFluidStackHandler
 import com.nred.azurum_miner.util.Helpers
 import io.netty.buffer.Unpooled
 import net.minecraft.client.gui.screens.Screen
@@ -38,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.energy.EnergyStorage
 import net.neoforged.neoforge.fluids.FluidUtil
 
 
@@ -92,10 +95,13 @@ class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties)
             val vars = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(CompoundTag())).copyTag().getIntArray("vars")
             val numPoints = vars.getOrElse(TOTAL_MODIFIER_POINTS) { _ -> 0 }.coerceAtLeast(getMinerConfig("numModifierPoints", this.tier) + vars.getOrElse(ADDED_MODIFIER_POINTS) { _ -> 0 })
             val numUsed = vars.getOrElse(USED_MODIFIER_POINTS) { _ -> 0 }
-            val mb = vars.getOrElse(MOLTEN_ORE_LEVEL) { _ -> 0 }
-            val energy = vars.getOrElse(ENERGY_LEVEL) { _ -> 0 }
-            val energyCap = vars.getOrElse(ENERGY_CAPACITY) { _ -> 0 }.coerceAtLeast(getMinerConfig("energyCapacity", this.tier))
-            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.miner.extended", intArrayOf(0xFFa66fbc.toInt(), CommonColors.SOFT_YELLOW, CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), numPoints, numUsed, getFE(energy), getFE(energyCap), getBuckets(mb)))
+            val tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
+            val fluids = CustomFluidStackHandler.listFromNBT(context.registries()!!, tag.getCompound("fluids"))
+            val energyHandler = EnergyStorage(getMinerConfig("energyCapacity", this.tier))
+            if (tag.contains("energy"))
+                energyHandler.deserializeNBT(context.registries()!!, tag.get("energy")!!)
+
+            tooltipComponents.addAll(Helpers.itemComponentSplitColorized("tooltip.azurum_miner.miner.extended", intArrayOf(0xFFa66fbc.toInt(), CommonColors.SOFT_YELLOW, CommonColors.SOFT_RED, CommonColors.LIGHT_GRAY), numPoints, numUsed, getFE(energyHandler.energyStored), getFE(energyHandler.maxEnergyStored), getBuckets(if (fluids.isEmpty()) 0 else fluids.get(0).amount)))
         } else {
             tooltipComponents.addAll(Helpers.itemComponentSplit("tooltip.azurum_miner.miner", this.tier + 1))
         }

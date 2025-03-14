@@ -10,13 +10,10 @@ import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.set
 import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
-import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
-import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
@@ -24,7 +21,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
-import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
@@ -118,30 +114,6 @@ class MinerFilterPayloadHandler {
     }
 }
 
-class FluidPayload(val fluid: FluidStack) : CustomPacketPayload {
-    companion object {
-        val TYPE = CustomPacketPayload.Type<FluidPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "fluid_server_to_client"))
-        val STREAM_CODEC = StreamCodec.composite(FluidStack.OPTIONAL_STREAM_CODEC, FluidPayload::fluid, ::FluidPayload)
-    }
-
-    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
-        return TYPE
-    }
-}
-
-class FluidPayloadHandler {
-    companion object {
-        fun handleDataOnNetwork(data: FluidPayload, context: IPayloadContext) {
-            val screen = Minecraft.getInstance().screen
-            if (screen is LiquifierScreen) {
-                screen.fluid = data.fluid
-            } else if (screen is InfuserScreen) {
-                screen.fluid = data.fluid
-            }
-        }
-    }
-}
-
 class FilterSetPayload(val item: ItemStack, val idx: Int) : CustomPacketPayload {
     companion object {
         val TYPE = CustomPacketPayload.Type<FilterSetPayload>(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "filter_set_client_to_server"))
@@ -204,7 +176,7 @@ class ClearPayloadHandler {
             } else if (menu is InfuserMenu) {
                 val entity = context.player().level().getBlockEntity(data.pos)
                 if (entity is InfuserEntity) {
-                    entity.fluidHandler.internalDrain(entity.fluidHandler.getFluidInTank(data.idx), IFluidHandler.FluidAction.EXECUTE)
+                    entity.fluidHandler.setFluid(0, FluidStack.EMPTY)
                 }
             }
         }

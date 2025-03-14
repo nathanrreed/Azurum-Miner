@@ -18,6 +18,12 @@ description='''${mod_description}'''
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
+    modId="kotlinforforge"
+    type="required"
+    versionRange="[5.5,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"

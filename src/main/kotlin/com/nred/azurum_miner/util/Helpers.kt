@@ -2,14 +2,18 @@ package com.nred.azurum_miner.util
 
 import com.nred.azurum_miner.item.ModItems
 import net.minecraft.core.NonNullList
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.util.CommonColors
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
+import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredRegister
 
@@ -93,5 +97,17 @@ object Helpers {
         }
         sourceSlot.onTake(playerIn, sourceStack)
         return copyOfSourceStack
+    }
+
+    fun addItemsTooltip(context: Item.TooltipContext, tooltipComponents: MutableList<Component>, tag: CompoundTag) {
+        val list = ArrayList<MutableComponent>()
+        val itemHandler = ItemStackHandler()
+        itemHandler.deserializeNBT(context.registries()!!, tag.getCompound("inventory"))
+        for (i in 0..itemHandler.slots - 1) {
+            if (!itemHandler.getStackInSlot(i).isEmpty) {
+                list.add(itemHandler.getStackInSlot(i).getHoverName().copy().append(" x " + itemHandler.getStackInSlot(i).count).withColor(CommonColors.SOFT_YELLOW))
+            }
+        }
+        tooltipComponents.addAll(list)
     }
 }
