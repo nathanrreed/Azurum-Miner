@@ -25,7 +25,7 @@ class SimpleGeneratorScreen(menu: SimpleGeneratorMenu, playerInventory: Inventor
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
-        val varLen = ceil((menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble()) * 14.0).toInt()
+        val varLen = ceil((menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble()) * 13.0).toInt() + 1
         guiGraphics.blitSprite(FLAME_FILLED, 14, 14, 0, 14 - varLen, base.left() + SimpleGeneratorMenu.slot_x + 2, base.top() + SimpleGeneratorMenu.slot_y + 35 - varLen, 14, varLen)
 
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY)

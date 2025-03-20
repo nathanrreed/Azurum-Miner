@@ -79,7 +79,7 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
         }
 
         override fun canOutput(tank: Int): Boolean {
-            return canOutputSlot(tank) //tank >= handlerInfo.numFluidInputs()
+            return canOutputSlot(tank)
         }
     }
 
