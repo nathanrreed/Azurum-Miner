@@ -4,7 +4,6 @@ import com.nred.azurum_miner.machine.MachineMenu
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.ModMachines.SlotItemHandlerWithPickup
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum
-import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf

@@ -5,6 +5,7 @@ import com.nred.azurum_miner.machine.generator.Generator
 import com.nred.azurum_miner.machine.infuser.Infuser
 import com.nred.azurum_miner.machine.liquifier.Liquifier
 import com.nred.azurum_miner.machine.miner.Miner
+import com.nred.azurum_miner.machine.simple_generator.SimpleGenerator
 import com.nred.azurum_miner.machine.transmogrifier.Transmogrifier
 import com.nred.azurum_miner.util.Helpers
 import net.minecraft.world.entity.player.Player
@@ -28,6 +29,7 @@ object ModMachines {
     val LIQUIFIER = Helpers.registerBlock("liquifier_block", MACHINES) { -> Liquifier(BASE_PROPERTIES) }
     val INFUSER = Helpers.registerBlock("infuser_block", MACHINES) { -> Infuser(BASE_PROPERTIES) }
     val TRANSMOGRIFIER = Helpers.registerBlock("transmogrifier_block", MACHINES) { -> Transmogrifier(BASE_PROPERTIES) }
+    val SIMPLE_GENERATOR = Helpers.registerBlock("simple_generator_block", MACHINES) { -> SimpleGenerator(BASE_PROPERTIES) }
     val GENERATOR = Helpers.registerBlock("generator_block", MACHINES) { -> Generator(BASE_PROPERTIES.noOcclusion().isViewBlocking({ _, _, _ -> false })) }
 
     fun register(eventBus: IEventBus) {

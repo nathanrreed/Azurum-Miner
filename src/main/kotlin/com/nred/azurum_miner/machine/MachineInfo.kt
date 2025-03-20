@@ -9,6 +9,7 @@ object MachineInfo {
     val data = mapOf<String, MachineInfoData>(
         "infuser" to MachineInfoData(1, 3),
         "generator" to MachineInfoData(0, 4, false, false, false, true),
+        "simple_generator" to MachineInfoData(0, 1, false, false, false, true),
         "liquifier" to MachineInfoData(1, 1, false, true),
         "transmogrifier" to MachineInfoData(0, 2),
         "miner" to MachineInfoData(1, 4)

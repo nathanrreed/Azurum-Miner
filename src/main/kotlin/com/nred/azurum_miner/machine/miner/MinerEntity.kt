@@ -500,10 +500,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     fun useFluid() {
         if (!nextIsMiss!! && fluidHandler.getFluidAmount(0) >= this.mBUsedOnHit) {
-            fluidHandler.internalExtractFluid(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE)
+            fluidHandler.internalExtractFluid(this.mBUsedOnHit, IFluidHandler.FluidAction.EXECUTE, true)
             data[FLUID_NEEDED] -= this.mBUsedOnHit
         } else if (nextIsMiss!! && fluidHandler.getFluidAmount(0) >= this.mBUsedOnMiss) {
-            fluidHandler.internalExtractFluid(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE)
+            fluidHandler.internalExtractFluid(this.mBUsedOnMiss, IFluidHandler.FluidAction.EXECUTE, true)
             data[FLUID_NEEDED] -= this.mBUsedOnMiss
         }
 

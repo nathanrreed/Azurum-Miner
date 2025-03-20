@@ -9,6 +9,7 @@ import com.nred.azurum_miner.machine.ModMachines.GENERATOR
 import com.nred.azurum_miner.machine.ModMachines.INFUSER
 import com.nred.azurum_miner.machine.ModMachines.LIQUIFIER
 import com.nred.azurum_miner.machine.ModMachines.MINER_BLOCK_TIERS
+import com.nred.azurum_miner.machine.ModMachines.SIMPLE_GENERATOR
 import com.nred.azurum_miner.machine.ModMachines.TRANSMOGRIFIER
 import com.nred.azurum_miner.util.OreHelper
 import net.minecraft.core.HolderLookup
@@ -58,6 +59,7 @@ class ModBlockLootTableProvider(registries: HolderLookup.Provider) :
         add(LIQUIFIER.get(), createMachineDrop(LIQUIFIER.get()))
         add(TRANSMOGRIFIER.get(), createMachineDrop(TRANSMOGRIFIER.get()))
         add(GENERATOR.get(), createMachineDrop(GENERATOR.get()))
+        add(SIMPLE_GENERATOR.get(), createMachineDrop(SIMPLE_GENERATOR.get()))
 
         dropSelf(CONGLOMERATE_OF_ORE_BLOCK.get())
         dropSelf(CONGLOMERATE_OF_ORE.get())

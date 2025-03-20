@@ -1,11 +1,11 @@
 package com.nred.azurum_miner.compat.jei
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.machine.MachineScreen.Companion.ENERGY_INNER
+import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_BAR
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_INNER
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.TANK
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.recipe.InfuserRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime

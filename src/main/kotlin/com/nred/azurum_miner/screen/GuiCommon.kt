@@ -74,7 +74,7 @@ abstract class GuiCommon {
             val list = ArrayList<IntArray>()
             for (y in 0..2) {
                 for (x in 0..8) {
-                    list.add(intArrayOf(x + y * 9 + 9, 8 + x * 18, 83 + y * 18))
+                    list.add(intArrayOf(x + y * 9 + 9, 8 + x * 18, 84 + y * 18))
                 }
             }
 
