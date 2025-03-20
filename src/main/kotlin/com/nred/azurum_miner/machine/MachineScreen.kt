@@ -82,7 +82,13 @@ open class MachineScreen<T : MachineMenu>(menu: T, playerInventory: Inventory, t
             guiGraphics.renderTooltip(font, Component.translatable("tooltip.azurum_miner.machine." + if (menu.containerData[MinerEnum.IS_ON] == 1) "on" else "off"), mouseX, mouseY)
         }
         if (tank.containsPoint(mouseX, mouseY)) {
-            guiGraphics.renderComponentTooltip(font, listOf(Component.translatable("tooltip.azurum_miner.machine.tank", menu.fluidHandler!!.getFluidInTank(0).fluidType.description, DecimalFormat("#,###").format(menu.fluidHandler!!.getFluidAmount(0))), Component.translatable("tooltip.azurum_miner.shift_clear")), mouseX, mouseY)
+            val list = mutableListOf(Component.translatable("tooltip.azurum_miner.machine.tank", menu.fluidHandler!!.getFluidInTank(0).fluidType.description, DecimalFormat("#,###").format(menu.fluidHandler!!.getFluidAmount(0))))
+
+            if (!menu.fluidHandler!!.canOutput(0)) {
+                list += Component.translatable("tooltip.azurum_miner.shift_clear")
+            }
+
+            guiGraphics.renderComponentTooltip(font, list.toList(), mouseX, mouseY)
         }
     }
 
