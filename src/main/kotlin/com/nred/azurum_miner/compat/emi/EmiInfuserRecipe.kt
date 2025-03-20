@@ -1,10 +1,10 @@
 package com.nred.azurum_miner.compat.emi
 
 import com.nred.azurum_miner.compat.emi.EmiPlugin.Companion.INFUSER_CATEGORY
+import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_BAR
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.ENERGY_INNER
-import com.nred.azurum_miner.machine.infuser.InfuserScreen.Companion.TANK
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import dev.emi.emi.api.recipe.BasicEmiRecipe

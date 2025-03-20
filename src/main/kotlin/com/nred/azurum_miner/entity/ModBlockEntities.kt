@@ -8,6 +8,7 @@ import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.miner.*
+import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -31,6 +32,7 @@ object ModBlockEntities {
     val INFUSER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<InfuserEntity>> = BLOCK_ENTITY_TYPES.register("infuser_entity", { -> BlockEntityType.Builder.of(::InfuserEntity, ModMachines.INFUSER.get()).build(null) })
     val TRANSMOGRIFIER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<TransmogrifierEntity>> = BLOCK_ENTITY_TYPES.register("transmogrifier_entity", { -> BlockEntityType.Builder.of(::TransmogrifierEntity, ModMachines.TRANSMOGRIFIER.get()).build(null) })
     val GENERATOR_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<GeneratorEntity>> = BLOCK_ENTITY_TYPES.register("generator_entity", { -> BlockEntityType.Builder.of(::GeneratorEntity, ModMachines.GENERATOR.get()).build(null) })
+    val SIMPLE_GENERATOR_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<SimpleGeneratorEntity>> = BLOCK_ENTITY_TYPES.register("simple_generator_entity", { -> BlockEntityType.Builder.of(::SimpleGeneratorEntity, ModMachines.SIMPLE_GENERATOR.get()).build(null) })
 
     fun register(eventBus: IEventBus) {
         BLOCK_ENTITY_TYPES.register(eventBus)

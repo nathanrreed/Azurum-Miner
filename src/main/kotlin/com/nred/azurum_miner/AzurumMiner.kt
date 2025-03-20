@@ -12,6 +12,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities.GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.INFUSER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.LIQUIFIER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.MINER_ENTITY_TIERS
+import com.nred.azurum_miner.entity.ModBlockEntities.SIMPLE_GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.TRANSMOGRIFIER_ENTITY
 import com.nred.azurum_miner.entity.ModEntities
 import com.nred.azurum_miner.fluid.ModFluids
@@ -26,6 +27,8 @@ import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.MinerScreen
+import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity
+import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
 import com.nred.azurum_miner.recipe.ModRecipe
@@ -187,6 +190,7 @@ object AzurumMiner {
         event.register(ModMenuTypes.INFUSER_MENU.get(), ::InfuserScreen)
         event.register(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), ::TransmogrifierScreen)
         event.register(ModMenuTypes.GENERATOR_MENU.get(), ::GeneratorScreen)
+        event.register(ModMenuTypes.SIMPLE_GENERATOR_MENU.get(), ::SimpleGeneratorScreen)
     }
 
     private fun registerConfig(event: ModConfigEvent.Loading) {
@@ -214,6 +218,9 @@ object AzurumMiner {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, GENERATOR_ENTITY.get()) { myBlockEntity: GeneratorEntity, _ -> myBlockEntity.itemStackHandler }
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, GENERATOR_ENTITY.get()) { myBlockEntity: GeneratorEntity, _ -> myBlockEntity.energyHandler }
 
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, SIMPLE_GENERATOR_ENTITY.get()) { myBlockEntity: SimpleGeneratorEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, SIMPLE_GENERATOR_ENTITY.get()) { myBlockEntity: SimpleGeneratorEntity, _ -> myBlockEntity.energyHandler }
+
         event.registerItem(Capabilities.FluidHandler.ITEM, { stack, _ ->
             object : FluidBucketWrapper(stack) {
                 override fun getFluid(): FluidStack {
@@ -222,7 +229,7 @@ object AzurumMiner {
             }
         }, Items.POWDER_SNOW_BUCKET)
 
-        if(ModList.get().isLoaded("computercraft")){
+        if (ModList.get().isLoaded("computercraft")) {
             registerPeripherals(event)
         }
     }

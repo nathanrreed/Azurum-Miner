@@ -28,7 +28,7 @@ class TransmogrifierMenu : MachineMenu {
         inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler!!, 0, slot_x + 1, slot_y + 1))
 
         // OUTPUT
-        this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 59, slot_y + 1) {
+        this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 61, slot_y + 1) {
             override fun mayPlace(stack: ItemStack): Boolean {
                 return false
             }

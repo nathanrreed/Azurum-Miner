@@ -147,7 +147,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
 
     override fun drain(maxDrain: Int, action: FluidAction): FluidStack {
         if (allowOutput) {
-            return internalExtractFluid(maxDrain, action)
+            return internalExtractFluid(maxDrain, action, false)
         }
         return FluidStack.EMPTY
     }
@@ -202,10 +202,10 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
         }
     }
 
-    fun internalExtractFluid(maxDrain: Int, action: FluidAction): FluidStack {
+    fun internalExtractFluid(maxDrain: Int, action: FluidAction, internal: Boolean): FluidStack {
         for (i in fluids.indices) {
             val fluid = fluids[i]
-            if (fluid.isEmpty || !canOutput(i)) continue
+            if (fluid.isEmpty || (!canOutput(i) && !internal)) continue
             var drained = maxDrain
             if (fluid.amount < drained) {
                 drained = fluid.amount
@@ -228,7 +228,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
 
     fun internalExtractFluid(resource: FluidStack, action: FluidAction): FluidStack {
         if (fluids.stream().anyMatch { fluidStack: FluidStack? -> fluidStack!!.`is`(resource.fluid) }) {
-            return internalExtractFluid(resource.amount, action)
+            return internalExtractFluid(resource.amount, action, true)
         }
         return FluidStack.EMPTY
     }

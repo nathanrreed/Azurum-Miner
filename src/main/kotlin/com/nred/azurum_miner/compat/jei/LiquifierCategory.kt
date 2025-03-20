@@ -2,7 +2,9 @@ package com.nred.azurum_miner.compat.jei
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.InfuserScreen
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_INNER
+import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.TANK
 import com.nred.azurum_miner.recipe.LiquifierRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -58,11 +60,11 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
     }
 
     override fun draw(recipe: LiquifierRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {
-        guiGraphics.blitSprite(InfuserScreen.Companion.ENERGY_BAR, 2, 2, 3, 6, 65)
-        guiGraphics.blitSprite(InfuserScreen.Companion.ENERGY_INNER, 3, 3, 4, 4, 63)
+        guiGraphics.blitSprite(ENERGY_BAR, 2, 2, 3, 6, 65)
+        guiGraphics.blitSprite(ENERGY_INNER, 3, 3, 4, 4, 63)
 
         // TANK
-        guiGraphics.blitSprite(InfuserScreen.Companion.TANK, width - 33, 2, 150, 31, 65)
+        guiGraphics.blitSprite(TANK, width - 33, 2, 150, 31, 65)
 
         if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
