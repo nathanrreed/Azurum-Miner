@@ -1,12 +1,12 @@
 package com.nred.azurum_miner.compat.jei
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.recipe.GeneratorRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
+import com.nred.azurum_miner.util.Helpers.azLoc
 import mezz.jei.api.constants.VanillaTypes
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder
 import mezz.jei.api.gui.drawable.IDrawable
@@ -27,7 +27,7 @@ import net.minecraft.world.item.crafting.Ingredient
 
 class GeneratorCategory(helper: IGuiHelper, val bases: List<GeneratorRecipe>) : IRecipeCategory<GeneratorRecipe> {
     companion object {
-        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator")
+        val UID: ResourceLocation = azLoc("generator")
         val TYPE = RecipeType(UID, GeneratorRecipe::class.java)
         val font: Font = Minecraft.getInstance().font
     }

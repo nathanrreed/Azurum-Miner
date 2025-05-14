@@ -100,7 +100,7 @@ class LiquifierRecipeBuilder(result: FluidStack, private val inputItem: Ingredie
             .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(key))
             .rewards(AdvancementRewards.Builder.recipe(key))
             .requirements(AdvancementRequirements.Strategy.OR)
-        this.criteria.forEach { advancement::addCriterion }
+        this.criteria.forEach { _ -> advancement::addCriterion }
         // Our factory parameters are the result, the block state, and the ingredient.
         val recipe = LiquifierRecipe(this.inputItem, this.result, this.power, this.processingTime)
 

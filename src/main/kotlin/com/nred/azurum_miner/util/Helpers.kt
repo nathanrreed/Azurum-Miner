@@ -1,11 +1,13 @@
 package com.nred.azurum_miner.util
 
+import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.item.ModItems
 import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.CommonColors
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.player.Player
@@ -109,5 +111,9 @@ object Helpers {
             }
         }
         tooltipComponents.addAll(list)
+    }
+
+    fun azLoc(path: String): ResourceLocation {
+        return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, path)
     }
 }

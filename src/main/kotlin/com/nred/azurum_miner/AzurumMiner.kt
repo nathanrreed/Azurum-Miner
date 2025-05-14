@@ -8,6 +8,7 @@ import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
 import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.entity.ModBlockEntities.CRYSTALLIZER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.INFUSER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.LIQUIFIER_ENTITY
@@ -18,6 +19,8 @@ import com.nred.azurum_miner.entity.ModEntities
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerEntity
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerScreen
 import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.generator.GeneratorRenderer
 import com.nred.azurum_miner.machine.generator.GeneratorScreen
@@ -44,7 +47,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
@@ -122,52 +124,6 @@ object AzurumMiner {
                 event.accept(item.get())
             }
         }
-
-        if (event.tabKey == CreativeModeTabs.INGREDIENTS) {
-            event.accept(ModItems.SIMPLE_VOID_PROCESSOR.get())
-            event.accept(ModItems.VOID_PROCESSOR.get())
-            event.accept(ModItems.ELABORATE_VOID_PROCESSOR.get())
-            event.accept(ModItems.COMPLEX_VOID_PROCESSOR.get())
-            event.accept(ModItems.CONGLOMERATE_OF_ORE_SHARD.get())
-
-            for (ore in OreHelper.ORES) {
-                ore.ingot?.get()?.let { event.accept(it) }
-                ore.nugget?.get()?.let { event.accept(it) }
-                ore.gear?.get()?.let { event.accept(it) }
-                ore.gem?.get()?.let { event.accept(it) }
-                ore.raw?.get()?.let { event.accept(it) }
-            }
-        }
-
-        if (event.tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
-            for (ore in OreHelper.ORES) {
-                event.accept(ore.ore)
-                event.accept(ore.deepslate_ore)
-                ore.raw_block?.let { event.accept(it) }
-            }
-            event.accept(ModBlocks.CONGLOMERATE_OF_ORE)
-        }
-
-        if (event.tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
-            for (ore in OreHelper.ORES) {
-                event.accept(ore.block)
-            }
-            event.accept(ModBlocks.CONGLOMERATE_OF_ORE_BLOCK)
-        }
-
-        if (event.tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            for (fluid in FluidHelper.FLUIDS) {
-                event.accept(fluid.bucket)
-            }
-        }
-
-        if (event.tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(ModMachines.LIQUIFIER)
-            event.accept(ModMachines.INFUSER)
-            for (i in 0..<5) {
-                event.accept(ModMachines.MINER_BLOCK_TIERS[i])
-            }
-        }
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
@@ -187,6 +143,7 @@ object AzurumMiner {
     private fun registerScreens(event: RegisterMenuScreensEvent) {
         event.register(ModMenuTypes.MINER_MENU.get(), ::MinerScreen)
         event.register(ModMenuTypes.LIQUIFIER_MENU.get(), ::LiquifierScreen)
+        event.register(ModMenuTypes.CRYSTALLIZER_MENU.get(), ::CrystallizerScreen)
         event.register(ModMenuTypes.INFUSER_MENU.get(), ::InfuserScreen)
         event.register(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), ::TransmogrifierScreen)
         event.register(ModMenuTypes.GENERATOR_MENU.get(), ::GeneratorScreen)
@@ -207,6 +164,10 @@ object AzurumMiner {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.itemStackHandler }
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.energyHandler }
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, LIQUIFIER_ENTITY.get()) { myBlockEntity: LiquifierEntity, _ -> myBlockEntity.fluidHandler }
+
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CRYSTALLIZER_ENTITY.get()) { myBlockEntity: CrystallizerEntity, _ -> myBlockEntity.itemStackHandler }
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, CRYSTALLIZER_ENTITY.get()) { myBlockEntity: CrystallizerEntity, _ -> myBlockEntity.energyHandler }
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, CRYSTALLIZER_ENTITY.get()) { myBlockEntity: CrystallizerEntity, _ -> myBlockEntity.fluidHandler }
 
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.itemStackHandler }
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, INFUSER_ENTITY.get()) { myBlockEntity: InfuserEntity, _ -> myBlockEntity.energyHandler }

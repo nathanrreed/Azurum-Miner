@@ -1,10 +1,10 @@
 package com.nred.azurum_miner.machine.infuser
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.get
 import com.nred.azurum_miner.util.ClearPayload
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenAxis
@@ -18,7 +18,7 @@ import kotlin.math.floor
 
 class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Component) : MachineScreen<InfuserMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser")
+        val BASE: ResourceLocation = azLoc("infuser")
     }
 
     override fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {

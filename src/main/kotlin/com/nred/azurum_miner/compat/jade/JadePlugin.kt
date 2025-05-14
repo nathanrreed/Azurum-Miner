@@ -1,6 +1,5 @@
 package com.nred.azurum_miner.compat.jade
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
@@ -9,6 +8,7 @@ import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.OUTPUT
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
@@ -39,7 +39,7 @@ class JadePlugin : IWailaPlugin {
 enum class MinerItemHider : IServerExtensionProvider<ItemStack>, IClientExtensionProvider<ItemStack, ItemView> {
     INSTANCE {
         override fun getUid(): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner.hide_filter")
+            return azLoc("miner.hide_filter")
         }
 
         override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<ItemStack>>): List<ClientViewGroup<ItemView>> {
@@ -59,7 +59,7 @@ enum class MinerItemHider : IServerExtensionProvider<ItemStack>, IClientExtensio
 enum class MachineProgressTime : IClientExtensionProvider<CompoundTag, ProgressView>, IServerExtensionProvider<CompoundTag> {
     INSTANCE {
         override fun getUid(): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "machine.progress")
+            return azLoc("machine.progress")
         }
 
         override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<CompoundTag>>): List<ClientViewGroup<ProgressView>> {
@@ -80,7 +80,7 @@ enum class MachineProgressTime : IClientExtensionProvider<CompoundTag, ProgressV
 enum class MachineEnergy : IClientExtensionProvider<CompoundTag, EnergyView>, IServerExtensionProvider<CompoundTag> {
     INSTANCE {
         override fun getUid(): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "machine.energy")
+            return azLoc("machine.energy")
         }
 
         override fun getClientGroups(accessor: Accessor<*>, groups: List<ViewGroup<CompoundTag>>): List<ClientViewGroup<EnergyView>> {

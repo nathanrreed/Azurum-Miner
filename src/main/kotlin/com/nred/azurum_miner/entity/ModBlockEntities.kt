@@ -4,6 +4,7 @@ package com.nred.azurum_miner.entity
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerEntity
 import com.nred.azurum_miner.machine.generator.GeneratorEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
@@ -28,6 +29,7 @@ object ModBlockEntities {
             })
     }
 
+    val CRYSTALLIZER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<CrystallizerEntity>> = BLOCK_ENTITY_TYPES.register("crystallizer_entity", { -> BlockEntityType.Builder.of(::CrystallizerEntity, ModMachines.CRYSTALLIZER.get()).build(null) })
     val LIQUIFIER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<LiquifierEntity>> = BLOCK_ENTITY_TYPES.register("liquifier_entity", { -> BlockEntityType.Builder.of(::LiquifierEntity, ModMachines.LIQUIFIER.get()).build(null) })
     val INFUSER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<InfuserEntity>> = BLOCK_ENTITY_TYPES.register("infuser_entity", { -> BlockEntityType.Builder.of(::InfuserEntity, ModMachines.INFUSER.get()).build(null) })
     val TRANSMOGRIFIER_ENTITY: DeferredHolder<BlockEntityType<*>, BlockEntityType<TransmogrifierEntity>> = BLOCK_ENTITY_TYPES.register("transmogrifier_entity", { -> BlockEntityType.Builder.of(::TransmogrifierEntity, ModMachines.TRANSMOGRIFIER.get()).build(null) })

@@ -14,6 +14,7 @@ import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import com.nred.azurum_miner.screen.RenderTab
 import com.nred.azurum_miner.util.FilterSetPayload
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Helpers.compC
 import com.nred.azurum_miner.util.Helpers.compCat
 import com.nred.azurum_miner.util.Helpers.componentSplit
@@ -63,10 +64,10 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
 
     companion object {
         private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.main.title")
-        val POINTS_BUTTON: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/points_button")
-        val POINTS_BUTTON_DISABLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/points_button_disabled")
-        val POINTS_BUTTON_HOVER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/points_button_hover")
-        val POINTS_BUTTON_BARS: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/points_button_bars")
+        val POINTS_BUTTON: ResourceLocation = azLoc("common/points_button")
+        val POINTS_BUTTON_DISABLED: ResourceLocation = azLoc("common/points_button_disabled")
+        val POINTS_BUTTON_HOVER: ResourceLocation = azLoc("common/points_button_hover")
+        val POINTS_BUTTON_BARS: ResourceLocation = azLoc("common/points_button_bars")
 
         val buttonSprites = WidgetSprites(POINTS_BUTTON, POINTS_BUTTON_DISABLED, POINTS_BUTTON_HOVER, POINTS_BUTTON_DISABLED)
     }
@@ -143,7 +144,7 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                 fun getVals(pointIdx: Int, levelIdx: Int, single: Boolean = false): List<Any> {
                     val map = minerMapping[pointIdx]!!
                     val name = map["name"].toString()
-                    var info = (map["info"] as List<*>)[levelIdx - 1]
+                    val info = (map["info"] as List<*>)[levelIdx - 1]
 
                     if (name == "efficiency" && levelIdx == 3) {
                         return listOf(getModifierVal("miner.modifiers.${name}.${levelIdx}", 0, true).second, "", "")
@@ -335,7 +336,7 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
 
 @OnlyIn(Dist.CLIENT)
 class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) : EditBox(Minecraft.getInstance().font, width, height, Component.literal(menu.filters[idx])) {
-    val SPRITES = WidgetSprites(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_disabled"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/text_field_highlighted"))
+    val SPRITES = WidgetSprites(azLoc("miner/text_field"), azLoc("miner/text_field_disabled"), azLoc("miner/text_field_highlighted"))
     var ingredients: Ingredient = Ingredient.EMPTY
     val foundTags = ArrayList<TagKey<Item>>()
     var init = false
@@ -384,7 +385,7 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
 }
 
 class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBox, val ingredientSlot: Boolean = false) : AbstractWidget(0, 0, 18, 18, Component.empty()) {
-    val SLOT: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
+    val SLOT: ResourceLocation = azLoc("common/slot")
     var index = 0
     var frame = 0
     var dontUse = false
@@ -398,7 +399,7 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
         guiGraphics.blitSprite(SLOT, this.x, this.y, 18, 18)
 
         if (!this.active || (this.dontUse && this.editBox.active)) {
-            guiGraphics.fill(this.x + 1, this.y + 1, this.x + 17, this.y + 17, 100, 0x70323232.toInt())
+            guiGraphics.fill(this.x + 1, this.y + 1, this.x + 17, this.y + 17, 100, 0x70323232)
         }
 
         if (ingredientSlot) {

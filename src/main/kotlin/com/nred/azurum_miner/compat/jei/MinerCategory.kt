@@ -1,8 +1,8 @@
 package com.nred.azurum_miner.compat.jei
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.recipe.MinerRecipe
+import com.nred.azurum_miner.util.Helpers.azLoc
 import mezz.jei.api.constants.VanillaTypes
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder
 import mezz.jei.api.gui.drawable.IDrawable
@@ -14,7 +14,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.RecipeHolder
 
@@ -29,11 +28,11 @@ class MinerCategory(helper: IGuiHelper, val tier: Int) : IRecipeCategory<RecipeH
             }
         }
 
-        val TYPE_TIER1 = RecipeType(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_tier1"), RecipeHolder::class.java)
-        val TYPE_TIER2 = RecipeType(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_tier2"), RecipeHolder::class.java)
-        val TYPE_TIER3 = RecipeType(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_tier3"), RecipeHolder::class.java)
-        val TYPE_TIER4 = RecipeType(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_tier4"), RecipeHolder::class.java)
-        val TYPE_TIER5 = RecipeType(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner_tier5"), RecipeHolder::class.java)
+        val TYPE_TIER1 = RecipeType(azLoc("miner_tier1"), RecipeHolder::class.java)
+        val TYPE_TIER2 = RecipeType(azLoc("miner_tier2"), RecipeHolder::class.java)
+        val TYPE_TIER3 = RecipeType(azLoc("miner_tier3"), RecipeHolder::class.java)
+        val TYPE_TIER4 = RecipeType(azLoc("miner_tier4"), RecipeHolder::class.java)
+        val TYPE_TIER5 = RecipeType(azLoc("miner_tier5"), RecipeHolder::class.java)
     }
 
     private val icon: IDrawable = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemStack(ModMachines.MINER_BLOCK_TIERS[tier - 1].get()))

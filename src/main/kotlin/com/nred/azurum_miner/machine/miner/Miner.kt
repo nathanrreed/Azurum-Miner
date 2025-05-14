@@ -3,7 +3,6 @@ package com.nred.azurum_miner.machine.miner
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
@@ -45,6 +44,8 @@ import net.neoforged.neoforge.fluids.FluidUtil
 
 
 class Miner(val tier: Int, properties: Properties) : AbstractMachine(properties) {
+    override val typeName: String = "miner"
+
     val MINER_CODEC = RecordCodecBuilder.mapCodec<Miner> { instance ->
         instance.group(
             Codec.INT.fieldOf("tier").forGetter({ miner -> miner.tier }), propertiesCodec()

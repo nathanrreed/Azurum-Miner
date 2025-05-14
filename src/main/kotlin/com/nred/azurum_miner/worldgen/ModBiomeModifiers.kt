@@ -1,11 +1,10 @@
 package com.nred.azurum_miner.worldgen
 
-import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.core.HolderSet
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BiomeTags
 import net.minecraft.world.level.levelgen.GenerationStep
 import net.neoforged.neoforge.common.world.BiomeModifier
@@ -23,6 +22,6 @@ object ModBiomeModifiers {
     }
 
     fun registerKey(name: String): ResourceKey<BiomeModifier> {
-        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, name))
+        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, azLoc(name))
     }
 }

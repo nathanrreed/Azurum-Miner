@@ -1,6 +1,5 @@
 package com.nred.azurum_miner.compat.jei
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
@@ -20,6 +19,7 @@ import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER5_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.SHAPED_RECIPE_TRANSFORM_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE
 import com.nred.azurum_miner.screen.ModMenuTypes
+import com.nred.azurum_miner.util.Helpers.azLoc
 import mezz.jei.api.IModPlugin
 import mezz.jei.api.JeiPlugin
 import mezz.jei.api.ingredients.ITypedIngredient
@@ -39,7 +39,7 @@ import net.minecraft.world.item.crafting.RecipeHolder
 class JEIPlugin : IModPlugin {
     lateinit var recipeManager: IRecipeManager
     override fun getPluginUid(): ResourceLocation {
-        return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "jei_plugin")
+        return azLoc("jei_plugin")
     }
 
     override fun registerCategories(registration: IRecipeCategoryRegistration) {

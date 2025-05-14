@@ -1,11 +1,11 @@
 package com.nred.azurum_miner.machine
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.get
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.blitTile
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -29,12 +29,12 @@ open class MachineScreen<T : MachineMenu>(menu: T, playerInventory: Inventory, t
     }
 
     companion object {
-        val PLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
-        val PAUSE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
-        val TANK: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/fluid_tank")
-        val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
-        val ARROW_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "textures/gui/sprites/common/arrow_filled.png")
-        val FLAME_FILLED: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/flame_filled")
+        val PLAY: ResourceLocation = azLoc("common/play")
+        val PAUSE: ResourceLocation = azLoc("common/pause")
+        val TANK: ResourceLocation = azLoc("common/fluid_tank")
+        val ENERGY_INNER: ResourceLocation = azLoc("common/energy_inner")
+        val ARROW_FILLED: ResourceLocation = azLoc("textures/gui/sprites/common/arrow_filled.png")
+        val FLAME_FILLED: ResourceLocation = azLoc("common/flame_filled")
     }
 
     var base: ScreenRectangle = ScreenRectangle.empty()

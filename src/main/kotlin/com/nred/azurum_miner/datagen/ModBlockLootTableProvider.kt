@@ -5,6 +5,7 @@ import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
 import com.nred.azurum_miner.block.ModBlocks.ENERGIZED_OBSIDIAN
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.ModMachines.CRYSTALLIZER
 import com.nred.azurum_miner.machine.ModMachines.GENERATOR
 import com.nred.azurum_miner.machine.ModMachines.INFUSER
 import com.nred.azurum_miner.machine.ModMachines.LIQUIFIER
@@ -57,6 +58,7 @@ class ModBlockLootTableProvider(registries: HolderLookup.Provider) :
 
         add(INFUSER.get(), createMachineDrop(INFUSER.get()))
         add(LIQUIFIER.get(), createMachineDrop(LIQUIFIER.get()))
+        add(CRYSTALLIZER.get(), createMachineDrop(CRYSTALLIZER.get()))
         add(TRANSMOGRIFIER.get(), createMachineDrop(TRANSMOGRIFIER.get()))
         add(GENERATOR.get(), createMachineDrop(GENERATOR.get()))
         add(SIMPLE_GENERATOR.get(), createMachineDrop(SIMPLE_GENERATOR.get()))

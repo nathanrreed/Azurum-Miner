@@ -11,6 +11,7 @@ object MachineInfo {
         "generator" to MachineInfoData(0, 4, false, false, false, true),
         "simple_generator" to MachineInfoData(0, 1, false, false, false, true),
         "liquifier" to MachineInfoData(1, 1, false, true),
+        "crystallizer" to MachineInfoData(2, 1, true, true),
         "transmogrifier" to MachineInfoData(0, 2),
         "miner" to MachineInfoData(1, 4)
     )

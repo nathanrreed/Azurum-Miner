@@ -31,6 +31,7 @@ object ModRecipe {
         }
     }
 
+    val CRYSTALLIZER_RECIPE_TYPE = register<CrystallizerRecipe>("crystallizer_recipe")
     val LIQUIFIER_RECIPE_TYPE = register<LiquifierRecipe>("liquifier_recipe")
     val INFUSER_RECIPE_TYPE = register<InfuserRecipe>("infuser_recipe")
     val TRANSMOGRIFIER_RECIPE_TYPE = register<TransmogrifierRecipe>("transmogrifier_recipe")
@@ -44,6 +45,7 @@ object ModRecipe {
 
     val RECIPE_SERIALIZERS: DeferredRegister<RecipeSerializer<*>?> = DeferredRegister.create(Registries.RECIPE_SERIALIZER, AzurumMiner.ID)
 
+    val CRYSTALLIZER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crystallizer_recipe") { -> CrystallizerRecipeSerializer() }
     val LIQUIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("liquifier_recipe") { -> LiquifierRecipeSerializer() }
     val INFUSER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("infuser_recipe") { -> InfuserRecipeSerializer() }
     val TRANSMOGRIFIER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("transmogrifier_recipe") { -> TransmogrifierRecipeSerializer() }
@@ -105,5 +107,29 @@ abstract class SimpleFluidRecipeBuilder(protected val result: FluidStack) : Reci
 
     fun getDefaultRecipeId(fluid: Fluid): ResourceLocation {
         return BuiltInRegistries.FLUID.getKey(fluid)
+    }
+}
+
+abstract class SimpleItemFluidRecipeBuilder(protected val result: ItemStack, protected val fluidResult: FluidStack) : RecipeBuilder {
+    protected val criteria = LinkedHashMap<String, Criterion<*>>()
+
+    protected var group: String? = null
+
+    override fun unlockedBy(name: String, criterion: Criterion<*>): SimpleItemFluidRecipeBuilder {
+        criteria.put(name, criterion)
+        return this
+    }
+
+    override fun group(group: String?): SimpleItemFluidRecipeBuilder {
+        this.group = group
+        return this
+    }
+
+    override fun getResult(): Item {
+        return result.item
+    }
+
+    fun getFluidResult(): Fluid {
+        return this.fluidResult.fluid
     }
 }

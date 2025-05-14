@@ -3,7 +3,7 @@
 package com.nred.azurum_miner.screen
 
 import com.google.common.collect.ImmutableList
-import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.TabButton
@@ -20,7 +20,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
 import java.text.DecimalFormat
 import kotlin.math.max
@@ -46,7 +45,7 @@ abstract class GuiCommon {
         }
 
         fun getTime(ticks: Number): String {
-            if (ticks.toDouble() <= 0){
+            if (ticks.toDouble() <= 0) {
                 return "0s"
             }
 
@@ -209,7 +208,7 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
 
 @Suppress("PrivatePropertyName")
 class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height: Int) : TabButton(tabManager, tab, width, height) {
-    private val TAB = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/tab")
+    private val TAB = azLoc("miner/tab")
     private var navigationBar: VerticalTabNavigationBar? = null
     private var selected: Boolean = false
     private var color: List<Float>

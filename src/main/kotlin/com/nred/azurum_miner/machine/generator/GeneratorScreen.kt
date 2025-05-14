@@ -1,6 +1,5 @@
 package com.nred.azurum_miner.machine.generator
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.GeneratorEnum.*
@@ -9,6 +8,7 @@ import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.util.ClearPayload
 import com.nred.azurum_miner.util.FALSE
 import com.nred.azurum_miner.util.Helpers
+import com.nred.azurum_miner.util.Helpers.azLoc
 import io.netty.buffer.Unpooled
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.network.PacketDistributor
 
 class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Component) : MachineScreen<GeneratorMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator")
+        val BASE: ResourceLocation = azLoc("generator")
         val LOCK: ResourceLocation = ResourceLocation.withDefaultNamespace("container/cartography_table/locked")
         val EMPTY_INGOT = Minecraft.getInstance().getTextureAtlas(ResourceLocation.withDefaultNamespace("textures/atlas/blocks.png")).apply(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     }

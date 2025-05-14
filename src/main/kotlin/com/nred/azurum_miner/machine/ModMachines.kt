@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.machine.crystallizer.Crystallizer
 import com.nred.azurum_miner.machine.generator.Generator
 import com.nred.azurum_miner.machine.infuser.Infuser
 import com.nred.azurum_miner.machine.liquifier.Liquifier
@@ -26,6 +27,7 @@ object ModMachines {
         }
     }
 
+    val CRYSTALLIZER = Helpers.registerBlock("crystallizer_block", MACHINES) { -> Crystallizer(BASE_PROPERTIES) }
     val LIQUIFIER = Helpers.registerBlock("liquifier_block", MACHINES) { -> Liquifier(BASE_PROPERTIES) }
     val INFUSER = Helpers.registerBlock("infuser_block", MACHINES) { -> Infuser(BASE_PROPERTIES) }
     val TRANSMOGRIFIER = Helpers.registerBlock("transmogrifier_block", MACHINES) { -> Transmogrifier(BASE_PROPERTIES) }

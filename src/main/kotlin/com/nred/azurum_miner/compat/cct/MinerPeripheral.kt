@@ -2,13 +2,13 @@
 
 package com.nred.azurum_miner.compat.cct
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.get
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.set
 import com.nred.azurum_miner.util.FALSE
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.TRUE
 import dan200.computercraft.api.detail.VanillaDetailRegistries
 import dan200.computercraft.api.lua.LuaFunction
@@ -95,7 +95,7 @@ class MinerPeripheral(private val miner: MinerEntity) : MachinePeripheral(miner)
     }
 
     override fun getType(): String {
-        return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner").toString()
+        return azLoc("miner").toString()
     }
 
     override fun equals(other: IPeripheral?): Boolean {

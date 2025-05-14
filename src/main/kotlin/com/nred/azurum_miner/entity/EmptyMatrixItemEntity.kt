@@ -4,10 +4,12 @@ import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.Vec3i
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents.*
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
@@ -17,9 +19,12 @@ import net.minecraft.world.level.block.Portal
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
-import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3i
 import kotlin.random.Random
+
+
+// TODO kotlinforforge functions not working!
+fun Vec3.toVec3i(): Vec3i = Vec3i(Mth.floor(x), Mth.floor(y), Mth.floor(z))
+fun BlockPos.toVec3(): Vec3 = Vec3.atLowerCornerOf(this)
 
 class EmptyMatrixItemEntity : ItemEntity {
     var fill = 0

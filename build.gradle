@@ -6,8 +6,8 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '1.0.11'
 
-    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.20'
 }
 
 version = mod_version
@@ -104,7 +104,7 @@ repositories {
 
 
 dependencies {
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.7.0'
+    implementation "thedarkcolour:kotlinforforge-neoforge:${kotlin_version}"
 
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")

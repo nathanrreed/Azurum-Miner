@@ -21,6 +21,10 @@ class ModCommonConfig {
             BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000, 0, 9223372036854775807)
             BUILDER.pop()
 
+            BUILDER.comment("Liquifier Settings").push("crystallizer")
+            BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000, 0, 9223372036854775807)
+            BUILDER.pop()
+
             BUILDER.comment("Transmogrifier Settings").push("transmogrifier")
             BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 5000000, 0, 9223372036854775807)
             BUILDER.pop()
@@ -31,9 +35,9 @@ class ModCommonConfig {
             BUILDER.comment("Energy Shard chance per tick").define("shardChance", 0.0005)
             BUILDER.pop()
 
-            BUILDER.comment("Generator Settings").push("simple_generator")
+            BUILDER.comment("Simple Generator Settings").push("simple_generator")
             BUILDER.comment("The energy capacity").defineInRange("energyCapacity", 500000, 0, 9223372036854775807)
-            BUILDER.comment("The amount of energy created per tick").defineInRange("energyProduction", 50, 0, 9223372036854775807)
+            BUILDER.comment("The amount of energy created per tick").defineInRange("energyProduction", 20, 0, 9223372036854775807)
             BUILDER.pop()
 
             BUILDER.comment("Miner Settings").push("miner")
