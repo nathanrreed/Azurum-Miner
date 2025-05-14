@@ -2,6 +2,7 @@ package com.nred.azurum_miner.fluid
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.util.FluidHelper
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Items
@@ -21,7 +22,7 @@ object ModFluids {
     init {
         FluidHelper("nether_essence", 0xFF982b2b.toInt())
         FluidHelper("ender_essence", 0xFF208c7a.toInt())
-        FluidHelper("molten_ore", 0xFFFFFFFF.toInt(), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/molten_ore_still"), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/molten_ore_flow"))
+        FluidHelper("molten_ore", 0xFFFFFFFF.toInt(), azLoc("block/fluid/molten_ore_still"), azLoc("block/fluid/molten_ore_flow"))
     }
 
     val snow_type: DeferredHolder<FluidType?, FluidType?> = FLUID_TYPES.register("snow_type") { -> FluidType(FluidType.Properties.create().temperature(-50)) }
@@ -30,7 +31,7 @@ object ModFluids {
 
     val snow_client = object : IClientFluidTypeExtensions {
         override fun getStillTexture(): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/snow_still")
+            return azLoc("block/fluid/snow_still")
         }
 
         override fun getTintColor(): Int {

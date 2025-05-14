@@ -1,12 +1,12 @@
 package com.nred.azurum_miner.compat.jei
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.recipe.TransmogrifierRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
+import com.nred.azurum_miner.util.Helpers.azLoc
 import mezz.jei.api.constants.VanillaTypes
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder
 import mezz.jei.api.gui.drawable.IDrawable
@@ -26,7 +26,7 @@ import net.minecraft.world.item.ItemStack
 
 class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<TransmogrifierRecipe> {
     companion object {
-        val UID: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier")
+        val UID: ResourceLocation = azLoc("transmogrifier")
         val TYPE = RecipeType(UID, TransmogrifierRecipe::class.java)
     }
 

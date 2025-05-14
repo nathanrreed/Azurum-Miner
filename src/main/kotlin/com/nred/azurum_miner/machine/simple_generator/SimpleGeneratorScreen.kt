@@ -1,10 +1,10 @@
 package com.nred.azurum_miner.machine.simple_generator
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity.Companion.SimpleGeneratorEnum.PROCESSING_TIME
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity.Companion.SimpleGeneratorEnum.PROGRESS
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity.Companion.get
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
@@ -14,7 +14,7 @@ import kotlin.math.ceil
 
 class SimpleGeneratorScreen(menu: SimpleGeneratorMenu, playerInventory: Inventory, title: Component) : MachineScreen<SimpleGeneratorMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "simple_generator")
+        val BASE: ResourceLocation = azLoc("simple_generator")
     }
 
     override fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {

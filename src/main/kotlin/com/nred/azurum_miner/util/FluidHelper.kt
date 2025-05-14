@@ -4,11 +4,11 @@ package com.nred.azurum_miner.util
 
 import com.mojang.blaze3d.shaders.FogShape
 import com.mojang.blaze3d.systems.RenderSystem
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.block.ModBlocks.BLOCKS
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.fluid.ModFluids.FLUID_TYPES
 import com.nred.azurum_miner.item.ModItems.ITEMS
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.client.Camera
 import net.minecraft.client.renderer.FogRenderer
 import net.minecraft.core.BlockPos
@@ -42,7 +42,7 @@ import net.neoforged.neoforge.fluids.FluidType
 import net.neoforged.neoforge.registries.DeferredHolder
 import kotlin.math.abs
 
-class FluidHelper(name: String, tint: Int, still: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/fluid_still"), flow: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "block/fluid/fluid_flow")) {
+class FluidHelper(name: String, tint: Int, still: ResourceLocation = azLoc("block/fluid/fluid_still"), flow: ResourceLocation = azLoc("block/fluid/fluid_flow")) {
     companion object {
         val FLUIDS = ArrayList<Fluid>()
 
@@ -61,7 +61,7 @@ class Fluid(val name: String, val tint: Int, still: ResourceLocation, flow: Reso
     val still = ModFluids.FLUIDS.register(name) { -> BaseFlowingFluid.Source(this.properties) }
     val flowing = ModFluids.FLUIDS.register(name + "flowing") { -> BaseFlowingFluid.Flowing(this.properties) }
     val properties: BaseFlowingFluid.Properties = BaseFlowingFluid.Properties({ -> this.type.get() }, { -> this.still.get() }, { -> this.flowing.get() }).bucket({ this.bucket.get() }).block({ this.block.get() }).tickRate(100).levelDecreasePerBlock(2)
-    val damageType = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, name + "_damage"))
+    val damageType = ResourceKey.create(Registries.DAMAGE_TYPE, azLoc(name + "_damage"))
 
     val block = BLOCKS.register(name) { ->
         object : LiquidBlock(

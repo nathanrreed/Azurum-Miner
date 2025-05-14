@@ -4,8 +4,8 @@ package com.nred.azurum_miner.item
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
 import com.nred.azurum_miner.entity.ModEntities.ENTITY_TYPES
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
@@ -30,7 +30,7 @@ object ModItems {
     val DIMENSIONAL_MATRIX: DeferredItem<Item> = ITEMS.register("dimensional_matrix") { -> Item(Properties().durability(1).setNoRepair()) }
     val EMPTY_DIMENSIONAL_MATRIX: DeferredItem<Item> = ITEMS.register("empty_dimensional_matrix") { -> Item(Properties()) }
     val EMPTY_DIMENSIONAL_MATRIX_TYPE = ENTITY_TYPES.register("empty_dimensional_matrix_type") { -> EntityType.Builder.of(::EmptyMatrixItemEntity, MobCategory.MISC).sized(0.25F, 0.25F).eyeHeight(0.2125F).clientTrackingRange(6).updateInterval(20).build("empty_dimensional_matrix_type") }
-    val EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "empty_dimensional_matrix_type"))
+    val EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE = TagKey.create(Registries.ENTITY_TYPE, azLoc("empty_dimensional_matrix_type"))
 
     fun register(eventBus: IEventBus) {
         ITEMS.register(eventBus)

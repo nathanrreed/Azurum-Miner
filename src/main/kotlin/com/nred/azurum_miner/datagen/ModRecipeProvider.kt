@@ -18,6 +18,7 @@ import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.VOID_PROCESSOR
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.ModMachines.GENERATOR
+import com.nred.azurum_miner.machine.ModMachines.SIMPLE_GENERATOR
 import com.nred.azurum_miner.recipe.*
 import com.nred.azurum_miner.util.FluidHelper.Companion.FLUIDS
 import com.nred.azurum_miner.util.FluidHelper.Companion.get
@@ -139,6 +140,8 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         TransmogrifierRecipeBuilder(ItemStack(CRYING_OBSIDIAN, 1), Ingredient.of(OBSIDIAN), 1000000, 3600).save(recipeOutput)
         TransmogrifierRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE_SHARD.get(), 2), Ingredient.of(CONGLOMERATE_OF_ORE), 2000000, 1200).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_ore")
 
+        CrystallizerRecipeBuilder(ItemStack(DIAMOND, 1), FluidStack(FLUIDS["nether_essence"].still.get(), 150), Ingredient.of(SAND), FluidStack(FLUIDS["nether_essence"].still.get(), 150), 50000, 60).save(recipeOutput)
+
         MinerRecipeBuilder(Ingredient.of(oreTierTag[0]), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
         MinerRecipeBuilder(Ingredient.of(oreTierTag[1]), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
         MinerRecipeBuilder(Ingredient.of(oreTierTag[2]), 3).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier3")
@@ -179,6 +182,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('A', ANVIL).define('O', OBSIDIAN).define('F', BLAST_FURNACE).define('P', SIMPLE_VOID_PROCESSOR).define('G', TINTED_GLASS)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.CRYSTALLIZER).pattern("ODO").pattern("PIP").pattern("TDT")
+            .define('T', ORES["thelxium"].ingot!!).define('O', OBSIDIAN).define('D', DIAMOND_BLOCK).define('P', VOID_PROCESSOR).define('I', ModMachines.INFUSER)
+            .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.TRANSMOGRIFIER).pattern("NED").pattern("MCM").pattern("GVG")
             .define('V', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', DIMENSIONAL_MATRIX).define('E', ENDER_EYE).define('C', CONGLOMERATE_OF_ORE).define('N', NETHER_DIAMOND).define('D', ENDER_DIAMOND)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
@@ -205,6 +212,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
 
         ShapedRecipeBuilder.shaped(BUILDING_BLOCKS, GENERATOR).pattern("GCG").pattern("VEV").pattern("OOO")
             .define('E', END_CRYSTAL).define('O', OBSIDIAN).define('V', VOID_PROCESSOR).define('C', CONGLOMERATE_OF_ORE_BLOCK).define('G', TINTED_GLASS)
+            .unlockedBy(getHasName(ENERGY_SHARD), has(ENERGY_SHARD)).save(recipeOutput)
+
+        ShapedRecipeBuilder.shaped(BUILDING_BLOCKS, SIMPLE_GENERATOR).pattern("CPC").pattern("CFC").pattern("III")
+            .define('C', COBBLESTONE).define('F', FURNACE).define('I', IRON_INGOT).define('P', SIMPLE_VOID_PROCESSOR)
             .unlockedBy(getHasName(ENERGY_SHARD), has(ENERGY_SHARD)).save(recipeOutput)
 
         ShapedRecipeBuilder.shaped(BUILDING_BLOCKS, ENERGIZED_OBSIDIAN).pattern(" E ").pattern("EOE").pattern(" E ")

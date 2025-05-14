@@ -40,7 +40,7 @@ open class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) 
 @Suppress("UsePropertyAccessSyntax")
 abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineName: String, pos: BlockPos, blockState: BlockState) : BlockEntity(type, pos, blockState), MenuProvider {
     var loaded = false
-    protected var capCache: BlockCapabilityCache<IItemHandler, Direction>? = null
+    protected var capCache: BlockCapabilityCache<IItemHandler?, Direction?>? = null
     abstract var variables: IntArray
     abstract var variablesSize: Int
     abstract val itemStackHandler: ExtendedItemStackHandler
@@ -68,9 +68,9 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
 
     val fluidHandler = object : CustomFluidStackHandler(FLUID_SIZE, MachineInfo.data[machineName]!!.numTanks, MachineInfo.data[machineName]!!.allowFluidInput, MachineInfo.data[machineName]!!.allowFluidOutput) {
         override fun onContentsChanged() {
-            setChanged();
+            setChanged()
             if (level != null && !level!!.isClientSide()) {
-                level!!.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                level!!.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL)
             }
         }
 

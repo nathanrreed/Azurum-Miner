@@ -1,12 +1,11 @@
 package com.nred.azurum_miner.worldgen
 
-import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.OreHelper
 import com.nred.azurum_miner.util.OreHelper.Companion.get
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature
 import net.minecraft.world.level.levelgen.feature.Feature
@@ -28,7 +27,7 @@ object ModConfiguredFeatures {
     }
 
     fun registerKey(name: String): ResourceKey<ConfiguredFeature<*, *>> {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, name))
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, azLoc(name))
     }
 
     fun <FC : FeatureConfiguration, F : Feature<FC>> register(context: BootstrapContext<ConfiguredFeature<*, *>>, key: ResourceKey<ConfiguredFeature<*, *>>, feature: F, configuration: FC) {

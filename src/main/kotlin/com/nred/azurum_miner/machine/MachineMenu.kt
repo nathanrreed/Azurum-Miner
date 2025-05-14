@@ -29,6 +29,6 @@ abstract class MachineMenu(menuType: MenuType<*>, val machineName: String, conta
     }
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
-        return Helpers.quickMoveStack(player, index, slots, ::moveItemStackTo, MachineInfo.data.get(machineName)!!.numItems)
+        return Helpers.quickMoveStack(player, index, slots, ::moveItemStackTo, MachineInfo.data[machineName]!!.numItems)
     }
 }

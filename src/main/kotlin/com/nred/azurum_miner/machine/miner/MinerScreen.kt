@@ -1,14 +1,14 @@
 package com.nred.azurum_miner.machine.miner
 
 import com.mojang.blaze3d.platform.InputConstants
-import com.nred.azurum_miner.AzurumMiner
-import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.IS_ON
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum.*
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.get
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.SpriteTabButton
 import com.nred.azurum_miner.screen.VerticalTabNavigationBar
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Helpers.componentSplit
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.Minecraft
@@ -31,13 +31,13 @@ import kotlin.math.round
 
 class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component) : AbstractContainerScreen<MinerMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/base")
-        val SLOT: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/slot")
-        val PLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/play")
-        val PAUSE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/pause")
-        val ENERGY_BAR: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_bar")
-        val ENERGY_INNER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "common/energy_inner")
-        val TANK: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/fluid_tank")
+        val BASE: ResourceLocation = azLoc("common/base")
+        val SLOT: ResourceLocation = azLoc("common/slot")
+        val PLAY: ResourceLocation = azLoc("common/play")
+        val PAUSE: ResourceLocation = azLoc("common/pause")
+        val ENERGY_BAR: ResourceLocation = azLoc("common/energy_bar")
+        val ENERGY_INNER: ResourceLocation = azLoc("common/energy_inner")
+        val TANK: ResourceLocation = azLoc("miner/fluid_tank")
     }
 
     var base: ScreenRectangle = ScreenRectangle.empty()
@@ -116,34 +116,34 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         //MISS
         guiGraphics.setColor(1f, 0.30f, 0.30f, 1f)
         barRects.add(ScreenRectangle(barGraphs.left() + barGraphs.width, height, barGraphs.width, barHeight(barGraphs.height * barData[0])))
-        guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[0].left(), barRects[0].top(), barGraphs.width, barRects[0].height)
+        guiGraphics.blitSprite(azLoc("miner/bar"), barRects[0].left(), barRects[0].top(), barGraphs.width, barRects[0].height)
         height += barHeight(barGraphs.height * barData[0])
 
         // MATERIAL CHANCE
         guiGraphics.setColor(0.3f, 0.8f, 1f, 1f)
         barData.add(hit * (menu.containerData[MATERIAL_CHANCE] / 100.0))
         barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, barHeight(barGraphs.height * barData[1])))
-        guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[1].left(), barRects[1].top(), barGraphs.width, barRects[1].height)
+        guiGraphics.blitSprite(azLoc("miner/bar"), barRects[1].left(), barRects[1].top(), barGraphs.width, barRects[1].height)
         height += barHeight(barGraphs.height * barData[1])
 
         // RAW
         guiGraphics.setColor(0.9f, 0.3f, 0.9f, 1f)
         barData.add(hit * (menu.containerData[RAW_CHANCE] / 100.0))
         barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, barHeight(barGraphs.height * barData[2])))
-        guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[2].left(), barRects[2].top(), barGraphs.width, barRects[2].height)
+        guiGraphics.blitSprite(azLoc("miner/bar"), barRects[2].left(), barRects[2].top(), barGraphs.width, barRects[2].height)
         height += barHeight(barGraphs.height * barData[2])
 
         // ORES
         guiGraphics.setColor(0.3f, 1f, 0.3f, 1f)
         barData.add(hit - barData[1] - barData[2])
         barRects.add(ScreenRectangle(barRects[0].left(), height, barGraphs.width, barGraphs.bottom() - height))
-        guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/bar"), barRects[3].left(), barRects[3].top(), barGraphs.width, barRects[3].height)
+        guiGraphics.blitSprite(azLoc("miner/bar"), barRects[3].left(), barRects[3].top(), barGraphs.width, barRects[3].height)
 
         guiGraphics.setColor(1f, 1f, 1f, 1f)
 
         // MOLTEN ORE
         val varMoltenLen = floor(menu.fluidHandler.getFluidAmount(0).toDouble() / MinerEntity.FLUID_SIZE.toDouble() * tank.height).toInt()
-        guiGraphics.blitSprite(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner/molten_ore_still"), tank.left(), tank.bottom() - varMoltenLen, tank.width, varMoltenLen)
+        guiGraphics.blitSprite(azLoc("miner/molten_ore_still"), tank.left(), tank.bottom() - varMoltenLen, tank.width, varMoltenLen)
 
         // TANK
         guiGraphics.blitSprite(TANK, tank.left() - 1, tank.top() - 1, 4, 45, tank.height + 2)

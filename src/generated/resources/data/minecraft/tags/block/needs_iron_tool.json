@@ -16,6 +16,7 @@
     "azurum_miner:conglomerate_of_ore_block",
     "azurum_miner:infuser_block",
     "azurum_miner:liquifier_block",
+    "azurum_miner:crystallizer_block",
     "azurum_miner:transmogrifier_block",
     "azurum_miner:generator_block"
   ]

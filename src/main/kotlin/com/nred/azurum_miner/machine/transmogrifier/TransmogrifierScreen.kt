@@ -1,9 +1,9 @@
 package com.nred.azurum_miner.machine.transmogrifier
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.TransmogrifierEnum.*
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity.Companion.get
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenAxis
@@ -17,7 +17,7 @@ import kotlin.math.floor
 
 class TransmogrifierScreen(menu: TransmogrifierMenu, playerInventory: Inventory, title: Component) : MachineScreen<TransmogrifierMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier")
+        val BASE: ResourceLocation = azLoc("transmogrifier")
     }
 
     override fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {

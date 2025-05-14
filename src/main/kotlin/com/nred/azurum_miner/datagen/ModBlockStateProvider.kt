@@ -41,6 +41,7 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
         }
 
         simpleMachineModel(ModMachines.LIQUIFIER, "liquifier")
+        simpleMachineModel(ModMachines.CRYSTALLIZER, "crystallizer")
         simpleMachineModel(ModMachines.INFUSER, "infuser")
         simpleMachineModel(ModMachines.TRANSMOGRIFIER, "transmogrifier")
         simpleMachineModel(ModMachines.GENERATOR, "generator")

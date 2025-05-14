@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "azurum_miner:infuser_block"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "P": {
+      "item": "azurum_miner:void_processor"
+    },
+    "T": {
+      "item": "azurum_miner:thelxium_ingot"
+    }
+  },
+  "pattern": [
+    "ODO",
+    "PIP",
+    "TDT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:crystallizer_block"
+  }
+}

@@ -103,7 +103,7 @@ open class SimpleGeneratorEntity(pos: BlockPos, blockState: BlockState) : Abstra
             data[PROGRESS] = 0
             data[PROCESSING_TIME] = 0
         } else {
-            energyHandler.internalInsertEnergy(CONFIG.getIntOrElse("$machineName.energyProduction", 50), false)
+            energyHandler.internalInsertEnergy(CONFIG.getIntOrElse("$machineName.energyProduction", 20), false)
             data[PROGRESS] += 1
         }
 

@@ -4,6 +4,7 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerScreen
 import com.nred.azurum_miner.machine.generator.GeneratorScreen
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
@@ -12,11 +13,13 @@ import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.miner.MinerScreen
 import com.nred.azurum_miner.machine.miner.OptionsTab
+import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.FilterSetPayload
+import com.nred.azurum_miner.util.Helpers.azLoc
 import dev.emi.emi.api.EmiEntrypoint
 import dev.emi.emi.api.EmiPlugin
 import dev.emi.emi.api.EmiRegistry
@@ -34,9 +37,11 @@ import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -49,19 +54,23 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient
 @EmiEntrypoint
 class EmiPlugin : EmiPlugin {
     companion object {
-        val portal: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")
+        val portal: ResourceLocation = azLoc("portal")
 
         val LIQUIFIER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.LIQUIFIER)
         val INFUSER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.INFUSER)
+        val CRYSTALLIZER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.CRYSTALLIZER)
         val TRANSMOGRIFIER_WORKSTATION: EmiStack = EmiStack.of(ModMachines.TRANSMOGRIFIER)
         val GENERATOR_WORKSTATION: EmiStack = EmiStack.of(ModMachines.GENERATOR)
+        val SIMPLE_GENERATOR_WORKSTATION: EmiStack = EmiStack.of(ModMachines.SIMPLE_GENERATOR)
         val MINER_WORKSTATION: EmiIngredient = EmiIngredient.of(ModMachines.MINER_BLOCK_TIERS.map { EmiIngredient.of(Ingredient.of(it.get())) })
-        val LIQUIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier"), LIQUIFIER_WORKSTATION)
-        val INFUSER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "infuser"), INFUSER_WORKSTATION)
-        val GENERATOR_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator"), GENERATOR_WORKSTATION)
-        val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "transmogrifier"), TRANSMOGRIFIER_WORKSTATION)
-        val MINER_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "miner"), MINER_WORKSTATION)
-        val PORTAL_CATEGORY = EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "portal")) { guiGraphics, x, y, _ ->
+        val LIQUIFIER_CATEGORY = EmiRecipeCategory(azLoc("liquifier"), LIQUIFIER_WORKSTATION)
+        val INFUSER_CATEGORY = EmiRecipeCategory(azLoc("infuser"), INFUSER_WORKSTATION)
+        val CRYSTALLIZER_CATEGORY = EmiRecipeCategory(azLoc("crystallizer"), CRYSTALLIZER_WORKSTATION)
+        val GENERATOR_CATEGORY = EmiRecipeCategory(azLoc("generator"), GENERATOR_WORKSTATION)
+        val SIMPLE_GENERATOR_CATEGORY = EmiRecipeCategory(azLoc("simple_generator"), SIMPLE_GENERATOR_WORKSTATION)
+        val TRANSMOGRIFIER_CATEGORY = EmiRecipeCategory(azLoc("transmogrifier"), TRANSMOGRIFIER_WORKSTATION)
+        val MINER_CATEGORY = EmiRecipeCategory(azLoc("miner"), MINER_WORKSTATION)
+        val PORTAL_CATEGORY = EmiRecipeCategory(azLoc("portal")) { guiGraphics, x, y, _ ->
             guiGraphics.blitSprite(portal, x, y, 16, 16)
         }
     }
@@ -69,15 +78,19 @@ class EmiPlugin : EmiPlugin {
     override fun register(registry: EmiRegistry) {
         registry.addCategory(LIQUIFIER_CATEGORY)
         registry.addCategory(INFUSER_CATEGORY)
+        registry.addCategory(CRYSTALLIZER_CATEGORY)
         registry.addCategory(TRANSMOGRIFIER_CATEGORY)
         registry.addCategory(MINER_CATEGORY)
         registry.addCategory(PORTAL_CATEGORY)
         registry.addCategory(GENERATOR_CATEGORY)
+        registry.addCategory(SIMPLE_GENERATOR_CATEGORY)
 
         registry.addExclusionArea(LiquifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(InfuserScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
+        registry.addExclusionArea(CrystallizerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(TransmogrifierScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(GeneratorScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
+        registry.addExclusionArea(SimpleGeneratorScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top() + 6, 10, 37)) }
 
@@ -169,9 +182,11 @@ class EmiPlugin : EmiPlugin {
 
         registry.addWorkstation(LIQUIFIER_CATEGORY, LIQUIFIER_WORKSTATION)
         registry.addWorkstation(INFUSER_CATEGORY, INFUSER_WORKSTATION)
+        registry.addWorkstation(CRYSTALLIZER_CATEGORY, CRYSTALLIZER_WORKSTATION)
         registry.addWorkstation(TRANSMOGRIFIER_CATEGORY, TRANSMOGRIFIER_WORKSTATION)
         registry.addWorkstation(MINER_CATEGORY, MINER_WORKSTATION)
         registry.addWorkstation(GENERATOR_CATEGORY, GENERATOR_WORKSTATION)
+        registry.addWorkstation(SIMPLE_GENERATOR_CATEGORY, SIMPLE_GENERATOR_WORKSTATION)
 
         val manager = registry.recipeManager
 
@@ -193,8 +208,30 @@ class EmiPlugin : EmiPlugin {
             registry.addRecipe(EmiInfuserRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
         }
 
+        for (recipe in manager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get())) {
+            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+        }
+
         for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {
             registry.addRecipe(EmiTransmogrifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+        }
+
+        val fuels = hashMapOf<Int, ArrayList<Item>>()
+        for (item: Item in BuiltInRegistries.ITEM) { // Find all fuels
+            val time = item.defaultInstance.getBurnTime(null)
+            if (time > 0) {
+                if (fuels.contains(time)) {
+                    fuels.get(time)!!.plusAssign(item)
+                } else {
+                    fuels.put(time, ArrayList())
+                }
+            }
+        }
+
+        for (time: Int in fuels.keys) {
+            val ingredients = Ingredient.of(*fuels.get(time)!!.toTypedArray())
+            if (ingredients.hasNoItems()) continue
+            registry.addRecipe(EmiSimpleGeneratorRecipe(azLoc("simple_generator"), EmiIngredient.of(ingredients), time))
         }
 
         val bases = manager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get()).filter { it.value.typeName == "base" }.map { it.value }
@@ -216,7 +253,7 @@ class EmiPlugin : EmiPlugin {
             }
 
             override fun getId(): ResourceLocation {
-                return ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "generator_bases")
+                return azLoc("generator_bases")
             }
         }
         registry.addRecipe(workaround)
@@ -228,7 +265,7 @@ class EmiPlugin : EmiPlugin {
 
         registry.addRecipe(EmiPortalRecipe(ResourceLocation.parse(AzurumMiner.ID + ":/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))
 
-        registry.addRecipe(EmiInfoRecipe(listOf(NeoForgeEmiIngredient.of(FluidIngredient.of(ModFluids.snow_still.get())), EmiIngredient.of(Ingredient.of(Items.POWDER_SNOW_BUCKET))), listOf(Component.translatable("emi.azurum_miner.powder_snow")), ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "/powder_snow_bucket_from_fake_block")))
+        registry.addRecipe(EmiInfoRecipe(listOf(NeoForgeEmiIngredient.of(FluidIngredient.of(ModFluids.snow_still.get())), EmiIngredient.of(Ingredient.of(Items.POWDER_SNOW_BUCKET))), listOf(Component.translatable("emi.azurum_miner.powder_snow")), azLoc("/powder_snow_bucket_from_fake_block")))
         registry.addRecipe(
             EmiWorldInteractionRecipe.builder().leftInput(EmiIngredient.of(Ingredient.of(Items.BUCKET))).rightInput(
                 EmiIngredient.of(Ingredient.of(Blocks.POWDER_SNOW)), false
@@ -251,7 +288,7 @@ class EmiPlugin : EmiPlugin {
                         return tooltips
                     }
                 }
-            }.id(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "/powder_snow_liquid_from_powder_snow_bucket")).output(EmiStack.of { Items.POWDER_SNOW_BUCKET }).build()
+            }.id(azLoc("/powder_snow_liquid_from_powder_snow_bucket")).output(EmiStack.of { Items.POWDER_SNOW_BUCKET }).build()
         )
     }
 }

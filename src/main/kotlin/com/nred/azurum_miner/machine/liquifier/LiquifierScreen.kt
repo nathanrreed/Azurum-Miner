@@ -1,9 +1,9 @@
 package com.nred.azurum_miner.machine.liquifier
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.LiquifierEnum.*
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity.Companion.get
+import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenAxis
@@ -17,7 +17,7 @@ import kotlin.math.floor
 
 class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Component) : MachineScreen<LiquifierMenu>(menu, playerInventory, title) {
     companion object {
-        val BASE: ResourceLocation = ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "liquifier")
+        val BASE: ResourceLocation = azLoc("liquifier")
     }
 
     override fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
