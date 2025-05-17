@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:crystallizer_recipe",
+  "fluid_stack": {
+    "amount": 150,
+    "id": "azurum_miner:amethyst_crystal_solution"
+  },
+  "ingredient": {
+    "item": "azurum_miner:seed_crystal"
+  },
+  "power": 50000,
+  "processingTime": 200,
+  "result": {
+    "count": 1,
+    "id": "minecraft:amethyst_shard"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "neoforge:item/bucket_drip",
+  "apply_tint": true,
+  "fluid": "azurum_miner:quartz_crystal_solution",
+  "loader": "neoforge:fluid_container"
+}

@@ -31,7 +31,7 @@ data class CrystallizerInput(val state: BlockState, val stack: ItemStack) : Reci
     }
 }
 
-class CrystallizerRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val fluidResult: FluidStack, val power: Int, val processingTime: Int) : Recipe<CrystallizerInput> {
+class CrystallizerRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<CrystallizerInput> {
     override fun matches(input: CrystallizerInput, level: Level): Boolean {
         return this.inputItem.test(input.stack)
     }
@@ -80,7 +80,6 @@ class CrystallizerRecipeSerializer : RecipeSerializer<CrystallizerRecipe> {
                 Ingredient.CODEC.fieldOf("ingredient").forGetter(CrystallizerRecipe::inputItem),
                 FluidStack.CODEC.fieldOf("fluid_stack").forGetter(CrystallizerRecipe::inputFluid),
                 ItemStack.CODEC.fieldOf("result").forGetter(CrystallizerRecipe::result),
-                FluidStack.CODEC.fieldOf("fluidResult").forGetter(CrystallizerRecipe::fluidResult),
                 Codec.INT.fieldOf("power").forGetter(CrystallizerRecipe::power),
                 Codec.INT.fieldOf("processingTime").forGetter(CrystallizerRecipe::processingTime)
             ).apply(inst, ::CrystallizerRecipe)
@@ -89,7 +88,6 @@ class CrystallizerRecipeSerializer : RecipeSerializer<CrystallizerRecipe> {
             Ingredient.CONTENTS_STREAM_CODEC, CrystallizerRecipe::inputItem,
             FluidStack.STREAM_CODEC, CrystallizerRecipe::inputFluid,
             ItemStack.STREAM_CODEC, CrystallizerRecipe::result,
-            FluidStack.STREAM_CODEC, CrystallizerRecipe::fluidResult,
             ByteBufCodecs.INT, CrystallizerRecipe::power,
             ByteBufCodecs.INT, CrystallizerRecipe::processingTime,
             ::CrystallizerRecipe
@@ -97,7 +95,7 @@ class CrystallizerRecipeSerializer : RecipeSerializer<CrystallizerRecipe> {
     }
 }
 
-class CrystallizerRecipeBuilder(result: ItemStack, fluidResult: FluidStack, private val inputItem: Ingredient, private val inputFluid: FluidStack, private val power: Int, private val processingTime: Int) : SimpleItemFluidRecipeBuilder(result, fluidResult) {
+class CrystallizerRecipeBuilder(result: ItemStack, private val inputItem: Ingredient, private val inputFluid: FluidStack, private val power: Int, private val processingTime: Int) : SimpleRecipeBuilder(result) {
     override fun save(output: RecipeOutput, key: ResourceLocation) {
         val advancement = output.advancement()
             .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(key))
@@ -105,7 +103,7 @@ class CrystallizerRecipeBuilder(result: ItemStack, fluidResult: FluidStack, priv
             .requirements(AdvancementRequirements.Strategy.OR)
         this.criteria.forEach { _ -> advancement::addCriterion }
         // Our factory parameters are the result, the block state, and the ingredient.
-        val recipe = CrystallizerRecipe(this.inputItem, this.inputFluid, this.result, this.fluidResult, this.power, this.processingTime)
+        val recipe = CrystallizerRecipe(this.inputItem, this.inputFluid, this.result, this.power, this.processingTime)
 
         output.accept(key, recipe, advancement.build(key.withPrefix("recipes/")))
     }

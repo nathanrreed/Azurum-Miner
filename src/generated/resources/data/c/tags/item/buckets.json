@@ -2,6 +2,11 @@
   "values": [
     "azurum_miner:nether_essence_bucket",
     "azurum_miner:ender_essence_bucket",
+    "azurum_miner:diamond_crystal_solution_bucket",
+    "azurum_miner:emerald_crystal_solution_bucket",
+    "azurum_miner:quartz_crystal_solution_bucket",
+    "azurum_miner:amethyst_crystal_solution_bucket",
+    "azurum_miner:prismarine_crystal_solution_bucket",
     "azurum_miner:molten_ore_bucket"
   ]
 }

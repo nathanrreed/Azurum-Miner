@@ -1,5 +1,6 @@
 {
   "type": "azurum_miner:liquifier_recipe",
+  "fluid_ingredient": {},
   "ingredient": {
     "item": "minecraft:ender_eye"
   },

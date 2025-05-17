@@ -2,15 +2,11 @@
 
 package com.nred.azurum_miner.util
 
-import com.mojang.blaze3d.shaders.FogShape
-import com.mojang.blaze3d.systems.RenderSystem
 import com.nred.azurum_miner.block.ModBlocks.BLOCKS
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.fluid.ModFluids.FLUID_TYPES
 import com.nred.azurum_miner.item.ModItems.ITEMS
 import com.nred.azurum_miner.util.Helpers.azLoc
-import net.minecraft.client.Camera
-import net.minecraft.client.renderer.FogRenderer
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -104,21 +100,12 @@ class Fluid(val name: String, val tint: Int, still: ResourceLocation, flow: Reso
             return flow
         }
 
-        override fun getOverlayTexture(): ResourceLocation? {
-            return ResourceLocation.withDefaultNamespace("block/water_overlay")
-        }
-
         override fun getStillTexture(): ResourceLocation {
             return still
         }
 
         override fun getTintColor(): Int {
             return tint
-        }
-
-        override fun modifyFogRender(camera: Camera, mode: FogRenderer.FogMode, renderDistance: Float, partialTick: Float, nearDistance: Float, farDistance: Float, shape: FogShape) {
-            RenderSystem.setShaderFogStart(1f)
-            RenderSystem.setShaderFogEnd(6f)
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:crystallizer_recipe",
+  "fluid_stack": {
+    "amount": 500,
+    "id": "azurum_miner:emerald_crystal_solution"
+  },
+  "ingredient": {
+    "item": "azurum_miner:seed_crystal"
+  },
+  "power": 140000,
+  "processingTime": 800,
+  "result": {
+    "count": 1,
+    "id": "minecraft:emerald"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:crystallizer_recipe",
+  "fluid_stack": {
+    "amount": 150,
+    "id": "azurum_miner:prismarine_crystal_solution"
+  },
+  "ingredient": {
+    "item": "azurum_miner:seed_crystal"
+  },
+  "power": 70000,
+  "processingTime": 300,
+  "result": {
+    "count": 2,
+    "id": "minecraft:prismarine_crystals"
+  }
+}

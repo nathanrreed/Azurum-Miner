@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:liquifier_recipe",
+  "fluid_ingredient": {
+    "amount": 5000,
+    "id": "minecraft:water"
+  },
+  "ingredient": {
+    "item": "minecraft:diamond"
+  },
+  "power": 200000,
+  "processingTime": 400,
+  "result": {
+    "amount": 750,
+    "id": "azurum_miner:diamond_crystal_solution"
+  }
+}

@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.util
 
+import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.generator.BASE_SLOT_SAVE
 import com.nred.azurum_miner.machine.generator.FUEL_SLOT_SAVE
 import com.nred.azurum_miner.machine.generator.GeneratorEntity
@@ -8,7 +9,6 @@ import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.Generat
 import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.set
 import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
-import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.miner.MinerEntity
 import com.nred.azurum_miner.machine.miner.MinerMenu
@@ -172,10 +172,10 @@ class ClearPayloadHandler {
 
                     else -> {}
                 }
-            } else if (menu is InfuserMenu) {
+            } else {
                 val entity = context.player().level().getBlockEntity(data.pos)
-                if (entity is InfuserEntity) {
-                    entity.fluidHandler.setFluid(0, FluidStack.EMPTY)
+                if (entity is AbstractMachineBlockEntity) {
+                    entity.fluidHandler.setFluid(data.idx, FluidStack.EMPTY)
                 }
             }
         }

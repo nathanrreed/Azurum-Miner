@@ -107,8 +107,9 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
                     data[PROGRESS]++
                 } else {
                     this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
-                    this.fluidHandler.internalInsertFluid(recipe.fluidResult, IFluidHandler.FluidAction.EXECUTE)
-                    this.itemStackHandler.decrement(0)
+
+                    if (level.random.nextBoolean()) // 50% chance to be used
+                        this.itemStackHandler.decrement(0)
                     this.itemStackHandler.insertItem(1, recipe.result.copy(), false)
                     data[PROGRESS] = 0
                 }
@@ -121,7 +122,4 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
             data[PROGRESS] = 0
         }
     }
-
-    // DIAMOND, EMERALD, QUARTZ, AMETHYST, END CRYSTAL, LAVA
-
 }

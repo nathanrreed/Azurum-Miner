@@ -26,7 +26,13 @@ class EmiLiquifierRecipe(id: ResourceLocation, inputs: List<EmiIngredient>, outp
         widgets.addFillingArrow(40, 26, 1500).tooltipText(listOf(Component.literal(getTime(processingTime))))
 
         widgets.addSlot(inputs[0], 18, 26)
-        widgets.addTank(outputs[0], width - 33, 2, 31, 66, outputs[0].amount.toInt()).recipeContext(this)
+        widgets.addTank(outputs[0], width - 33, 2, 31, 66, outputs[0].amount.toInt()).drawBack(false).recipeContext(this)
+
+        if (!inputs[1].isEmpty) {
+            widgets.addDrawable(10, 2, 6, 65) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(ENERGY_BAR, 0, 0, 3, 6, 65) }
+            widgets.addTank(inputs[1], 10, 2, 6, 65, inputs[1].amount.toInt()).drawBack(false)
+        }
+
         widgets.addDrawable(width - 33, 2, 31, 65) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(TANK, 0, 0, 150, 31, 65) }
 
         widgets.addDrawable(2, 2, 6, 65) { guiGraphics, _, _, _ -> guiGraphics.blitSprite(ENERGY_BAR, 0, 0, 3, 6, 65) }.tooltipText(listOf(Component.literal(getFE(power))))
