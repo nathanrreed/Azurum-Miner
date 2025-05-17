@@ -4,6 +4,7 @@ import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerMenu
 import com.nred.azurum_miner.machine.crystallizer.CrystallizerScreen
 import com.nred.azurum_miner.machine.generator.GeneratorScreen
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
@@ -27,6 +28,7 @@ import dev.emi.emi.api.neoforge.NeoForgeEmiIngredient
 import dev.emi.emi.api.recipe.*
 import dev.emi.emi.api.recipe.handler.EmiCraftContext
 import dev.emi.emi.api.recipe.handler.StandardRecipeHandler
+import dev.emi.emi.api.stack.Comparison
 import dev.emi.emi.api.stack.EmiIngredient
 import dev.emi.emi.api.stack.EmiStack
 import dev.emi.emi.api.widget.Bounds
@@ -123,6 +125,35 @@ class EmiPlugin : EmiPlugin {
             }
         })
 
+        registry.addRecipeHandler(ModMenuTypes.CRYSTALLIZER_MENU.get(), object : StandardRecipeHandler<CrystallizerMenu> {
+            override fun getInputSources(handler: CrystallizerMenu): List<Slot> {
+                return handler.slots
+            }
+
+            override fun getCraftingSlots(handler: CrystallizerMenu): List<Slot> {
+                return handler.inputSlots
+            }
+
+            override fun supportsRecipe(recipe: EmiRecipe): Boolean {
+                return (recipe.category == CRYSTALLIZER_CATEGORY)
+            }
+
+            override fun getInventory(screen: AbstractContainerScreen<CrystallizerMenu>): EmiPlayerInventory {
+                val inv = super.getInventory(screen)
+                val stack = EmiStack.of(screen.menu.fluidHandler!!.getFluidInTank(0).fluid, screen.menu.fluidHandler!!.getFluidInTank(0).amount.toLong())
+                inv.inventory.merge(stack, stack, { a, b -> a.setAmount(a.getAmount() + b.getAmount()) })
+                return inv
+            }
+
+            override fun craft(recipe: EmiRecipe, context: EmiCraftContext<CrystallizerMenu>): Boolean {
+                if (recipe !is EmiInfuserRecipe) return false
+                val clone = EmiInfuserRecipe(recipe.recipeId, recipe.inputs, recipe.output, recipe.power, recipe.processingTime)
+                clone.inputs.removeAt(2)
+
+                return super.craft(clone, context)
+            }
+        })
+
         registry.addRecipeHandler(ModMenuTypes.LIQUIFIER_MENU.get(), object : StandardRecipeHandler<LiquifierMenu> {
             override fun getInputSources(handler: LiquifierMenu): List<Slot> {
                 return handler.slots
@@ -201,7 +232,7 @@ class EmiPlugin : EmiPlugin {
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiLiquifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result.fluid, recipe.value.result.amount.toLong()), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiLiquifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + if (recipe.value.inputFluid.isEmpty) NeoForgeEmiIngredient.of(FluidIngredient.empty()) else NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result.fluid, recipe.value.result.amount.toLong()), recipe.value.power, recipe.value.processingTime))
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get())) {
@@ -209,7 +240,7 @@ class EmiPlugin : EmiPlugin {
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it).setChance(0.5f) }, EmiStack.of(recipe.value.inputFluid.fluid, recipe.value.inputFluid.componentsPatch, recipe.value.inputFluid.amount.toLong()).comparison(Comparison.compareData { stack: EmiStack -> stack.componentChanges }), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {

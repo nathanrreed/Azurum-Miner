@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "azurum_miner:azurum"
+    },
+    {
+      "item": "azurum_miner:azurum"
+    },
+    [
+      {
+        "item": "minecraft:diamond"
+      },
+      {
+        "item": "minecraft:emerald"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:quartz"
+      },
+      {
+        "item": "minecraft:prismarine_crystals"
+      }
+    ]
+  ],
+  "result": {
+    "count": 4,
+    "id": "azurum_miner:seed_crystal"
+  }
+}

@@ -22,6 +22,12 @@ object ModFluids {
     init {
         FluidHelper("nether_essence", 0xFF982b2b.toInt())
         FluidHelper("ender_essence", 0xFF208c7a.toInt())
+        FluidHelper("diamond_crystal_solution", 0XFF49EAD6.toInt(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("block/water_flow"))
+        FluidHelper("emerald_crystal_solution", 0XFF17DA61.toInt(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("block/water_flow"))
+        FluidHelper("quartz_crystal_solution", 0XFFE7E2DB.toInt(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("block/water_flow"))
+        FluidHelper("amethyst_crystal_solution", 0XFF8B69CA.toInt(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("block/water_flow"))
+        FluidHelper("prismarine_crystal_solution", 0XFF8FC3B5.toInt(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("block/water_flow"))
+//        FluidHelper("end_crystal_solution", 0xFF0000FF.toInt())
         FluidHelper("molten_ore", 0xFFFFFFFF.toInt(), azLoc("block/fluid/molten_ore_still"), azLoc("block/fluid/molten_ore_flow"))
     }
 

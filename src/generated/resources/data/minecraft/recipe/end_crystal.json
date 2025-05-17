@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:crystallizer_recipe",
+  "fluid_stack": {
+    "amount": 5000,
+    "id": "azurum_miner:ender_essence"
+  },
+  "ingredient": {
+    "item": "azurum_miner:seed_crystal"
+  },
+  "power": 500000,
+  "processingTime": 1200,
+  "result": {
+    "count": 1,
+    "id": "minecraft:end_crystal"
+  }
+}

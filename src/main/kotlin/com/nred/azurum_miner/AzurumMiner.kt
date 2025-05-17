@@ -60,6 +60,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.common.NeoForge
@@ -217,6 +218,13 @@ object AzurumMiner {
         }
 
         event.registerFluidType(ModFluids.snow_client, ModFluids.snow_type)
+    }
+
+    @SubscribeEvent
+    fun bucketLoad(event: RegisterColorHandlersEvent.Item) {
+        for (fluid in FluidHelper.FLUIDS) {
+            event.register(({ stack, tintIndex -> if (tintIndex == 0) -1 else fluid.client.tintColor }), fluid.bucket.asItem())
+        }
     }
 
     @SubscribeEvent

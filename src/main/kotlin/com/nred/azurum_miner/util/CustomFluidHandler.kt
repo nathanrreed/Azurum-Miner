@@ -33,8 +33,8 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
     }
 
     abstract override fun isFluidValid(tank: Int, stack: FluidStack): Boolean
-
     abstract fun canOutput(tank: Int): Boolean
+    abstract fun canInput(tank: Int): Boolean
 
     override fun deserializeNBT(lookupProvider: HolderLookup.Provider, nbt: CompoundTag) {
         setSize(if (nbt.contains("Size", Tag.TAG_INT.toInt())) nbt.getInt("Size") else fluids.size)
@@ -62,7 +62,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
                     FluidStack.parse(provider, fluidTags).ifPresent(Consumer { fluid: FluidStack -> fluids.add(fluid) })
                 }
             }
-            return fluids;
+            return fluids
         }
     }
 
@@ -99,7 +99,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
     // Stop other mods using capability from doing unexpected things
     override fun fill(resource: FluidStack, action: FluidAction): Int {
         if (allowInput) {
-            return internalInsertFluid(resource, action)
+            return internalInsertFluid(resource, action, false)
         }
         return 0
     }
@@ -153,7 +153,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
     }
 
     // Normal insert and extract for use within the mod
-    fun internalInsertFluid(resource: FluidStack, action: FluidAction): Int {
+    fun internalInsertFluid(resource: FluidStack, action: FluidAction, internal: Boolean): Int {
         if (resource.isEmpty) {
             return 0
         }
@@ -162,7 +162,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
             var i = -1 // Will start at 0 always since i++ is right after, just makes continues easier
             for (fluid in fluids) {
                 i++
-                if (!isFluidValid(i, resource)) continue
+                if (!isFluidValid(i, resource) || (!canInput(i) && !internal)) continue
                 if (fluid.isEmpty) {
                     amount = (amount + min(capacity.toDouble(), resource.amount.toDouble())).toInt()
                 }
@@ -200,6 +200,10 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
             }
             return 0
         }
+    }
+
+    fun internalInsertFluid(resource: FluidStack, action: FluidAction): Int {
+        return internalInsertFluid(resource, action, true)
     }
 
     fun internalExtractFluid(maxDrain: Int, action: FluidAction, internal: Boolean): FluidStack {

@@ -3,7 +3,6 @@ package com.nred.azurum_miner.machine.infuser
 import com.nred.azurum_miner.machine.MachineScreen
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.InfuserEnum.*
 import com.nred.azurum_miner.machine.infuser.InfuserEntity.Companion.get
-import com.nred.azurum_miner.util.ClearPayload
 import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.gui.GuiGraphics
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
-import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.network.PacketDistributor
 import kotlin.math.floor
 
@@ -25,7 +23,7 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         super.resize(width, imageWidth, height, imageHeight)
         powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
         energy = ScreenRectangle(base.left() + 6, base.top() + 6, 4, 63)
-        tank = ScreenRectangle(base.right() - 55, base.top() + 7, 34, 75)
+        tanks = listOf(ScreenRectangle(base.right() - 55, base.top() + 7, 34, 75))
         progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 20, base.top() + 35, 22, 16)
     }
 
@@ -49,9 +47,6 @@ class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Compon
         if (button == 0 && powerButton.containsPoint(mouseX.toInt(), mouseY.toInt())) {
             PacketDistributor.sendToServer(Payload(IS_ON, (menu.containerData[IS_ON]).xor(1), "ENUM", "infuser", menu.pos))
             return true
-        } else if (hasShiftDown() && button == 0 && tank.containsPoint(mouseX.toInt(), mouseY.toInt())) {
-            menu.fluidHandler!!.internalExtractFluid(menu.fluidHandler!!.getFluidInTank(0), IFluidHandler.FluidAction.EXECUTE)
-            PacketDistributor.sendToServer(ClearPayload(0, menu.pos))
         }
         return super.mouseClicked(mouseX, mouseY, button)
     }

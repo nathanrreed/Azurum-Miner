@@ -18,7 +18,9 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
+import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import kotlin.jvm.optionals.getOrNull
 
@@ -68,6 +70,20 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
             }
             return ItemStack.EMPTY
         }
+    }
+
+    override fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
+        if (tank == 0)
+            return stack.fluid.isSame(Fluids.WATER)
+        return true
+    }
+
+    override fun canOutputSlot(tank: Int): Boolean {
+        return tank == 1
+    }
+
+    override fun canInputSlot(tank: Int): Boolean {
+        return tank == 0
     }
 
     override fun getProgress(): Float {

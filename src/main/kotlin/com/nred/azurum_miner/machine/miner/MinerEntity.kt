@@ -126,7 +126,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
     }
 
-    override fun validFluidSlot(stack: FluidStack): Boolean {
+    override fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
         return stack.`is`(FluidHelper.FLUIDS["molten_ore"].still)
     }
 

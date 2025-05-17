@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:liquifier_recipe",
+  "fluid_ingredient": {
+    "amount": 5000,
+    "id": "minecraft:water"
+  },
+  "ingredient": {
+    "item": "minecraft:emerald"
+  },
+  "power": 250000,
+  "processingTime": 500,
+  "result": {
+    "amount": 750,
+    "id": "azurum_miner:emerald_crystal_solution"
+  }
+}

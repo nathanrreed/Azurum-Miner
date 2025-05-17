@@ -24,7 +24,7 @@ class LiquifierScreen(menu: LiquifierMenu, playerInventory: Inventory, title: Co
         super.resize(width, imageWidth, height, imageHeight)
         powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
         energy = ScreenRectangle(base.left() + 6, base.top() + 6, 4, 63)
-        tank = ScreenRectangle(base.right() - 65, base.top() + 7, 34, 75)
+        tanks = listOf(ScreenRectangle(base.left() + 13, base.top() + 5, 6, 65), ScreenRectangle(base.right() - 65, base.top() + 7, 34, 75))
         progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 9, base.top() + 35, 22, 16)
     }
 

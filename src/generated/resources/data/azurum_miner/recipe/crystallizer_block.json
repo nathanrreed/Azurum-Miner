@@ -12,7 +12,7 @@
       "item": "minecraft:obsidian"
     },
     "P": {
-      "item": "azurum_miner:void_processor"
+      "item": "azurum_miner:elaborate_void_processor"
     },
     "T": {
       "item": "azurum_miner:thelxium_ingot"

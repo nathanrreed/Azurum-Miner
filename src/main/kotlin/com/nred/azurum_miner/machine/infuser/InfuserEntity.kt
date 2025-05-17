@@ -79,7 +79,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         return data[PROGRESS].toFloat() / data[PROCESSING_TIME].toFloat()
     }
 
-    override fun validFluidSlot(stack: FluidStack): Boolean {
+    override fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
         return level!!.recipeManager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get()).any { it.value.result.`is`(stack.fluid) }
     }
 

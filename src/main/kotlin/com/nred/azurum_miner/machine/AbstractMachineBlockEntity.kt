@@ -66,7 +66,7 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
         }
     }
 
-    val fluidHandler = object : CustomFluidStackHandler(FLUID_SIZE, MachineInfo.data[machineName]!!.numTanks, MachineInfo.data[machineName]!!.allowFluidInput, MachineInfo.data[machineName]!!.allowFluidOutput) {
+    open val fluidHandler = object : CustomFluidStackHandler(FLUID_SIZE, MachineInfo.data[machineName]!!.numTanks, MachineInfo.data[machineName]!!.allowFluidInput, MachineInfo.data[machineName]!!.allowFluidOutput) {
         override fun onContentsChanged() {
             setChanged()
             if (level != null && !level!!.isClientSide()) {
@@ -75,19 +75,26 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
         }
 
         override fun isFluidValid(tank: Int, stack: FluidStack): Boolean {
-            return validFluidSlot(stack)
+            return validFluidSlot(tank, stack)
         }
 
         override fun canOutput(tank: Int): Boolean {
             return canOutputSlot(tank)
         }
+
+        override fun canInput(tank: Int): Boolean {
+            return canInputSlot(tank)
+        }
     }
 
-    open fun validFluidSlot(stack: FluidStack): Boolean {
+    open fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
         return true
     }
 
     open fun canOutputSlot(tank: Int): Boolean {
+        return true
+    }
+    open fun canInputSlot(tank: Int): Boolean {
         return true
     }
 

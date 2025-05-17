@@ -56,6 +56,7 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: LiquifierRecipe, focuses: IFocusGroup) {
         builder.addInputSlot(18, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addInputSlot(10, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 4, 63)
         builder.addOutputSlot(width - 33, 2).addFluidStack(recipe.result.fluid, recipe.result.amount.toLong()).setFluidRenderer(recipe.result.amount.toLong(), false, 31, 65)
     }
 
@@ -65,6 +66,9 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
 
         // TANK
         guiGraphics.blitSprite(TANK, width - 33, 2, 150, 31, 65)
+
+        guiGraphics.blitSprite(ENERGY_BAR, 2, 10, 3, 6, 65)
+
 
         if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())

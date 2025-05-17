@@ -7,11 +7,8 @@ import com.nred.azurum_miner.machine.AbstractMachine
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -19,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
-import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.fluids.FluidUtil
 
 
 class Liquifier(properties: Properties) : AbstractMachine(properties) {
@@ -56,14 +51,6 @@ class Liquifier(properties: Properties) : AbstractMachine(properties) {
         }
 
         return InteractionResult.SUCCESS
-    }
-
-    override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
-        val cap = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, hitResult.direction)!!
-        if (FluidUtil.interactWithFluidHandler(player, hand, cap)) {
-            return ItemInteractionResult.SUCCESS
-        }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }
 
     override fun <T : BlockEntity> getTicker(level: Level, state: BlockState, blockEntityType: BlockEntityType<T>): BlockEntityTicker<T>? {

@@ -1,18 +1,14 @@
 {
   "type": "azurum_miner:crystallizer_recipe",
-  "fluidResult": {
-    "amount": 150,
-    "id": "azurum_miner:nether_essence"
-  },
   "fluid_stack": {
-    "amount": 150,
-    "id": "azurum_miner:nether_essence"
+    "amount": 500,
+    "id": "azurum_miner:diamond_crystal_solution"
   },
   "ingredient": {
-    "item": "minecraft:sand"
+    "item": "azurum_miner:seed_crystal"
   },
-  "power": 50000,
-  "processingTime": 60,
+  "power": 120000,
+  "processingTime": 600,
   "result": {
     "count": 1,
     "id": "minecraft:diamond"

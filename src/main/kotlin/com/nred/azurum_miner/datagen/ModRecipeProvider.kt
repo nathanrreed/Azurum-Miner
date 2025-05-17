@@ -5,7 +5,7 @@ import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE
 import com.nred.azurum_miner.block.ModBlocks.CONGLOMERATE_OF_ORE_BLOCK
 import com.nred.azurum_miner.block.ModBlocks.ENERGIZED_OBSIDIAN
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
-import com.nred.azurum_miner.fluid.ModFluids
+import com.nred.azurum_miner.fluid.ModFluids.snow_still
 import com.nred.azurum_miner.item.ModItems.COMPLEX_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.CONGLOMERATE_OF_ORE_SHARD
 import com.nred.azurum_miner.item.ModItems.DIMENSIONAL_MATRIX
@@ -14,6 +14,7 @@ import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
 import com.nred.azurum_miner.item.ModItems.ENERGY_SHARD
 import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
+import com.nred.azurum_miner.item.ModItems.SEED_CRYSTAL
 import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.VOID_PROCESSOR
 import com.nred.azurum_miner.machine.ModMachines
@@ -104,6 +105,14 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         LiquifierRecipeBuilder(FluidStack(FLUIDS["ender_essence"].still, 50), Ingredient.of(END_ROD, ENDER_PEARL), 5000, 20).unlockedBy(getHasName(END_ROD), has(END_ROD)).unlockedBy(getHasName(ENDER_PEARL), has(ENDER_PEARL)).save(recipeOutput, AzurumMiner.ID + ":ender_essence_from_end_rod")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["ender_essence"].still, 150), Ingredient.of(ENDER_EYE), 5000, 20).unlockedBy(getHasName(ENDER_EYE), has(ENDER_EYE)).save(recipeOutput, AzurumMiner.ID + ":ender_essence_from_ender_eye")
         LiquifierRecipeBuilder(FluidStack(FLUIDS["ender_essence"].still, 1000), Ingredient.of(END_CRYSTAL), 5000, 20).unlockedBy(getHasName(END_CRYSTAL), has(END_CRYSTAL)).save(recipeOutput, AzurumMiner.ID + ":ender_essence_from_end_crystal")
+        LiquifierRecipeBuilder(FluidStack(snow_still, 40), Ingredient.of(SNOW_BLOCK), 5000, 40).unlockedBy(getHasName(SNOW_BLOCK), has(SNOW_BLOCK)).save(recipeOutput, AzurumMiner.ID + ":powdered_snow_from_snow")
+        LiquifierRecipeBuilder(FluidStack(snow_still, 10), Ingredient.of(SNOWBALL), 5000, 20).unlockedBy(getHasName(SNOWBALL), has(SNOWBALL)).save(recipeOutput, AzurumMiner.ID + ":powdered_snow_from_snow_ball")
+
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["diamond_crystal_solution"].still, 750), Ingredient.of(DIAMOND), FluidStack(Fluids.WATER, 5000), 200000, 400).unlockedBy(getHasName(DIAMOND), has(DIAMOND)).save(recipeOutput)
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["emerald_crystal_solution"].still, 750), Ingredient.of(EMERALD), FluidStack(Fluids.WATER, 5000), 250000, 500).unlockedBy(getHasName(EMERALD), has(EMERALD)).save(recipeOutput)
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["quartz_crystal_solution"].still, 500), Ingredient.of(QUARTZ), FluidStack(Fluids.WATER, 2000), 150000, 200).unlockedBy(getHasName(QUARTZ), has(QUARTZ)).save(recipeOutput)
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["amethyst_crystal_solution"].still, 500), Ingredient.of(AMETHYST_SHARD), FluidStack(Fluids.WATER, 3000), 100000, 200).unlockedBy(getHasName(AMETHYST_SHARD), has(AMETHYST_SHARD)).save(recipeOutput)
+        LiquifierRecipeBuilder(FluidStack(FLUIDS["prismarine_crystal_solution"].still, 500), Ingredient.of(PRISMARINE_CRYSTALS), FluidStack(Fluids.WATER, 3000), 200000, 200).unlockedBy(getHasName(PRISMARINE_CRYSTALS), has(PRISMARINE_CRYSTALS)).save(recipeOutput)
 
         InfuserRecipeBuilder(ItemStack(ORES["azurum"].ingot!!.asItem(), 1), Ingredient.of(ORES["azurum"].gem), Ingredient.of(IRON_INGOT), FluidStack(Fluids.LAVA, 1000), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":azurum_ingot_from_infuser")
         InfuserRecipeBuilder(ItemStack(OBSIDIAN, 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(Fluids.LAVA, 1000), 5000, 200).save(recipeOutput, AzurumMiner.ID + ":obsidian_from_infuser")
@@ -123,9 +132,9 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         InfuserRecipeBuilder(ItemStack(SOUL_CAMPFIRE, 1), Ingredient.of(CAMPFIRE), Ingredient.EMPTY, FluidStack(FLUIDS["nether_essence"].still.get(), 200), 5000, 40).save(recipeOutput, AzurumMiner.ID + ":soul_campfire_from_infuser")
         InfuserRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE.asItem(), 1), Ingredient.of(ORES["azurum"].nugget), Ingredient.of(STONE), FluidStack(FLUIDS["molten_ore"].still.get(), 1000), 5000, 200).save(recipeOutput)
 
-        InfuserRecipeBuilder(ItemStack(BLUE_ICE.asItem(), 1), Ingredient.of(PACKED_ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
-        InfuserRecipeBuilder(ItemStack(PACKED_ICE.asItem(), 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
-        InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW_BLOCK), Ingredient.EMPTY, FluidStack(ModFluids.snow_still, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(BLUE_ICE.asItem(), 1), Ingredient.of(PACKED_ICE), Ingredient.EMPTY, FluidStack(snow_still, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(PACKED_ICE.asItem(), 1), Ingredient.of(ICE), Ingredient.EMPTY, FluidStack(snow_still, 1000), 50000, 2000).save(recipeOutput)
+        InfuserRecipeBuilder(ItemStack(ICE.asItem(), 1), Ingredient.of(SNOW_BLOCK), Ingredient.EMPTY, FluidStack(snow_still, 1000), 50000, 2000).save(recipeOutput)
 
         TransmogrifierRecipeBuilder(ItemStack(RED_SAND, 1), Ingredient.of(SAND), 50000, 60).save(recipeOutput)
         TransmogrifierRecipeBuilder(ItemStack(CALCITE, 1), Ingredient.of(DIORITE), 50000, 60).save(recipeOutput)
@@ -140,7 +149,13 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         TransmogrifierRecipeBuilder(ItemStack(CRYING_OBSIDIAN, 1), Ingredient.of(OBSIDIAN), 1000000, 3600).save(recipeOutput)
         TransmogrifierRecipeBuilder(ItemStack(CONGLOMERATE_OF_ORE_SHARD.get(), 2), Ingredient.of(CONGLOMERATE_OF_ORE), 2000000, 1200).save(recipeOutput, AzurumMiner.ID + ":conglomerate_of_ore_shard_from_ore")
 
-        CrystallizerRecipeBuilder(ItemStack(DIAMOND, 1), FluidStack(FLUIDS["nether_essence"].still.get(), 150), Ingredient.of(SAND), FluidStack(FLUIDS["nether_essence"].still.get(), 150), 50000, 60).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(DIAMOND, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["diamond_crystal_solution"].still.get(), 500), 120000, 600).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(EMERALD, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["emerald_crystal_solution"].still.get(), 500), 140000, 800).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(QUARTZ, 2), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["quartz_crystal_solution"].still.get(), 150), 30000, 60).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(AMETHYST_SHARD, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["amethyst_crystal_solution"].still.get(), 150), 50000, 200).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(PRISMARINE_CRYSTALS, 2), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["prismarine_crystal_solution"].still.get(), 150), 70000, 300).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(END_CRYSTAL, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["ender_essence"].still.get(), 5000), 500000, 1200).save(recipeOutput)
+//        CrystallizerRecipeBuilder(ItemStack(LAVA_CRYSTAL, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["crystal_solution"].still.get(), 150), 50000, 60).save(recipeOutput)
 
         MinerRecipeBuilder(Ingredient.of(oreTierTag[0]), 1).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier1")
         MinerRecipeBuilder(Ingredient.of(oreTierTag[1]), 2).save(recipeOutput, AzurumMiner.ID + ":ore_from_miner_tier2")
@@ -183,7 +198,7 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.CRYSTALLIZER).pattern("ODO").pattern("PIP").pattern("TDT")
-            .define('T', ORES["thelxium"].ingot!!).define('O', OBSIDIAN).define('D', DIAMOND_BLOCK).define('P', VOID_PROCESSOR).define('I', ModMachines.INFUSER)
+            .define('T', ORES["thelxium"].ingot!!).define('O', OBSIDIAN).define('D', DIAMOND_BLOCK).define('P', ELABORATE_VOID_PROCESSOR).define('I', ModMachines.INFUSER)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModMachines.TRANSMOGRIFIER).pattern("NED").pattern("MCM").pattern("GVG")
@@ -235,5 +250,7 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         GeneratorRecipeBuilder(ORES["galibium"].ingot!!.asItem(), 7000, 5000).save(recipeOutput)
         GeneratorRecipeBuilder(ORES["thelxium"].ingot!!.asItem(), 15000, 800).save(recipeOutput)
         GeneratorRecipeBuilder(ORES["palestium"].ingot!!.asItem(), 48000, 500).save(recipeOutput)
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SEED_CRYSTAL, 4).requires(ORES["azurum"].gem!!, 2).requires(Ingredient.of(DIAMOND, EMERALD), 1).requires(Ingredient.of(QUARTZ, PRISMARINE_CRYSTALS), 1).unlockedBy(getHasName(QUARTZ), has(QUARTZ)).save(recipeOutput)
     }
 }
