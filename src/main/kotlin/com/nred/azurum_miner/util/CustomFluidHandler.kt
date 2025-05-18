@@ -67,7 +67,7 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
     }
 
     fun setSize(size: Int) {
-        fluids = NonNullList.withSize<FluidStack?>(size, FluidStack.EMPTY)
+        fluids = NonNullList.withSize(size, FluidStack.EMPTY)
         onContentsChanged()
     }
 

@@ -21,7 +21,7 @@ import net.neoforged.neoforge.fluids.FluidStack
 
 
 @JvmRecord
-data class LiquifierInput(val state: BlockState, val stack: ItemStack) : RecipeInput {
+data class LiquifierInput(val state: BlockState, val stack: ItemStack, val fluidStack: FluidStack) : RecipeInput {
     override fun getItem(slot: Int): ItemStack {
         require(slot == 0) { "No item for index $slot" }
         return this.stack
@@ -34,7 +34,7 @@ data class LiquifierInput(val state: BlockState, val stack: ItemStack) : RecipeI
 
 class LiquifierRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: FluidStack, val power: Int, val processingTime: Int) : Recipe<LiquifierInput> {
     override fun matches(input: LiquifierInput, level: Level): Boolean {
-        return this.inputItem.test(input.stack)
+        return this.inputItem.test(input.stack) && FluidStack.isSameFluid(this.inputFluid, input.fluidStack)
     }
 
     override fun assemble(input: LiquifierInput, registries: HolderLookup.Provider): ItemStack {

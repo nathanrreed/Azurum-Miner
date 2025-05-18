@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.fluids.FluidStack
 
 @JvmRecord
-data class CrystallizerInput(val state: BlockState, val stack: ItemStack) : RecipeInput {
+data class CrystallizerInput(val state: BlockState, val stack: ItemStack, val fluidStack: FluidStack) : RecipeInput {
     override fun getItem(slot: Int): ItemStack {
         require(slot == 0) { "No item for index $slot" }
         return this.stack
@@ -33,7 +33,7 @@ data class CrystallizerInput(val state: BlockState, val stack: ItemStack) : Reci
 
 class CrystallizerRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<CrystallizerInput> {
     override fun matches(input: CrystallizerInput, level: Level): Boolean {
-        return this.inputItem.test(input.stack)
+        return this.inputItem.test(input.stack) && FluidStack.isSameFluid(this.inputFluid, input.fluidStack)
     }
 
     override fun assemble(input: CrystallizerInput, registries: HolderLookup.Provider): ItemStack {

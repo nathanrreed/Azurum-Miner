@@ -57,14 +57,21 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         }
 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
-            if (slot == 0) {
-                return level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
-            } else if (slot == 1) {
-                return level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).flatMap { it.value.catalyst.items.toList() }.any { it.`is`(stack.item) }
-            } else if (slot == 2) {
-                return level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).map { it.value.result }.any { it.`is`(stack.item) }
+            return when (slot) {
+                0 -> {
+                    level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
+                }
+
+                1 -> {
+                    level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).flatMap { it.value.catalyst.items.toList() }.any { it.`is`(stack.item) }
+                }
+
+                2 -> {
+                    level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).map { it.value.result }.any { it.`is`(stack.item) }
+                }
+
+                else -> false
             }
-            return false
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
@@ -110,7 +117,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
         if (!this.loaded) return
         var found = false
-        for (recipe in level.recipeManager.getRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1)), level).map { it.value }) {
+        for (recipe in level.recipeManager.getRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1), fluidHandler.getFluidInTank(0)), level).map { it.value }) {
             if (recipe != null) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 data[PROCESSING_TIME] = recipe.processingTime

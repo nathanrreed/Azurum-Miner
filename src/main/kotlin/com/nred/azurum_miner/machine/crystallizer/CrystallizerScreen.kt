@@ -24,8 +24,8 @@ class CrystallizerScreen(menu: CrystallizerMenu, playerInventory: Inventory, tit
         super.resize(width, imageWidth, height, imageHeight)
         powerButton = ScreenRectangle(base.right() - 17, base.top() + 5, 12, 13)
         energy = ScreenRectangle(base.left() + 6, base.top() + 6, 4, 63)
-        tanks = listOf(ScreenRectangle(base.right() - 65, base.top() + 7, 34, 75))
-        progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 9, base.top() + 35, 22, 16)
+        tanks = listOf(ScreenRectangle(base.left() + 19, base.top() + 7, 31, 65))
+        progressBar = ScreenRectangle(base.getCenterInAxis(ScreenAxis.HORIZONTAL) - 5, base.top() + 35, 22, 16)
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {

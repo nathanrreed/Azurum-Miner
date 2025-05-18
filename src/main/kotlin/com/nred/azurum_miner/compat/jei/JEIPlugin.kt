@@ -3,11 +3,14 @@ package com.nred.azurum_miner.compat.jei
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerMenu
+import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.recipe.*
+import com.nred.azurum_miner.recipe.ModRecipe.CRYSTALLIZER_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.GENERATOR_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.INFUSER_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.LIQUIFIER_RECIPE_TYPE
@@ -45,6 +48,7 @@ class JEIPlugin : IModPlugin {
     override fun registerCategories(registration: IRecipeCategoryRegistration) {
         val recipeManager = Minecraft.getInstance().level!!.recipeManager
 
+        registration.addRecipeCategories(CrystallizerCategory(registration.jeiHelpers.guiHelper))
         registration.addRecipeCategories(LiquifierCategory(registration.jeiHelpers.guiHelper))
         registration.addRecipeCategories(InfuserCategory(registration.jeiHelpers.guiHelper))
         registration.addRecipeCategories(TransmogrifierCategory(registration.jeiHelpers.guiHelper))
@@ -54,6 +58,8 @@ class JEIPlugin : IModPlugin {
 
 
     override fun registerRecipeTransferHandlers(registration: IRecipeTransferRegistration) {
+        registration.addRecipeTransferHandler(GeneratorMenu::class.java, ModMenuTypes.GENERATOR_MENU.get(), InfuserCategory.TYPE, 0, 4, 4, 36)
+        registration.addRecipeTransferHandler(CrystallizerMenu::class.java, ModMenuTypes.CRYSTALLIZER_MENU.get(), InfuserCategory.TYPE, 0, 1, 1, 36)
         registration.addRecipeTransferHandler(InfuserMenu::class.java, ModMenuTypes.INFUSER_MENU.get(), InfuserCategory.TYPE, 0, 3, 3, 36)
         registration.addRecipeTransferHandler(LiquifierMenu::class.java, ModMenuTypes.LIQUIFIER_MENU.get(), LiquifierCategory.TYPE, 0, 1, 1, 36)
         registration.addRecipeTransferHandler(TransmogrifierMenu::class.java, ModMenuTypes.TRANSMOGRIFIER_MENU.get(), TransmogrifierCategory.TYPE, 0, 2, 2, 36)
@@ -64,6 +70,7 @@ class JEIPlugin : IModPlugin {
         registration.addRecipeCatalysts(InfuserCategory.TYPE, ModMachines.INFUSER)
         registration.addRecipeCatalysts(TransmogrifierCategory.TYPE, ModMachines.TRANSMOGRIFIER)
         registration.addRecipeCatalysts(GeneratorCategory.TYPE, ModMachines.GENERATOR)
+        registration.addRecipeCatalysts(CrystallizerCategory.TYPE, ModMachines.CRYSTALLIZER)
 
         registration.addRecipeCatalysts(MinerCategory.TYPE_TIER1, ModMachines.MINER_BLOCK_TIERS[0], ModMachines.MINER_BLOCK_TIERS[1], ModMachines.MINER_BLOCK_TIERS[2], ModMachines.MINER_BLOCK_TIERS[3], ModMachines.MINER_BLOCK_TIERS[4])
         registration.addRecipeCatalysts(MinerCategory.TYPE_TIER2, ModMachines.MINER_BLOCK_TIERS[1], ModMachines.MINER_BLOCK_TIERS[2], ModMachines.MINER_BLOCK_TIERS[3], ModMachines.MINER_BLOCK_TIERS[4])
@@ -113,6 +120,7 @@ class JEIPlugin : IModPlugin {
         registration.addRecipes(LiquifierCategory.TYPE, recipeManager.getAllRecipesFor(LIQUIFIER_RECIPE_TYPE.get()).stream().map(RecipeHolder<LiquifierRecipe>::value).toList())
         registration.addRecipes(InfuserCategory.TYPE, recipeManager.getAllRecipesFor(INFUSER_RECIPE_TYPE.get()).stream().map(RecipeHolder<InfuserRecipe>::value).toList())
         registration.addRecipes(TransmogrifierCategory.TYPE, recipeManager.getAllRecipesFor(TRANSMOGRIFIER_RECIPE_TYPE.get()).stream().map(RecipeHolder<TransmogrifierRecipe>::value).toList())
+        registration.addRecipes(CrystallizerCategory.TYPE, recipeManager.getAllRecipesFor(CRYSTALLIZER_RECIPE_TYPE.get()).stream().map(RecipeHolder<CrystallizerRecipe>::value).toList())
         registration.addRecipes(GeneratorCategory.TYPE, recipeManager.getAllRecipesFor(GENERATOR_RECIPE_TYPE.get()).stream().filter { it.value.typeName == "fuel" }.map(RecipeHolder<GeneratorRecipe>::value).toList())
 
         val crafting = RecipeType(BuiltInRegistries.RECIPE_TYPE.getKey(net.minecraft.world.item.crafting.RecipeType.CRAFTING)!!, RecipeHolder::class.java)

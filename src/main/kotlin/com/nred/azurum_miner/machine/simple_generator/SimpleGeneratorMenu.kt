@@ -18,7 +18,7 @@ class SimpleGeneratorMenu : MachineMenu {
     val inputSlots = ArrayList<Slot>()
 
     companion object {
-        const val slot_x = 79
+        const val slot_x = 80
         const val slot_y = 32
     }
 

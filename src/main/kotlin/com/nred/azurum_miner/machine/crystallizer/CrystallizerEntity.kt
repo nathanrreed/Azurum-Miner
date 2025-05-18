@@ -50,7 +50,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
         data[PROCESSING_TIME] = 0
     }
 
-    override val itemStackHandler = object : ExtendedItemStackHandler(1) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(2) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
@@ -59,7 +59,18 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
         }
 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
-            return level!!.recipeManager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
+            return when (slot) {
+                0 -> {
+                    level!!.recipeManager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
+                }
+
+                1 -> {
+                    level!!.recipeManager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get()).map { it.value.result }.any { it.`is`(stack.item) }
+                }
+
+                else -> false
+            }
+
         }
 
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
@@ -97,7 +108,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
         if (!this.loaded) return
-        val recipe = level.recipeManager.getRecipeFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get(), CrystallizerInput(state, itemStackHandler.getStackInSlot(0)), level).getOrNull()?.value
+        val recipe = level.recipeManager.getRecipeFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get(), CrystallizerInput(state, itemStackHandler.getStackInSlot(0), fluidHandler.getFluidInTank(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
             if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
