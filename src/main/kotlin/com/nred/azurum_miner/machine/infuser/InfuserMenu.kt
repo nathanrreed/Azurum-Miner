@@ -19,15 +19,15 @@ class InfuserMenu : MachineMenu {
     val inputSlots = ArrayList<Slot>()
 
     companion object {
-        const val slot_x = 45
-        const val slot_y = 34
+        const val slot_x = 58
+        const val slot_y = 29
     }
 
-    // Server Constructor
+    // Server Constructore
     constructor (containerId: Int, inventory: Inventory, access: ContainerLevelAccess, pos: BlockPos, containerData: ContainerData) : super(ModMenuTypes.INFUSER_MENU.get(), "infuser", containerId, inventory, pos, containerData, access) {
         if (this.itemHandler != null) {
             inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 0, slot_x + 1, slot_y + 1))
-            inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 25, slot_y + 23))
+            inputSlots += this.addSlot(SlotItemHandlerWithPickup(this.itemHandler, 1, slot_x + 25, slot_y + 24))
 
             // OUTPUT
             this.addSlot(object : SlotItemHandlerWithPickup(this.itemHandler, 2, slot_x + 49, slot_y + 1) {

@@ -21,7 +21,7 @@ import net.neoforged.neoforge.fluids.FluidStack
 
 
 @JvmRecord
-data class InfuserInput(val state: BlockState, val stack: ItemStack, val catalyst: ItemStack) : RecipeInput {
+data class InfuserInput(val state: BlockState, val stack: ItemStack, val catalyst: ItemStack, val fluidStack: FluidStack) : RecipeInput {
     override fun getItem(slot: Int): ItemStack {
         return when (slot) {
             1 -> this.stack
@@ -39,7 +39,7 @@ data class InfuserInput(val state: BlockState, val stack: ItemStack, val catalys
 
 class InfuserRecipe(val inputItem: Ingredient, val catalyst: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<InfuserInput> {
     override fun matches(input: InfuserInput, level: Level): Boolean {
-        return this.inputItem.test(input.stack) && this.catalyst.test(input.catalyst)
+        return this.inputItem.test(input.stack) && this.catalyst.test(input.catalyst) && FluidStack.isSameFluid(this.inputFluid, input.fluidStack)
     }
 
     override fun assemble(input: InfuserInput, registries: HolderLookup.Provider): ItemStack {

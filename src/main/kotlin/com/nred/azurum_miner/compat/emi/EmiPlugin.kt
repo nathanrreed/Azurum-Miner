@@ -112,7 +112,7 @@ class EmiPlugin : EmiPlugin {
             override fun getInventory(screen: AbstractContainerScreen<InfuserMenu>): EmiPlayerInventory {
                 val inv = super.getInventory(screen)
                 val stack = EmiStack.of(screen.menu.fluidHandler!!.getFluidInTank(0).fluid, screen.menu.fluidHandler!!.getFluidInTank(0).amount.toLong()) //TODO
-                inv.inventory.merge(stack, stack, { a, b -> a.setAmount(a.getAmount() + b.getAmount()) })
+                inv.inventory.merge(stack, stack) { a, b -> a.setAmount(a.getAmount() + b.getAmount()) }
                 return inv
             }
 
@@ -141,7 +141,7 @@ class EmiPlugin : EmiPlugin {
             override fun getInventory(screen: AbstractContainerScreen<CrystallizerMenu>): EmiPlayerInventory {
                 val inv = super.getInventory(screen)
                 val stack = EmiStack.of(screen.menu.fluidHandler!!.getFluidInTank(0).fluid, screen.menu.fluidHandler!!.getFluidInTank(0).amount.toLong())
-                inv.inventory.merge(stack, stack, { a, b -> a.setAmount(a.getAmount() + b.getAmount()) })
+                inv.inventory.merge(stack, stack) { a, b -> a.setAmount(a.getAmount() + b.getAmount()) }
                 return inv
             }
 

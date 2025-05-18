@@ -113,7 +113,7 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
 
     fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: BlockEntity) {
         if (!this.loaded) return
-        val recipe = level.recipeManager.getRecipeFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get(), LiquifierInput(state, itemStackHandler.getStackInSlot(0)), level).getOrNull()?.value
+        val recipe = level.recipeManager.getRecipeFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get(), LiquifierInput(state, itemStackHandler.getStackInSlot(0), fluidHandler.getFluidInTank(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
             if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {

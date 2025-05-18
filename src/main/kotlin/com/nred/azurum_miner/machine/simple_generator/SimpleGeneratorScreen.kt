@@ -9,8 +9,8 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
-import kotlin.math.ceil
 
 class SimpleGeneratorScreen(menu: SimpleGeneratorMenu, playerInventory: Inventory, title: Component) : MachineScreen<SimpleGeneratorMenu>(menu, playerInventory, title) {
     companion object {
@@ -19,15 +19,16 @@ class SimpleGeneratorScreen(menu: SimpleGeneratorMenu, playerInventory: Inventor
 
     override fun resize(width: Int, imageWidth: Int, height: Int, imageHeight: Int) {
         super.resize(width, imageWidth, height, imageHeight)
-        energy = ScreenRectangle(base.right() - 13, base.top() + 8, 4, 63)
+        energy = ScreenRectangle(base.right() - 12, base.top() + 8, 4, 63)
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         guiGraphics.blitSprite(BASE, base.left(), base.top(), 0, base.width, base.height)
 
-        val varLen = ceil((menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble()) * 13.0).toInt() + 1
-        guiGraphics.blitSprite(FLAME_FILLED, 14, 14, 0, 14 - varLen, base.left() + SimpleGeneratorMenu.slot_x + 2, base.top() + SimpleGeneratorMenu.slot_y + 35 - varLen, 14, varLen)
-
+        if (menu.containerData[PROGRESS] > 0) {
+            val varLen = 14 - Mth.ceil(Mth.clamp(menu.containerData[PROGRESS].toDouble() / menu.containerData[PROCESSING_TIME].toDouble(), 0.0, 1.0) * 13.0) + 1
+            guiGraphics.blitSprite(FLAME_FILLED, 14, 14, 0, 14 - varLen, base.left() + SimpleGeneratorMenu.slot_x + 2, base.top() + SimpleGeneratorMenu.slot_y + 22 + 14 - varLen, 14, varLen)
+        }
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY)
     }
 }
