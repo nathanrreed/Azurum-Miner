@@ -17,10 +17,13 @@
     },
     "P": {
       "item": "azurum_miner:complex_void_processor"
+    },
+    "V": {
+      "item": "azurum_miner:void_crystal"
     }
   },
   "pattern": [
-    "BPB",
+    "BVB",
     "GMG",
     "EPE"
   ],

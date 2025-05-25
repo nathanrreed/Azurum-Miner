@@ -57,7 +57,7 @@ class CrystallizerCategory(helper: IGuiHelper) : IRecipeCategory<CrystallizerRec
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: CrystallizerRecipe, focuses: IFocusGroup) {
         builder.addInputSlot(46, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
         builder.addInputSlot(11, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 31, 65)
-        builder.addOutputSlot(92, 22).addItemStack(recipe.result).setOutputSlotBackground()
+        builder.addOutputSlot(97, 27).addItemStack(recipe.result).setOutputSlotBackground()
     }
 
     override fun draw(recipe: CrystallizerRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {

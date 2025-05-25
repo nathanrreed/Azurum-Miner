@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.datagen.ModItemTagProvider.Companion.oreTierTag
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
@@ -21,6 +22,7 @@ import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER4_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.MINER_TIER5_RECIPE_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.SHAPED_RECIPE_TRANSFORM_TYPE
 import com.nred.azurum_miner.recipe.ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE
+import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.Helpers.azLoc
 import mezz.jei.api.IModPlugin
@@ -127,6 +129,7 @@ class JEIPlugin : IModPlugin {
         registration.addRecipes(crafting, recipeManager.getAllRecipesFor(SHAPED_RECIPE_TRANSFORM_TYPE.get()).toList())
 
         registration.addIngredientInfo(ModItems.DIMENSIONAL_MATRIX, Component.translatable("jei.info.azurum_miner.dimensional_matrix"))
+        registration.addIngredientInfo(ModMachines.SIMPLE_GENERATOR, Component.translatable("jei.info.azurum_miner.simple_generator", getFE(CONFIG.getOptional<Int>("simple_generator.energyProduction").get())))
     }
 
     override fun onRuntimeAvailable(jeiRuntime: IJeiRuntime) {

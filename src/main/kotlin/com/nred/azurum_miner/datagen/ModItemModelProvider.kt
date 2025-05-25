@@ -32,7 +32,10 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         basicItem(ModItems.DIMENSIONAL_MATRIX.get())
         basicItem(ModItems.EMPTY_DIMENSIONAL_MATRIX.get())
         basicItem(ModItems.ENERGY_SHARD.get())
+        basicItem(ModItems.VOID_CRYSTAL.get())
         basicItem(ModItems.SEED_CRYSTAL.get())
+
+        handheldItem(ModItems.VOID_BULLET.get())
 
         for (ore in OreHelper.ORES) {
             if (ore.isOre) {
@@ -53,7 +56,7 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
 
     private fun dynamicBucket(entry: Fluid) {
         withExistingParent(entry.name + "_bucket", ResourceLocation.fromNamespaceAndPath("neoforge", "item/bucket_drip"))
-            .customLoader { parent: ItemModelBuilder?, existingFileHelper: ExistingFileHelper? -> DynamicFluidContainerModelBuilder.begin(parent, existingFileHelper) }
+            .customLoader { parent: ItemModelBuilder, existingFileHelper: ExistingFileHelper -> DynamicFluidContainerModelBuilder.begin(parent, existingFileHelper) }
             .fluid(entry.still.get()).applyTint(true)
     }
 }

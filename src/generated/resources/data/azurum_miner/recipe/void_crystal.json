@@ -1,0 +1,16 @@
+{
+  "type": "azurum_miner:crystallizer_recipe",
+  "fluid_stack": {
+    "amount": 3000,
+    "id": "azurum_miner:ender_essence"
+  },
+  "ingredient": {
+    "item": "azurum_miner:energy_shard"
+  },
+  "power": 50000,
+  "processingTime": 600,
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:void_crystal"
+  }
+}

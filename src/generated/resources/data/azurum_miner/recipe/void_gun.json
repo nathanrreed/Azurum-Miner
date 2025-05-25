@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "E": {
+      "item": "azurum_miner:energy_shard"
+    },
+    "P": {
+      "item": "azurum_miner:void_processor"
+    },
+    "V": {
+      "item": "azurum_miner:void_crystal"
+    }
+  },
+  "pattern": [
+    "EVE",
+    "PCP",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "azurum_miner:void_gun"
+  }
+}
