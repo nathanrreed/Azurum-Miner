@@ -5,11 +5,14 @@
     "D": {
       "item": "minecraft:diamond_block"
     },
+    "E": {
+      "item": "minecraft:emerald_block"
+    },
     "I": {
       "item": "azurum_miner:infuser_block"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "item": "azurum_miner:energized_obsidian_block"
     },
     "P": {
       "item": "azurum_miner:elaborate_void_processor"
@@ -21,7 +24,7 @@
   "pattern": [
     "ODO",
     "PIP",
-    "TDT"
+    "TET"
   ],
   "result": {
     "count": 1,

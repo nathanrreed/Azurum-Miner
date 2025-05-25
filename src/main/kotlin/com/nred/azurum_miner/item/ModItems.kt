@@ -27,12 +27,15 @@ object ModItems {
     val NETHER_DIAMOND: DeferredItem<Item> = ITEMS.register("nether_diamond") { -> Item(Properties()) }
     val ENDER_DIAMOND: DeferredItem<Item> = ITEMS.register("ender_diamond") { -> Item(Properties()) }
     val ENERGY_SHARD: DeferredItem<Item> = ITEMS.register("energy_shard") { -> Item(Properties()) }
+    val VOID_CRYSTAL: DeferredItem<Item> = ITEMS.register("void_crystal") { -> Item(Properties()) }
     val DIMENSIONAL_MATRIX: DeferredItem<Item> = ITEMS.register("dimensional_matrix") { -> Item(Properties().durability(1).setNoRepair()) }
     val EMPTY_DIMENSIONAL_MATRIX: DeferredItem<Item> = ITEMS.register("empty_dimensional_matrix") { -> Item(Properties()) }
     val EMPTY_DIMENSIONAL_MATRIX_TYPE = ENTITY_TYPES.register("empty_dimensional_matrix_type") { -> EntityType.Builder.of(::EmptyMatrixItemEntity, MobCategory.MISC).sized(0.25F, 0.25F).eyeHeight(0.2125F).clientTrackingRange(6).updateInterval(20).build("empty_dimensional_matrix_type") }
     val EMPTY_DIMENSIONAL_MATRIX_TAG_TYPE = TagKey.create(Registries.ENTITY_TYPE, azLoc("empty_dimensional_matrix_type"))
     val SEED_CRYSTAL: DeferredItem<Item> = ITEMS.register("seed_crystal") { -> Item(Properties()) }
 
+    val VOID_GUN: DeferredItem<Item> = ITEMS.register("void_gun") { -> VoidGun() }
+    val VOID_BULLET: DeferredItem<Item> = ITEMS.register("void_bullet") { -> VoidBulletItem(Properties()) }
 
     fun register(eventBus: IEventBus) {
         ITEMS.register(eventBus)

@@ -3,7 +3,6 @@ package com.nred.azurum_miner.compat.jei
 import com.nred.azurum_miner.machine.MachineScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
-import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.recipe.InfuserRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
@@ -56,10 +55,10 @@ class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
     }
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: InfuserRecipe, focuses: IFocusGroup) {
-        builder.addInputSlot(InfuserMenu.slot_x, InfuserMenu.slot_y - 8).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
-        builder.addInputSlot(InfuserMenu.slot_x + 24, InfuserMenu.slot_y + 14).addIngredients(recipe.ingredients[1]).setStandardSlotBackground()
+        builder.addInputSlot(46, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addInputSlot(70, 48).addIngredients(recipe.ingredients[1]).setStandardSlotBackground()
         builder.addInputSlot(9, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 31, 65)
-        builder.addOutputSlot(InfuserMenu.slot_x + 53, InfuserMenu.slot_y - 8).addItemStack(recipe.result).setOutputSlotBackground()
+        builder.addOutputSlot(97, 27).addItemStack(recipe.result).setOutputSlotBackground()
     }
 
     override fun draw(recipe: InfuserRecipe, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {

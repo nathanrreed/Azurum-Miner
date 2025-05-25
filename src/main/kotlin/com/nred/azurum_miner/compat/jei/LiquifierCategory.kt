@@ -1,9 +1,9 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_INNER
-import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.TANK
 import com.nred.azurum_miner.recipe.LiquifierRecipe
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
@@ -56,7 +56,8 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: LiquifierRecipe, focuses: IFocusGroup) {
         builder.addInputSlot(18, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
-        builder.addInputSlot(10, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 4, 63)
+        if (!recipe.inputFluid.isEmpty)
+            builder.addInputSlot(10, 3).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 4, 63)
         builder.addOutputSlot(width - 33, 2).addFluidStack(recipe.result.fluid, recipe.result.amount.toLong()).setFluidRenderer(recipe.result.amount.toLong(), false, 31, 65)
     }
 
@@ -67,7 +68,8 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
         // TANK
         guiGraphics.blitSprite(TANK, width - 33, 2, 150, 31, 65)
 
-        guiGraphics.blitSprite(ENERGY_BAR, 2, 10, 3, 6, 65)
+        if (!recipe.inputFluid.isEmpty)
+            guiGraphics.blitSprite(ENERGY_BAR, 9, 2, 3, 6, 65)
 
 
         if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {

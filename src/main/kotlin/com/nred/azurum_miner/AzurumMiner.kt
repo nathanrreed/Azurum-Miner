@@ -6,8 +6,7 @@ import com.nred.azurum_miner.compat.cct.RegisterPeripherals.registerPeripherals
 import com.nred.azurum_miner.config.ModCommonConfig
 import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
-import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
-import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.entity.*
 import com.nred.azurum_miner.entity.ModBlockEntities.CRYSTALLIZER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.INFUSER_ENTITY
@@ -15,7 +14,7 @@ import com.nred.azurum_miner.entity.ModBlockEntities.LIQUIFIER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.MINER_ENTITY_TIERS
 import com.nred.azurum_miner.entity.ModBlockEntities.SIMPLE_GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.TRANSMOGRIFIER_ENTITY
-import com.nred.azurum_miner.entity.ModEntities
+import com.nred.azurum_miner.entity.ModEntities.VOID_BULLET
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
@@ -60,6 +59,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
@@ -134,6 +134,7 @@ object AzurumMiner {
         }
 
         BlockEntityRenderers.register(GENERATOR_ENTITY.get(), ::GeneratorRenderer)
+        EntityRenderers.register(VOID_BULLET.get(), ::VoidBulletRenderer)
         EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
     }
 
@@ -209,6 +210,11 @@ object AzurumMiner {
     fun serverToClientUpdate(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
         registrar.playToClient(MinerFilterPayloadToPlayer.TYPE, MinerFilterPayloadToPlayer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnPlayer))
+    }
+
+    @SubscribeEvent
+    fun registerLayers(event: EntityRenderersEvent.RegisterLayerDefinitions) {
+        event.registerLayerDefinition(VoidBulletModel.LAYER_LOCATION, VoidBulletModel::createBodyLayer)
     }
 
     @SubscribeEvent
