@@ -1,14 +1,15 @@
 {
   "type": "azurum_miner:crystallizer_recipe",
   "fluid_stack": {
-    "amount": 1000,
-    "id": "azurum_miner:molten_ore"
+    "amount": 4000,
+    "id": "minecraft:lava"
   },
   "ingredient": {
     "item": "azurum_miner:azurum"
   },
   "power": 5000,
   "processingTime": 600,
+  "rate": 1.0,
   "result": {
     "count": 1,
     "id": "azurum_miner:energy_shard"

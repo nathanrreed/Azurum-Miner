@@ -9,6 +9,7 @@
   },
   "power": 70000,
   "processingTime": 300,
+  "rate": 0.5,
   "result": {
     "count": 2,
     "id": "minecraft:prismarine_crystals"

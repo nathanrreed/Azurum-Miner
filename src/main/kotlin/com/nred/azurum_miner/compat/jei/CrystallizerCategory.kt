@@ -17,11 +17,13 @@ import mezz.jei.api.helpers.IGuiHelper
 import mezz.jei.api.recipe.IFocusGroup
 import mezz.jei.api.recipe.RecipeType
 import mezz.jei.api.recipe.category.IRecipeCategory
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 
 
@@ -55,7 +57,11 @@ class CrystallizerCategory(helper: IGuiHelper) : IRecipeCategory<CrystallizerRec
     }
 
     override fun setRecipe(builder: IRecipeLayoutBuilder, recipe: CrystallizerRecipe, focuses: IFocusGroup) {
-        builder.addInputSlot(46, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground()
+        builder.addInputSlot(46, 26).addIngredients(recipe.ingredients[0]).setStandardSlotBackground().addRichTooltipCallback { recipeSlotView, tooltip ->
+            if (recipe.rate != 1f) {
+                tooltip.add(Component.translatable("tooltip.azurum_miner.consumption_chance", Mth.floor(100 * recipe.rate)).withStyle(ChatFormatting.GOLD))
+            }
+        }
         builder.addInputSlot(11, 2).addFluidStack(recipe.inputFluid.fluid, recipe.inputFluid.amount.toLong()).setFluidRenderer(recipe.inputFluid.amount.toLong(), false, 31, 65)
         builder.addOutputSlot(97, 27).addItemStack(recipe.result).setOutputSlotBackground()
     }
