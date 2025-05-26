@@ -240,7 +240,7 @@ class EmiPlugin : EmiPlugin {
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it).setChance(0.5f) }, EmiStack.of(recipe.value.inputFluid.fluid, recipe.value.inputFluid.componentsPatch, recipe.value.inputFluid.amount.toLong()).comparison(Comparison.compareData { stack: EmiStack -> stack.componentChanges }), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it).setChance(recipe.value.rate) }, EmiStack.of(recipe.value.inputFluid.fluid, recipe.value.inputFluid.componentsPatch, recipe.value.inputFluid.amount.toLong()).comparison(Comparison.compareData { stack: EmiStack -> stack.componentChanges }), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
         }
 
         for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {

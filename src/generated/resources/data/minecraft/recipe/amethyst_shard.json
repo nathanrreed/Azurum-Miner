@@ -9,6 +9,7 @@
   },
   "power": 50000,
   "processingTime": 200,
+  "rate": 0.5,
   "result": {
     "count": 1,
     "id": "minecraft:amethyst_shard"

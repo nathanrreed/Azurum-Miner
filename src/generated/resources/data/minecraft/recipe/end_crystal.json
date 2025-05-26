@@ -5,10 +5,11 @@
     "id": "azurum_miner:ender_essence"
   },
   "ingredient": {
-    "item": "azurum_miner:seed_crystal"
+    "item": "minecraft:diamond"
   },
   "power": 250000,
   "processingTime": 1200,
+  "rate": 1.0,
   "result": {
     "count": 1,
     "id": "minecraft:end_crystal"

@@ -1,6 +1,8 @@
 package com.nred.azurum_miner.item
 
 import com.nred.azurum_miner.item.ModItems.VOID_BULLET
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -84,5 +86,9 @@ class VoidGun() : ProjectileWeaponItem(Properties().stacksTo(1)) {
             player.startUsingItem(hand)
             return InteractionResultHolder.consume<ItemStack?>(itemStack)
         }
+    }
+
+    override fun getName(stack: ItemStack): Component {
+        return super.getName(stack).copy().withStyle(ChatFormatting.AQUA)
     }
 }

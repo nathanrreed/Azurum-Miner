@@ -9,6 +9,7 @@ import com.nred.azurum_miner.recipe.CrystallizerInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -120,7 +121,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
                 } else {
                     this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
 
-                    if (level.random.nextBoolean()) // 50% chance to be used
+                    if (level.random.nextIntBetweenInclusive(0, 100) < Mth.floor(100 * recipe.rate)) // Chance to be used
                         this.itemStackHandler.decrement(0)
                     this.itemStackHandler.internalInsertItem(1, recipe.result.copy(), false)
                     data[PROGRESS] = 0

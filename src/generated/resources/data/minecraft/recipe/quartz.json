@@ -9,6 +9,7 @@
   },
   "power": 30000,
   "processingTime": 60,
+  "rate": 0.5,
   "result": {
     "count": 2,
     "id": "minecraft:quartz"

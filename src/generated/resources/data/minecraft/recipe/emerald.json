@@ -9,6 +9,7 @@
   },
   "power": 140000,
   "processingTime": 800,
+  "rate": 0.5,
   "result": {
     "count": 1,
     "id": "minecraft:emerald"

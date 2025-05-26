@@ -115,6 +115,7 @@
     "tag.item.azurum_miner.miner_ore_tier3_tag": "Miner Tier 3 Ores",
     "tag.item.azurum_miner.miner_ore_tier4_tag": "Miner Tier 4 Ores",
     "tag.item.azurum_miner.miner_ore_tier5_tag": "Miner Tier 5 Ores",
+    "tooltip.azurum_miner.consumption_chance": "Consumption chance: %s%%",
     "tooltip.azurum_miner.crystallizer": "Creates crystals from fluid\nHold §eShift§r for more info",
     "tooltip.azurum_miner.crystallizer.extended": "%s / %s\n%s: %s",
     "tooltip.azurum_miner.generator": "Draws energy from other dimensions\nHold §eShift§r for more info",
