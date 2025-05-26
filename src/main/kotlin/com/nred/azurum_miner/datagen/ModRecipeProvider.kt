@@ -157,7 +157,7 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         CrystallizerRecipeBuilder(ItemStack(QUARTZ, 2), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["quartz_crystal_solution"].still.get(), 150), 30000, 60).save(recipeOutput)
         CrystallizerRecipeBuilder(ItemStack(AMETHYST_SHARD, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["amethyst_crystal_solution"].still.get(), 150), 50000, 200).save(recipeOutput)
         CrystallizerRecipeBuilder(ItemStack(PRISMARINE_CRYSTALS, 2), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["prismarine_crystal_solution"].still.get(), 150), 70000, 300).save(recipeOutput)
-        CrystallizerRecipeBuilder(ItemStack(END_CRYSTAL, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["ender_essence"].still.get(), 5000), 500000, 1200).save(recipeOutput)
+        CrystallizerRecipeBuilder(ItemStack(END_CRYSTAL, 1), Ingredient.of(SEED_CRYSTAL.get()), FluidStack(FLUIDS["ender_essence"].still.get(), 5000), 250000, 1200).save(recipeOutput)
         CrystallizerRecipeBuilder(ItemStack(VOID_CRYSTAL.get(), 1), Ingredient.of(ENERGY_SHARD), FluidStack(FLUIDS["ender_essence"].still.get(), 3000), 50000, 600).save(recipeOutput)
         CrystallizerRecipeBuilder(ItemStack(ENERGY_SHARD.get(), 1), Ingredient.of(ORES["azurum"].gem), FluidStack(FLUIDS["molten_ore"].still.get(), 1000), 5000, 600).save(recipeOutput)
 

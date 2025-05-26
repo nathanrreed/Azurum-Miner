@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.EventHooks
 import java.util.function.Predicate
 
 class VoidGun() : ProjectileWeaponItem(Properties().stacksTo(1)) {
+    @Deprecated("Deprecated in Java")
     override fun getAllSupportedProjectiles(): Predicate<ItemStack> {
         return Predicate { stack -> stack.`is`(VOID_BULLET) }
     }

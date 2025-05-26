@@ -71,7 +71,7 @@ open class MachineScreen<T : MachineMenu>(menu: T, playerInventory: Inventory, t
             if (menu.fluidHandler != null) {
                 if (!menu.fluidHandler!!.getFluidInTank(tankId).isEmpty) {
                     val varMoltenLen = floor(menu.fluidHandler!!.getFluidAmount(tankId).toDouble() / InfuserEntity.FLUID_SIZE.toDouble() * (tank.height - 2)).toInt()
-                    blitTile(guiGraphics, Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(tankId).fluid).stillTexture), tank.left() + if (tank.width > 10) 0 else 1, tank.bottom() - varMoltenLen - if (tank.width > 10) 2 else 1, tank.width - 2, varMoltenLen, 16, 16, IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(tankId).fluid).tintColor)
+                    blitTile(guiGraphics, Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(tankId).fluid).stillTexture), tank.left(), tank.bottom() - varMoltenLen - if (tank.width > 10) 2 else 1, tank.width - 2, varMoltenLen, 16, 16, IClientFluidTypeExtensions.of(menu.fluidHandler!!.getFluidInTank(tankId).fluid).tintColor)
                 }
 
                 if (tank.width > 10)

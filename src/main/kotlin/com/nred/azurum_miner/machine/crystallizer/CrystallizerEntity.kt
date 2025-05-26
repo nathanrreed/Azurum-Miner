@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.client.extensions.IMenuProviderExtension
+import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import kotlin.jvm.optionals.getOrNull
 
@@ -42,6 +43,10 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
 
     fun updateEnumData(index: Int, value: Int) {
         this.data.set(index, value)
+    }
+
+    override fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
+        return level!!.recipeManager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get()).any { it.value.inputFluid.`is`(stack.fluid) }
     }
 
     init {
@@ -70,14 +75,10 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
 
                 else -> false
             }
-
         }
 
-        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (!simulate) {
-                return super.extractItem(slot, amount, simulate)
-            }
-            return ItemStack.EMPTY
+        override fun itemOutput(slot: Int): Boolean {
+            return slot == 1
         }
     }
 
@@ -111,7 +112,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get(), CrystallizerInput(state, itemStackHandler.getStackInSlot(0), fluidHandler.getFluidInTank(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
+            if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
@@ -121,7 +122,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
 
                     if (level.random.nextBoolean()) // 50% chance to be used
                         this.itemStackHandler.decrement(0)
-                    this.itemStackHandler.insertItem(1, recipe.result.copy(), false)
+                    this.itemStackHandler.internalInsertItem(1, recipe.result.copy(), false)
                     data[PROGRESS] = 0
                 }
             } else {

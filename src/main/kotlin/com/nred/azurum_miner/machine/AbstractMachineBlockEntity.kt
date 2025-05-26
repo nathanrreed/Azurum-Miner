@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.inventory.ContainerData
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -31,9 +32,27 @@ import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.ItemStackHandler
 
-open class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) {
+abstract class ExtendedItemStackHandler(capacity: Int) : ItemStackHandler(capacity) {
     open fun decrement(slot: Int, amount: Int = 1) {
         super.extractItem(slot, amount, false)
+    }
+
+    abstract fun itemOutput(slot: Int): Boolean
+
+    override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
+        if (itemOutput(slot) || !simulate)
+            return super.extractItem(slot, amount, simulate)
+        return ItemStack.EMPTY
+    }
+
+    override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
+        if (!itemOutput(slot))
+            return super.insertItem(slot, stack, simulate)
+        return stack
+    }
+
+    fun internalInsertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
+        return super.insertItem(slot, stack, simulate)
     }
 }
 
@@ -94,6 +113,7 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
     open fun canOutputSlot(tank: Int): Boolean {
         return true
     }
+
     open fun canInputSlot(tank: Int): Boolean {
         return true
     }

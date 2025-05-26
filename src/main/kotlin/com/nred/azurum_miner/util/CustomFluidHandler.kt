@@ -208,20 +208,28 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
 
     fun internalExtractFluid(maxDrain: Int, action: FluidAction, internal: Boolean): FluidStack {
         for (i in fluids.indices) {
-            val fluid = fluids[i]
-            if (fluid.isEmpty || (!canOutput(i) && !internal)) continue
-            var drained = maxDrain
-            if (fluid.amount < drained) {
-                drained = fluid.amount
-            }
-            val stack = fluid.copyWithAmount(drained)
-            if (action.execute() && drained > 0) {
-                fluid.shrink(drained)
-                onContentsChanged()
-            }
-            if (drained > 0) {
-                return stack
-            }
+            val fluid = internalExtractFluid(maxDrain, action, internal, i)
+
+            if (!FluidStack.isSameFluidSameComponents(fluid, FluidStack.EMPTY))
+                return fluid
+        }
+        return FluidStack.EMPTY
+    }
+
+    fun internalExtractFluid(maxDrain: Int, action: FluidAction, internal: Boolean, index: Int): FluidStack {
+        val fluid = fluids[index]
+        if (fluid.isEmpty || (!canOutput(index) && !internal)) return FluidStack.EMPTY
+        var drained = maxDrain
+        if (fluid.amount < drained) {
+            drained = fluid.amount
+        }
+        val stack = fluid.copyWithAmount(drained)
+        if (action.execute() && drained > 0) {
+            fluid.shrink(drained)
+            onContentsChanged()
+        }
+        if (drained > 0) {
+            return stack
         }
         return FluidStack.EMPTY
     }
@@ -231,8 +239,10 @@ abstract class CustomFluidStackHandler(private val capacity: Int, private val ta
     }
 
     fun internalExtractFluid(resource: FluidStack, action: FluidAction): FluidStack {
-        if (fluids.stream().anyMatch { fluidStack: FluidStack? -> fluidStack!!.`is`(resource.fluid) }) {
-            return internalExtractFluid(resource.amount, action, true)
+        val index = fluids.indexOfFirst { fluidStack: FluidStack? -> fluidStack!!.`is`(resource.fluid) }
+
+        if (index >= 0) {
+            return internalExtractFluid(resource.amount, action, true, index)
         }
         return FluidStack.EMPTY
     }
