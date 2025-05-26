@@ -59,6 +59,10 @@ open class SimpleGeneratorEntity(pos: BlockPos, blockState: BlockState) : Abstra
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
             return stack.getBurnTime(null) > 0
         }
+
+        override fun itemOutput(slot: Int): Boolean {
+            return false
+        }
     }
 
     companion object {

@@ -161,11 +161,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
             return super.insertItem(slot, stack.copyWithCount(1), false)
         }
 
-        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (slot == OUTPUT) {
-                return super.extractItem(slot, amount, simulate)
-            }
-            return ItemStack.EMPTY
+        override fun itemOutput(slot: Int): Boolean {
+            return slot == OUTPUT
         }
 
         override fun getSlotLimit(slot: Int): Int {

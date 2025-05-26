@@ -64,6 +64,10 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
             return level!!.recipeManager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get()).flatMap { it.value.inputItem.items.toList() }.any { it.`is`(stack.item) }
         }
 
+        override fun itemOutput(slot: Int): Boolean {
+            return false
+        }
+
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
             if (!simulate) {
                 return super.extractItem(slot, amount, simulate)
@@ -116,13 +120,14 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get(), LiquifierInput(state, itemStackHandler.getStackInSlot(0), fluidHandler.getFluidInTank(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
+            if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount && this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
                     data[PROGRESS]++
                 } else {
                     this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.EXECUTE)
+                    this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
                     this.itemStackHandler.decrement(0)
                     data[PROGRESS] = 0
                 }

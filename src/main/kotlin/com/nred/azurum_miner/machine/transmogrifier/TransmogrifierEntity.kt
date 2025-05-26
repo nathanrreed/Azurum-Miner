@@ -66,6 +66,10 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
             return false
         }
 
+        override fun itemOutput(slot: Int): Boolean {
+            return slot == 1
+        }
+
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
             if (slot == 1 || !simulate) {
                 return super.extractItem(slot, amount, simulate)
@@ -102,13 +106,13 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         if (recipe != null) {
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
+            if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
                     data[PROGRESS]++
                 } else {
                     this.itemStackHandler.decrement(0)
-                    this.itemStackHandler.insertItem(1, recipe.result.copy(), false)
+                    this.itemStackHandler.internalInsertItem(1, recipe.result.copy(), false)
                     data[PROGRESS] = 0
                 }
             } else {

@@ -74,11 +74,8 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
             }
         }
 
-        override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
-            if (slot == 2 || !simulate) {
-                return super.extractItem(slot, amount, simulate)
-            }
-            return ItemStack.EMPTY
+        override fun itemOutput(slot: Int): Boolean {
+            return slot == 2
         }
     }
 
@@ -122,7 +119,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 data[PROCESSING_TIME] = recipe.processingTime
 
-                if (energyHandler.energyStored > recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
+                if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
                     found = true
                     if (data[PROGRESS] < recipe.processingTime) {
                         energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
@@ -131,7 +128,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                         this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)
                         this.itemStackHandler.decrement(0)
                         this.itemStackHandler.decrement(1)
-                        this.itemStackHandler.insertItem(2, recipe.result.copy(), false)
+                        this.itemStackHandler.internalInsertItem(2, recipe.result.copy(), false)
                         data[PROGRESS] = 0
                     }
                     break

@@ -104,6 +104,10 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
             return false
         }
 
+        override fun itemOutput(slot: Int): Boolean {
+            return false
+        }
+
         override fun extractItem(slot: Int, amount: Int, simulate: Boolean): ItemStack {
             if (slot == OUTPUT_SLOT || (slot == MATRIX_SLOT && !simulate)) {
                 return super.extractItem(slot, amount, simulate)
@@ -198,7 +202,7 @@ open class GeneratorEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
             }
 
             if (Random.nextDouble() <= shardChance) {
-                itemStackHandler.insertItem(OUTPUT_SLOT, ItemStack(ModItems.ENERGY_SHARD.get(), 1), false)
+                itemStackHandler.internalInsertItem(OUTPUT_SLOT, ItemStack(ModItems.ENERGY_SHARD.get(), 1), false)
             }
         } else {
             if (currFuelRecipe == null) {
