@@ -20,7 +20,7 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="kotlinforforge"
     type="required"
-    versionRange="[5.8,)"
+    versionRange="[5.7,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
