@@ -103,7 +103,6 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
         }
     }
 
-
     override fun createMenu(containerId: Int, playerInventory: Inventory, player: Player): CrystallizerMenu {
         return CrystallizerMenu(containerId, playerInventory, ContainerLevelAccess.create(level!!, blockPos), blockPos, this.data)
     }
