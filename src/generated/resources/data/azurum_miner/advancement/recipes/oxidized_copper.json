@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:blue_ice"
+        "recipe": "azurum_miner:oxidized_copper"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:blue_ice"
+      "azurum_miner:oxidized_copper"
     ]
   }
 }

@@ -46,6 +46,18 @@
     "azurum_miner:void_processor",
     "azurum_miner:palestium_ingot_from_smelting_palestium_ore",
     "azurum_miner:energized_obsidian_block",
+    "azurum_miner:emerald_crystal_solution",
+    "azurum_miner:amethyst_crystal_solution",
+    "azurum_miner:diamond_crystal_solution",
+    "azurum_miner:quartz_crystal_solution",
+    "azurum_miner:prismarine_crystal_solution",
+    "azurum_miner:void_crystal",
+    "azurum_miner:generator_block",
+    "azurum_miner:simple_generator_block",
+    "azurum_miner:seed_crystal",
+    "azurum_miner:powdered_snow_from_snow_ball",
+    "azurum_miner:void_gun",
+    "azurum_miner:void_bullet",
     "minecraft:crafter"
   ]
 }

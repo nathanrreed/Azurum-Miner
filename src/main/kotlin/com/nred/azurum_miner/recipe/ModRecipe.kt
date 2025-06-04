@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.recipe
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.advancements.Criterion
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -75,6 +76,10 @@ abstract class SimpleRecipeBuilder(protected val result: ItemStack) : RecipeBuil
 
     override fun getResult(): Item {
         return result.item
+    }
+
+    override fun save(recipeOutput: RecipeOutput) {
+        this.save(recipeOutput, azLoc(RecipeBuilder.getDefaultRecipeId(this.getResult()).path))
     }
 }
 

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:oxidized_copper"
+        "recipe": "azurum_miner:budding_amethyst"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:oxidized_copper"
+      "azurum_miner:budding_amethyst"
     ]
   }
 }

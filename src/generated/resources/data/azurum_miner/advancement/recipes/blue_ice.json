@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:crying_obsidian"
+        "recipe": "azurum_miner:blue_ice"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:crying_obsidian"
+      "azurum_miner:blue_ice"
     ]
   }
 }
