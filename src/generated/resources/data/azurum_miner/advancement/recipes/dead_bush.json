@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:packed_ice"
+        "recipe": "azurum_miner:dead_bush"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:packed_ice"
+      "azurum_miner:dead_bush"
     ]
   }
 }

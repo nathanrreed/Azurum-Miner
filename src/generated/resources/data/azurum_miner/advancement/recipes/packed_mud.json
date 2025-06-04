@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:gilded_blackstone"
+        "recipe": "azurum_miner:packed_mud"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:gilded_blackstone"
+      "azurum_miner:packed_mud"
     ]
   }
 }

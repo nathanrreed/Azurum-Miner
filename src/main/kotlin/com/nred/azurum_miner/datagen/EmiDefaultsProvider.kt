@@ -72,8 +72,19 @@ class EmiDefaultsProvider(val output: PackOutput, val registries: CompletableFut
         recipes += azLoc("void_processor")
         recipes += azLoc("palestium_ingot_from_smelting_palestium_ore")
         recipes += azLoc("energized_obsidian_block")
+        recipes += azLoc("emerald_crystal_solution")
+        recipes += azLoc("amethyst_crystal_solution")
+        recipes += azLoc("diamond_crystal_solution")
+        recipes += azLoc("quartz_crystal_solution")
+        recipes += azLoc("prismarine_crystal_solution")
+        recipes += azLoc("void_crystal")
+        recipes += azLoc("generator_block")
+        recipes += azLoc("simple_generator_block")
+        recipes += azLoc("seed_crystal")
+        recipes += azLoc("powdered_snow_from_snow_ball")
+        recipes += azLoc("void_gun")
+        recipes += azLoc("void_bullet")
 
         recipes += ResourceLocation.withDefaultNamespace("crafter")
     }
-
 }

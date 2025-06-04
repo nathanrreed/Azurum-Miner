@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:prismarine_crystals"
+        "recipe": "azurum_miner:end_crystal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:prismarine_crystals"
+      "azurum_miner:end_crystal"
     ]
   }
 }

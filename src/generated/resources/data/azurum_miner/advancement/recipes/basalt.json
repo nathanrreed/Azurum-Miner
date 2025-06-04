@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:dead_bush"
+        "recipe": "azurum_miner:basalt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:dead_bush"
+      "azurum_miner:basalt"
     ]
   }
 }

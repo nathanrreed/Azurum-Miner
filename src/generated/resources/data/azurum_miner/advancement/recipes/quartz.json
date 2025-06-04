@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:amethyst_shard"
+        "recipe": "azurum_miner:quartz"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:amethyst_shard"
+      "azurum_miner:quartz"
     ]
   }
 }
