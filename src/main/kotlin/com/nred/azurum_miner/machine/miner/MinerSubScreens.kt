@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.machine.miner
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.datagen.ModItemTagProvider
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MappingInfo
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerEnum.*
@@ -51,6 +52,7 @@ import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.network.PacketDistributor
 import org.joml.Vector2i
 import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.math.min
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE as TooltipPositioner
@@ -149,8 +151,13 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                     if (name == "efficiency" && levelIdx == 3) {
                         return listOf(getModifierVal("miner.modifiers.${name}.${levelIdx}", 0, true).second, "", "")
                     }
-
                     if (info !is MappingInfo) {
+                        val newValue = CONFIG.getOptional<Any>("miner.modifiers.${name}.${levelIdx}").getOrNull()
+                        if (newValue is Number) {
+                            return listOf(newValue, "", "")
+                        } else if (newValue is Boolean) {
+                            return listOf(Component.translatable(if (newValue) "tooltip.azurum_miner.miner.button${pointIdx + 1}.upgrade${levelIdx}.enabled" else "tooltip.azurum_miner.miner.disabled"), "", "")
+                        }
                         return listOf("", "", "")
                     }
 

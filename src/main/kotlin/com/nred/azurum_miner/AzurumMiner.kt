@@ -37,6 +37,7 @@ import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.*
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
@@ -49,6 +50,7 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.ModContainer
 import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
@@ -63,6 +65,8 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.neoforged.neoforge.client.gui.ConfigurationScreen
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent
@@ -136,6 +140,8 @@ object AzurumMiner {
         BlockEntityRenderers.register(GENERATOR_ENTITY.get(), ::GeneratorRenderer)
         EntityRenderers.register(VOID_BULLET.get(), ::VoidBulletRenderer)
         EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
+
+        ModList.get().getModContainerById(ID).orElseThrow().registerExtensionPoint(IConfigScreenFactory::class.java, IConfigScreenFactory { container: ModContainer, last: Screen -> ConfigurationScreen(container, last) })
     }
 
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
