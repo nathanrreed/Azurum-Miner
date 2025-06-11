@@ -302,18 +302,18 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
 
         if (modifierPoints[2] > 4) {
-            data[ACCURACY] = 100
+            data[ACCURACY] = CONFIG.get("miner.modifiers.accuracy.5")
         }
         if (modifierPoints[1] > 0) {
             data[NUM_FILTERS] = 1
         }
-        if (modifierPoints[1] > 1) {
+        if (modifierPoints[1] > 1 && CONFIG.get("miner.modifiers.filter.2")) {
             data[MATERIAL_CHANCE] = 0
         }
         if (modifierPoints[1] > 2) {
             data[NUM_FILTERS] = 2
         }
-        if (modifierPoints[1] > 3) {
+        if (modifierPoints[1] > 3 && CONFIG.get("miner.modifiers.filter.4")) {
             data[RAW_CHANCE] = 0
         }
         if (modifierPoints[1] > 4) {
