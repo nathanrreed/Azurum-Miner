@@ -17,4 +17,10 @@ Adds a Void Miner to mine ores from thin air
 
 Adds 5 Levels of Miners each with the ability to mine a specific tier of ore. Each tier contains more valuable ores. There is also a mini levelling system inside the miners to upgrade aspects of their operation
 
+### Adding ore types to the miner
+
+---
+
+> To add ores to a miner level add to the item tag for miner_ore_tier1_tag, miner_ore_tier2_tag, etc they will be added to the corresponding tier of miner and all subsequent tiers.
+
 Licensed under MIT License
