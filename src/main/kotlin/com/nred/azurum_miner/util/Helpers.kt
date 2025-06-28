@@ -2,13 +2,13 @@ package com.nred.azurum_miner.util
 
 import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.item.ModItems
+import net.minecraft.ChatFormatting
 import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.CommonColors
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.Slot
@@ -107,7 +107,7 @@ object Helpers {
         itemHandler.deserializeNBT(context.registries()!!, tag.getCompound("inventory"))
         for (i in 0..itemHandler.slots - 1) {
             if (!itemHandler.getStackInSlot(i).isEmpty) {
-                list.add(itemHandler.getStackInSlot(i).getHoverName().copy().append(" x " + itemHandler.getStackInSlot(i).count).withColor(CommonColors.SOFT_YELLOW))
+                list.add(itemHandler.getStackInSlot(i).hoverName.copy().append(" x " + itemHandler.getStackInSlot(i).count).withStyle(ChatFormatting.YELLOW))
             }
         }
         tooltipComponents.addAll(list)

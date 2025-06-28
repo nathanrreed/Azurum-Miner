@@ -43,11 +43,13 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ItemEntityRenderer
+import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModContainer
@@ -120,7 +122,7 @@ object AzurumMiner {
 
         MOD_BUS.addListener(this::addCreative)
 
-        LOADING_CONTEXT.activeContainer.registerConfig(ModConfig.Type.COMMON, ModCommonConfig.CONFIG_SPEC, "azurum_miner.toml")
+        LOADING_CONTEXT.activeContainer.registerConfig(ModConfig.Type.SERVER, ModCommonConfig.CONFIG_SPEC, "azurum_miner.toml")
     }
 
     fun addCreative(event: BuildCreativeModeTabContentsEvent) {
@@ -158,7 +160,7 @@ object AzurumMiner {
         event.register(ModMenuTypes.SIMPLE_GENERATOR_MENU.get(), ::SimpleGeneratorScreen)
     }
 
-    private fun registerConfig(event: ModConfigEvent.Loading) {
+    private fun registerConfig(event: ModConfigEvent) {
         CONFIG = event.config.loadedConfig!!.config()
     }
 
@@ -197,6 +199,17 @@ object AzurumMiner {
                 }
             }
         }, Items.POWDER_SNOW_BUCKET)
+
+        event.registerItem(Capabilities.EnergyStorage.ITEM, { stack, _ ->
+            val energyHandler = object : CustomEnergyHandler(CONFIG.getIntOrElse("void_gun.energyCapacity", 0), true, false) {
+                override fun onContentsChanged() {
+                    updateStackComponent(stack)
+                }
+            }
+            val energy = if (stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).contains("energy")) stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getInt("energy") else 0
+            energyHandler.internalInsertEnergy(energy, false)
+            return@registerItem energyHandler
+        }, ModItems.VOID_GUN)
 
         if (ModList.get().isLoaded("computercraft")) {
             registerPeripherals(event)
