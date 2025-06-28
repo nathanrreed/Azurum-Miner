@@ -40,6 +40,12 @@ class ModCommonConfig {
             BUILDER.defineInRange("energyProduction", 20, 0, 1000000000000)
             BUILDER.pop()
 
+            BUILDER.push("void_gun")
+            BUILDER.define("energyRequired", false)
+            BUILDER.defineInRange("energyCapacity", 50000, 0, 1000000000000)
+            BUILDER.defineInRange("energyPerShot", 1000, 0, 1000000000000)
+            BUILDER.pop()
+
             BUILDER.push("miner")
 
             BUILDER.translation("azurum_miner.configuration.miner.options").push("options")

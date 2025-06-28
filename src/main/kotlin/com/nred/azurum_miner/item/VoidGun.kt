@@ -1,12 +1,15 @@
 package com.nred.azurum_miner.item
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.item.ModItems.VOID_BULLET
+import com.nred.azurum_miner.util.CustomEnergyHandler
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.LivingEntity
@@ -14,8 +17,10 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ProjectileWeaponItem
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
+import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.event.EventHooks
 import java.util.function.Predicate
 
@@ -40,7 +45,14 @@ class VoidGun() : ProjectileWeaponItem(Properties().stacksTo(1)) {
     override fun releaseUsing(stack: ItemStack, level: Level, entityLiving: LivingEntity, timeLeft: Int) {
         if (entityLiving is Player) {
             val itemStack = entityLiving.getProjectile(stack)
-            if (!itemStack.isEmpty) {
+            val energyHandler: CustomEnergyHandler = stack.getCapability(Capabilities.EnergyStorage.ITEM) as CustomEnergyHandler
+            val energyPerShot = CONFIG.getInt("void_gun.energyPerShot")
+            val energyRequired: Boolean = CONFIG.get("void_gun.energyRequired")
+
+            if (!itemStack.isEmpty && (!energyRequired || energyHandler.internalExtractEnergy(energyPerShot, true) == energyPerShot)) {
+                if (energyRequired)
+                    energyHandler.internalExtractEnergy(energyPerShot, false)
+
                 var i = this.getUseDuration(stack, entityLiving) - timeLeft
                 i = EventHooks.onArrowLoose(stack, level, entityLiving, i, !itemStack.isEmpty)
                 if (i < 0) return
@@ -90,5 +102,32 @@ class VoidGun() : ProjectileWeaponItem(Properties().stacksTo(1)) {
 
     override fun getName(stack: ItemStack): Component {
         return super.getName(stack).copy().withStyle(ChatFormatting.AQUA)
+    }
+
+    override fun isBarVisible(stack: ItemStack): Boolean {
+        return CONFIG.get("void_gun.energyRequired")
+    }
+
+    override fun getBarWidth(stack: ItemStack): Int {
+        val energyHandler = stack.getCapability(Capabilities.EnergyStorage.ITEM)
+        if (energyHandler == null) return 0
+        return Mth.ceil((energyHandler.energyStored / energyHandler.maxEnergyStored.toDouble()) * 13)
+    }
+
+    override fun isRepairable(stack: ItemStack): Boolean {
+        return false
+    }
+
+    override fun isEnchantable(stack: ItemStack): Boolean {
+        return false
+    }
+
+    override fun getBarColor(pStack: ItemStack): Int {
+        return Mth.hsvToRgb(0.0f.coerceAtLeast(getBarWidth(pStack) / MAX_BAR_WIDTH.toFloat()) / 3.0f, 1.0f, 1.0f)
+    }
+
+    override fun appendHoverText(stack: ItemStack, context: TooltipContext, tooltipComponents: MutableList<Component>, tooltipFlag: TooltipFlag) {
+        if (CONFIG.get("void_gun.energyRequired"))
+            tooltipComponents.add(CustomEnergyHandler.getTooltip(stack))
     }
 }
