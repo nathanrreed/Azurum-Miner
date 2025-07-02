@@ -84,7 +84,7 @@ open class CustomEnergyHandler(capacity: Int, private val allowInput: Boolean, p
     }
 
     fun updateStackComponent(stack: ItemStack) {
-        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY) { customData -> customData.update({ compoundTag -> compoundTag.putInt("energy", this.energy) }) }
+        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY) { customData -> customData.update { compoundTag -> compoundTag.putInt("energy", this.energy) } }
     }
 
     fun getTooltip(): Component {
