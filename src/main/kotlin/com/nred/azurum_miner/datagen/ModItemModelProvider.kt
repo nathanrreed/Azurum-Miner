@@ -35,6 +35,8 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         basicItem(ModItems.VOID_CRYSTAL.get())
         basicItem(ModItems.SEED_CRYSTAL.get())
 
+        basicItem(ModItems.PALESTIUM_PICKAXE.get())
+
         handheldItem(ModItems.VOID_BULLET.get())
 
         for (ore in OreHelper.ORES) {

@@ -161,7 +161,7 @@ object AzurumMiner {
     }
 
     private fun registerConfig(event: ModConfigEvent) {
-        CONFIG = event.config.loadedConfig!!.config()
+        CONFIG = event.config.loadedConfig?.config() ?: CommentedConfig.inMemory()
     }
 
     private fun registerCapabilities(event: RegisterCapabilitiesEvent) {

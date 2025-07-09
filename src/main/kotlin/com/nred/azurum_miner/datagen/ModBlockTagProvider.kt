@@ -7,6 +7,7 @@ import com.nred.azurum_miner.util.Ore
 import com.nred.azurum_miner.util.OreHelper
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BlockTags
 import net.neoforged.neoforge.common.data.BlockTagsProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
@@ -17,6 +18,10 @@ class ModBlockTagProvider(
     lookupProvider: CompletableFuture<HolderLookup.Provider>,
     existingFileHelper: ExistingFileHelper?,
 ) : BlockTagsProvider(output, lookupProvider, AzurumMiner.ID, existingFileHelper) {
+
+    companion object {
+        val INCORRECT_FOR_PALESTIUM_TOOL = BlockTags.create(ResourceLocation.fromNamespaceAndPath(AzurumMiner.ID, "incorrect_for_palestium_tool"))
+    }
 
     override fun addTags(provider: HolderLookup.Provider) {
         for (ore in OreHelper.ORES) {
