@@ -47,6 +47,11 @@ class ModCommonConfig {
             BUILDER.defineInRange("energyPerShot", 1000, 0, 1000000000000)
             BUILDER.pop()
 
+            BUILDER.push("palestium_pickaxe")
+            BUILDER.defineInRange("chanceToHasteOnMine", 10, 0, 100)
+            BUILDER.defineInRange("hasteOnMine", 40, 0, 1000000000000)
+            BUILDER.pop()
+
             BUILDER.push("miner")
 
             BUILDER.translation("azurum_miner.configuration.miner.options").push("options")

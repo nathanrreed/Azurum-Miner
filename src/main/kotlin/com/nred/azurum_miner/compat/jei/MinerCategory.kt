@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.common.MinerCommon
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.recipe.MinerRecipe
 import com.nred.azurum_miner.util.Helpers.azLoc
@@ -20,14 +21,6 @@ import net.minecraft.world.item.crafting.RecipeHolder
 
 class MinerCategory(helper: IGuiHelper, val tier: Int) : IRecipeCategory<RecipeHolder<MinerRecipe>> {
     companion object {
-        fun tierRange(tier: Int): String {
-            return if (tier == 5) {
-                tier.toString()
-            } else {
-                "${tier}-5"
-            }
-        }
-
         val TYPE_TIER1 = RecipeType(azLoc("miner_tier1"), RecipeHolder::class.java)
         val TYPE_TIER2 = RecipeType(azLoc("miner_tier2"), RecipeHolder::class.java)
         val TYPE_TIER3 = RecipeType(azLoc("miner_tier3"), RecipeHolder::class.java)
@@ -75,6 +68,6 @@ class MinerCategory(helper: IGuiHelper, val tier: Int) : IRecipeCategory<RecipeH
     }
 
     override fun draw(recipe: RecipeHolder<MinerRecipe>, recipeSlotsView: IRecipeSlotsView, guiGraphics: GuiGraphics, mouseX: Double, mouseY: Double) {
-        guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("menu.title.azurum_miner.miner", tierRange(recipe.value.tier)), 50, 0, 0xFFFFFFFF.toInt())
+        guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("menu.title.azurum_miner.miner", MinerCommon.tierRange(recipe.value.tier)), 50, 0, 0xFFFFFFFF.toInt())
     }
 }

@@ -1,17 +1,22 @@
 package com.nred.azurum_miner.item
 
-// THIS LINE IS REQUIRED FOR USING PROPERTY DELEGATES
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.datagen.ModBlockTagProvider.Companion.INCORRECT_FOR_PALESTIUM_TOOL
 import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
 import com.nred.azurum_miner.entity.ModEntities.ENTITY_TYPES
 import com.nred.azurum_miner.util.Helpers.azLoc
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Item.Properties
+import net.minecraft.world.item.PickaxeItem
+import net.minecraft.world.item.crafting.Ingredient
 import net.neoforged.bus.api.IEventBus
+import net.neoforged.neoforge.common.SimpleTier
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 
@@ -36,6 +41,9 @@ object ModItems {
 
     val VOID_GUN: DeferredItem<Item> = ITEMS.register("void_gun") { -> VoidGun() }
     val VOID_BULLET: DeferredItem<Item> = ITEMS.register("void_bullet") { -> VoidBulletItem(Properties()) }
+
+    val PALESTIUM_PICKAXE_TIER = SimpleTier(INCORRECT_FOR_PALESTIUM_TOOL, 2400, 14f, 4f, 16) { -> Ingredient.of(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/palestium"))) }
+    val PALESTIUM_PICKAXE: DeferredItem<Item> = ITEMS.register("palestium_pickaxe") { -> PalestiumPickaxe(PALESTIUM_PICKAXE_TIER, Properties().attributes(PickaxeItem.createAttributes(PALESTIUM_PICKAXE_TIER, 2.0f, -2.4f))) }
 
     fun register(eventBus: IEventBus) {
         ITEMS.register(eventBus)

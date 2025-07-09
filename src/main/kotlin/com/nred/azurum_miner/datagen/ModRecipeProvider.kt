@@ -14,6 +14,7 @@ import com.nred.azurum_miner.item.ModItems.EMPTY_DIMENSIONAL_MATRIX
 import com.nred.azurum_miner.item.ModItems.ENDER_DIAMOND
 import com.nred.azurum_miner.item.ModItems.ENERGY_SHARD
 import com.nred.azurum_miner.item.ModItems.NETHER_DIAMOND
+import com.nred.azurum_miner.item.ModItems.PALESTIUM_PICKAXE
 import com.nred.azurum_miner.item.ModItems.SEED_CRYSTAL
 import com.nred.azurum_miner.item.ModItems.SIMPLE_VOID_PROCESSOR
 import com.nred.azurum_miner.item.ModItems.VOID_BULLET
@@ -248,6 +249,11 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, VOID_GUN).pattern("EVE").pattern("PCP").pattern(" E ")
             .define('E', ENERGY_SHARD).define('V', VOID_CRYSTAL).define('P', VOID_PROCESSOR).define('C', CROSSBOW)
             .unlockedBy(getHasName(ENERGY_SHARD), has(ENERGY_SHARD)).save(recipeOutput)
+
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PALESTIUM_PICKAXE).pattern("PEP").pattern(" G ").pattern(" S ")
+            .define('P', ORES["palestium"].ingot!!).define('S', STICK).define('G', ORES["palestium"].gear!!).define('E', ENERGY_SHARD)
+            .unlockedBy(getHasName(ORES["palestium"].ingot!!), has(ORES["palestium"].ingot!!)).save(recipeOutput)
 
         // Bases
         GeneratorRecipeBuilder(NETHERRACK, 0.7f, 200).save(recipeOutput)

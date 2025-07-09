@@ -1,7 +1,7 @@
 package com.nred.azurum_miner.compat.emi
 
+import com.nred.azurum_miner.common.MinerCommon
 import com.nred.azurum_miner.compat.emi.EmiPlugin.Companion.MINER_CATEGORY
-import com.nred.azurum_miner.compat.jei.MinerCategory
 import dev.emi.emi.api.recipe.BasicEmiRecipe
 import dev.emi.emi.api.stack.EmiIngredient
 import dev.emi.emi.api.widget.SlotWidget
@@ -29,6 +29,7 @@ class EmiMinerRecipe(id: ResourceLocation, val output: EmiIngredient, catalysts:
                 current.render(draw, bounds.x() + xOff, bounds.y() + yOff, delta)
             }
         }).large(true).recipeContext(this)
-        widgets.addText(Component.translatable("menu.title.azurum_miner.miner", MinerCategory.tierRange(tier + 1)), 60, 0, 0xFFFFFFFF.toInt(), true).horizontalAlign(TextWidget.Alignment.CENTER)
+
+        widgets.addText(Component.translatable("menu.title.azurum_miner.miner", MinerCommon.tierRange(tier + 1)), 60, 0, 0xFFFFFFFF.toInt(), true).horizontalAlign(TextWidget.Alignment.CENTER)
     }
 }
