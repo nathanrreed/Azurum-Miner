@@ -280,6 +280,7 @@
     "tooltip.azurum_miner.miner.button2.upgrade1": "\nGain a filter slot\n%s to %s ores from filters",
     "tooltip.azurum_miner.miner.button2.upgrade1.single": "\nGain a filter slot\n%s%% more ores from filters",
     "tooltip.azurum_miner.miner.button2.upgrade2": "%s",
+    "tooltip.azurum_miner.palestium_pickaxe": "Hastes as it mines",
     "tooltip.azurum_miner.miner.button2.upgrade2.enabled": "\nNo more materials\n(unless in filter)",
     "tooltip.azurum_miner.miner.button2.upgrade2.single": "%s",
     "tooltip.azurum_miner.miner.button2.upgrade2.single.enabled": "\nNo more materials\n(unless in filter)",
