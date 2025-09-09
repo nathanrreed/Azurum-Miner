@@ -277,6 +277,7 @@ class InfoBox(x: Int, y: Int, width: Int, height: Int, val menu: MinerMenu) : Ab
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
         // TODO
+//        narrationElementOutput.add(NarratedElementType.TITLE, this.getTitle())
     }
 }
 
@@ -370,7 +371,7 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
         }
 
         if (ResourceLocation.tryParse(this.value) != null) {
-            this.ingredients = Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(this.value))).items.filter { it -> foundTags.any { tag -> it.`is`(tag) } }.stream())
+            this.ingredients = Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(this.value))).items.filter { foundTags.any { tag -> it.`is`(tag) } }.stream())
         } else {
             this.ingredients = Ingredient.EMPTY
         }

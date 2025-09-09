@@ -84,7 +84,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
     }
 
     override fun validFluidSlot(tank: Int, stack: FluidStack): Boolean {
-        return level!!.recipeManager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get()).any { it.value.result.`is`(stack.fluid) }
+        return level!!.recipeManager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get()).any { it.value.inputFluid.`is`(stack.fluid) }
     }
 
     override fun canOutputSlot(tank: Int): Boolean {
