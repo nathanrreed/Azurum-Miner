@@ -113,7 +113,7 @@ open class CrystallizerEntity(pos: BlockPos, blockState: BlockState) : AbstractM
         if (recipe != null) {
             val power = Mth.ceil(recipe.powerMult * baseEnergy)
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
+            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.internalExtractEnergy(power / recipe.processingTime, false)
