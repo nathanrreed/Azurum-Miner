@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.compat.emi
 
 import com.nred.azurum_miner.AzurumMiner
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
@@ -42,6 +43,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
@@ -183,11 +185,11 @@ class EmiPlugin : EmiPlugin {
         })
 
         registry.addRecipeHandler(ModMenuTypes.MINER_MENU.get(), object : StandardRecipeHandler<MinerMenu> {
-            override fun getInputSources(handler: MinerMenu): List<Slot?>? {
+            override fun getInputSources(handler: MinerMenu): List<Slot> {
                 return listOf()
             }
 
-            override fun getCraftingSlots(handler: MinerMenu): List<Slot?>? {
+            override fun getCraftingSlots(handler: MinerMenu): List<Slot> {
                 return handler.filterSlots
             }
 
@@ -231,20 +233,21 @@ class EmiPlugin : EmiPlugin {
             }
         }
 
+        var baseEnergy = CONFIG.getInt("liquifier.baseEnergyRequired")
         for (recipe in manager.getAllRecipesFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiLiquifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + if (recipe.value.inputFluid.isEmpty) NeoForgeEmiIngredient.of(FluidIngredient.empty()) else NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result.fluid, recipe.value.result.amount.toLong()), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiLiquifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + if (recipe.value.inputFluid.isEmpty) NeoForgeEmiIngredient.of(FluidIngredient.empty()) else NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result.fluid, recipe.value.result.amount.toLong()), Mth.ceil(recipe.value.powerMult * baseEnergy), recipe.value.processingTime))
         }
-
+        baseEnergy = CONFIG.getInt("infuser.baseEnergyRequired")
         for (recipe in manager.getAllRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiInfuserRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiInfuserRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) } + NeoForgeEmiIngredient.of(SizedFluidIngredient.of(recipe.value.inputFluid)), EmiStack.of(recipe.value.result), Mth.ceil(recipe.value.powerMult * baseEnergy), recipe.value.processingTime))
         }
-
+        baseEnergy = CONFIG.getInt("crystallizer.baseEnergyRequired")
         for (recipe in manager.getAllRecipesFor(ModRecipe.CRYSTALLIZER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it).setChance(recipe.value.rate) }, EmiStack.of(recipe.value.inputFluid.fluid, recipe.value.inputFluid.componentsPatch, recipe.value.inputFluid.amount.toLong()).comparison(Comparison.compareData { stack: EmiStack -> stack.componentChanges }), EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiCrystallizerRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it).setChance(recipe.value.rate) }, EmiStack.of(recipe.value.inputFluid.fluid, recipe.value.inputFluid.componentsPatch, recipe.value.inputFluid.amount.toLong()).comparison(Comparison.compareData { stack: EmiStack -> stack.componentChanges }), EmiStack.of(recipe.value.result), Mth.ceil(recipe.value.powerMult * baseEnergy), recipe.value.processingTime))
         }
-
+        baseEnergy = CONFIG.getInt("transmogrifier.baseEnergyRequired")
         for (recipe in manager.getAllRecipesFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get())) {
-            registry.addRecipe(EmiTransmogrifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result), recipe.value.power, recipe.value.processingTime))
+            registry.addRecipe(EmiTransmogrifierRecipe(recipe.id, recipe.value.ingredients.map { EmiIngredient.of(it) }, EmiStack.of(recipe.value.result), Mth.ceil(recipe.value.powerMult * baseEnergy), recipe.value.processingTime))
         }
 
         val fuels = hashMapOf<Int, ArrayList<Item>>()

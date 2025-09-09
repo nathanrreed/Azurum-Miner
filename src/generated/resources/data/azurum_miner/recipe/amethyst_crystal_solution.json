@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "minecraft:amethyst_shard"
   },
-  "power": 100000,
+  "power": 20.0,
   "processingTime": 200,
   "result": {
     "amount": 500,

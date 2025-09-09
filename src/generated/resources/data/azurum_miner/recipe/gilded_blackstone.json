@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:blackstone"
   },
-  "power": 100000,
+  "power": 2.0,
   "processingTime": 1200,
   "result": {
     "count": 1,

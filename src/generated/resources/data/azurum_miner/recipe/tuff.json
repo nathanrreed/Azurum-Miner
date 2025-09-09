@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:andesite"
   },
-  "power": 50000,
+  "power": 1.0,
   "processingTime": 60,
   "result": {
     "count": 1,

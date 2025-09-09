@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:stripped_bamboo_block"
   },
-  "power": 500000,
+  "power": 10.0,
   "processingTime": 2400,
   "result": {
     "count": 1,

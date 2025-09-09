@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:amethyst_block"
   },
-  "power": 50000,
+  "power": 1.0,
   "processingTime": 2400,
   "result": {
     "count": 1,

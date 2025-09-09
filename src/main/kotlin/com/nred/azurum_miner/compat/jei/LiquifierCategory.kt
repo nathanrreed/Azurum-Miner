@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 
 
@@ -29,6 +31,7 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
     companion object {
         val UID: ResourceLocation = azLoc("liquifier")
         val TYPE = RecipeType(UID, LiquifierRecipe::class.java)
+        val baseEnergy = CONFIG.getInt("liquifier.baseEnergyRequired")
     }
 
     private val icon: IDrawable = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemStack(ModMachines.LIQUIFIER.get()))
@@ -73,7 +76,7 @@ class LiquifierCategory(helper: IGuiHelper) : IRecipeCategory<LiquifierRecipe> {
 
 
         if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(Mth.ceil(recipe.powerMult * baseEnergy))), mouseX.toInt(), mouseY.toInt())
         }
         if (ScreenRectangle(40, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getTime(recipe.processingTime)), mouseX.toInt(), mouseY.toInt())

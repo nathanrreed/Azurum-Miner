@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.machine.MachineScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
@@ -31,6 +32,7 @@ class CrystallizerCategory(helper: IGuiHelper) : IRecipeCategory<CrystallizerRec
     companion object {
         val UID: ResourceLocation = azLoc("crystallizer")
         val TYPE = RecipeType(UID, CrystallizerRecipe::class.java)
+        val baseEnergy = CONFIG.getInt("crystallizer.baseEnergyRequired")
     }
 
     private val icon: IDrawable = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemStack(ModMachines.CRYSTALLIZER.get()))
@@ -74,7 +76,7 @@ class CrystallizerCategory(helper: IGuiHelper) : IRecipeCategory<CrystallizerRec
         guiGraphics.blitSprite(TANK, 11, 2, 150, 31, 65)
 
         if (ScreenRectangle(0, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt())) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(Mth.ceil(recipe.powerMult * baseEnergy))), mouseX.toInt(), mouseY.toInt())
         }
 
         if (ScreenRectangle(72, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {

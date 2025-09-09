@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "azurum_miner:energy_shard"
   },
-  "power": 50000,
+  "power": 2.0,
   "processingTime": 600,
   "rate": 1.0,
   "result": {

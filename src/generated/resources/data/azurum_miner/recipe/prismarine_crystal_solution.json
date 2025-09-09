@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "minecraft:prismarine_crystals"
   },
-  "power": 200000,
+  "power": 40.0,
   "processingTime": 200,
   "result": {
     "amount": 500,

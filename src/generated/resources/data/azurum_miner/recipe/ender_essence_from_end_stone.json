@@ -9,7 +9,7 @@
       "item": "minecraft:end_stone_bricks"
     }
   ],
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 20,
   "result": {
     "amount": 5,

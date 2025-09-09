@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.machine.MachineScreen.Companion.ENERGY_INNER
 import com.nred.azurum_miner.machine.MachineScreen.Companion.TANK
 import com.nred.azurum_miner.machine.ModMachines
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 
 
@@ -29,6 +31,7 @@ class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
     companion object {
         val UID: ResourceLocation = azLoc("infuser")
         val TYPE = RecipeType(UID, InfuserRecipe::class.java)
+        val baseEnergy = CONFIG.getInt("infuser.baseEnergyRequired")
     }
 
     private val icon: IDrawable = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemStack(ModMachines.INFUSER.get()))
@@ -69,7 +72,7 @@ class InfuserCategory(helper: IGuiHelper) : IRecipeCategory<InfuserRecipe> {
         guiGraphics.blitSprite(TANK, 9, 2, 150, 31, 65)
 
         if (ScreenRectangle(0, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt())) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(Mth.ceil(recipe.powerMult * baseEnergy))), mouseX.toInt(), mouseY.toInt())
         }
 
         if (ScreenRectangle(72, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {

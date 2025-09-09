@@ -7,6 +7,7 @@ import com.nred.azurum_miner.recipe.InfuserInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -116,13 +117,14 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
         var found = false
         for (recipe in level.recipeManager.getRecipesFor(ModRecipe.INFUSER_RECIPE_TYPE.get(), InfuserInput(state, itemStackHandler.getStackInSlot(0), itemStackHandler.getStackInSlot(1), fluidHandler.getFluidInTank(0)), level).map { it.value }) {
             if (recipe != null) {
+                val power = Mth.ceil(recipe.powerMult * baseEnergy)
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 data[PROCESSING_TIME] = recipe.processingTime
 
-                if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
+                if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalInsertFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE) == recipe.inputFluid.amount) {
                     found = true
                     if (data[PROGRESS] < recipe.processingTime) {
-                        energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
+                        energyHandler.internalExtractEnergy(power / recipe.processingTime, false)
                         data[PROGRESS]++
                     } else {
                         this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.EXECUTE)

@@ -4,7 +4,7 @@
   "ingredient": {
     "item": "minecraft:blaze_rod"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 20,
   "result": {
     "amount": 250,

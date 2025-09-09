@@ -16,18 +16,22 @@ class ModCommonConfig {
 
             BUILDER.push("infuser")
             BUILDER.defineInRange("energyCapacity", 500000, 0, 1000000000000)
+            BUILDER.defineInRange("baseEnergyRequired", 5000, 0, 1000000000000)
             BUILDER.pop()
 
             BUILDER.push("liquifier")
             BUILDER.defineInRange("energyCapacity", 500000, 0, 1000000000000)
+            BUILDER.defineInRange("baseEnergyRequired", 5000, 0, 1000000000000)
             BUILDER.pop()
 
             BUILDER.push("crystallizer")
             BUILDER.defineInRange("energyCapacity", 500000, 0, 1000000000000)
+            BUILDER.defineInRange("baseEnergyRequired", 30000, 0, 1000000000000)
             BUILDER.pop()
 
             BUILDER.push("transmogrifier")
             BUILDER.defineInRange("energyCapacity", 5000000, 0, 1000000000000)
+            BUILDER.defineInRange("baseEnergyRequired", 50000, 0, 1000000000000)
             BUILDER.pop()
 
             BUILDER.push("generator")
@@ -79,11 +83,11 @@ class ModCommonConfig {
             BUILDER.translation("azurum_miner.configuration.modifier.filter").push("filter")
             BUILDER.translation("azurum_miner.configuration.modifier.filter.1").comment("Gain 1st filter slot. Percentage of ores that are from the filter").defineInRange("1", 25, 0, 33)
             BUILDER.define("1FE", 1.2)
-            BUILDER.translation("azurum_miner.configuration.modifier.filter.2").comment("No more materials (unless in filter)").define("2") { -> true }
+            BUILDER.translation("azurum_miner.configuration.modifier.filter.2").comment("No more materials (unless in filter)").define("2") { true }
             BUILDER.define("2FE", 1.2)
             BUILDER.translation("azurum_miner.configuration.modifier.filter.3").comment("Gain 2nd filter slot. Percentage of ores that are from the filter").defineInRange("3", 25, 0, 33)
             BUILDER.define("3FE", 1.2)
-            BUILDER.translation("azurum_miner.configuration.modifier.filter.4").comment("No more raw").define("4") { -> true }
+            BUILDER.translation("azurum_miner.configuration.modifier.filter.4").comment("No more raw").define("4") { true }
             BUILDER.define("4FE", 1.2)
             BUILDER.translation("azurum_miner.configuration.modifier.filter.5").comment("Gain 3rd filter slot and unlock tag filters. Percentage of ores that are from the filter").defineInRange("5", 25, 0, 33)
             BUILDER.define("5FE", 1.2)
