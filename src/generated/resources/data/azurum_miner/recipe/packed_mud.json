@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:granite"
   },
-  "power": 80000,
+  "power": 1.6,
   "processingTime": 120,
   "result": {
     "count": 1,

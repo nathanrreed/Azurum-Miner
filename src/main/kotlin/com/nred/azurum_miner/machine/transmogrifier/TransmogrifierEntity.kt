@@ -9,6 +9,7 @@ import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.recipe.TransmogrifierInput
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -104,11 +105,12 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
         if (!this.loaded) return
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.TRANSMOGRIFIER_RECIPE_TYPE.get(), TransmogrifierInput(state, itemStackHandler.getStackInSlot(0)), level).getOrNull()?.value
         if (recipe != null) {
+            val power = Mth.ceil(recipe.powerMult * baseEnergy)
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
+            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
                 if (data[PROGRESS] < recipe.processingTime) {
-                    energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
+                    energyHandler.internalExtractEnergy(power / recipe.processingTime, false)
                     data[PROGRESS]++
                 } else {
                     this.itemStackHandler.decrement(0)

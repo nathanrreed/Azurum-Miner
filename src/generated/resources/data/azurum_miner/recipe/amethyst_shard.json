@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "azurum_miner:seed_crystal"
   },
-  "power": 50000,
+  "power": 1.5,
   "processingTime": 200,
   "rate": 0.5,
   "result": {

@@ -4,7 +4,7 @@
   "ingredient": {
     "tag": "azurum_miner:miner_ore_tier5_tag"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 20,
   "result": {
     "amount": 250,

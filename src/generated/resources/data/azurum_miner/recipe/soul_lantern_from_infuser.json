@@ -8,7 +8,7 @@
   "ingredient": {
     "item": "minecraft:lantern"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 40,
   "result": {
     "count": 1,

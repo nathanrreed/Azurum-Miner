@@ -10,6 +10,8 @@
     "azurum_miner.configuration.chanceToHasteOnMine.tooltip": "Chance to get haste after mining a block",
     "azurum_miner.configuration.crystallizer": "Crystallizer Settings",
     "azurum_miner.configuration.energyCapacity": "Energy capacity",
+    "azurum_miner.configuration.baseEnergyRequired": "Energy Required",
+    "azurum_miner.configuration.baseEnergyRequired.tooltip": "Amount of energy a recipe will be multiplied by",
     "azurum_miner.configuration.energyPerShot": "Energy Per Shot",
     "azurum_miner.configuration.energyPerShot.tooltip": "Amount of energy needed per shot",
     "azurum_miner.configuration.energyProduction": "Energy Production",

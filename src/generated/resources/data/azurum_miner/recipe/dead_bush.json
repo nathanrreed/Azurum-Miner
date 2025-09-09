@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "minecraft:saplings"
   },
-  "power": 100000,
+  "power": 2.0,
   "processingTime": 60,
   "result": {
     "count": 1,

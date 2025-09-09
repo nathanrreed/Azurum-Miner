@@ -37,7 +37,7 @@ data class InfuserInput(val state: BlockState, val stack: ItemStack, val catalys
     }
 }
 
-class InfuserRecipe(val inputItem: Ingredient, val catalyst: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<InfuserInput> {
+class InfuserRecipe(val inputItem: Ingredient, val catalyst: Ingredient, val inputFluid: FluidStack, val result: ItemStack, val powerMult: Double, val processingTime: Int) : Recipe<InfuserInput> {
     override fun matches(input: InfuserInput, level: Level): Boolean {
         return this.inputItem.test(input.stack) && this.catalyst.test(input.catalyst) && FluidStack.isSameFluid(this.inputFluid, input.fluidStack)
     }
@@ -87,7 +87,7 @@ class InfuserRecipeSerializer : RecipeSerializer<InfuserRecipe> {
                 Ingredient.CODEC.fieldOf("catalyst").forGetter(InfuserRecipe::catalyst),
                 FluidStack.CODEC.fieldOf("fluid_stack").forGetter(InfuserRecipe::inputFluid),
                 ItemStack.CODEC.fieldOf("result").forGetter(InfuserRecipe::result),
-                Codec.INT.fieldOf("power").forGetter(InfuserRecipe::power),
+                Codec.DOUBLE.fieldOf("power").forGetter(InfuserRecipe::powerMult),
                 Codec.INT.fieldOf("processingTime").forGetter(InfuserRecipe::processingTime)
             ).apply(inst, ::InfuserRecipe)
         }
@@ -96,21 +96,21 @@ class InfuserRecipeSerializer : RecipeSerializer<InfuserRecipe> {
             Ingredient.CONTENTS_STREAM_CODEC, InfuserRecipe::catalyst,
             FluidStack.STREAM_CODEC, InfuserRecipe::inputFluid,
             ItemStack.STREAM_CODEC, InfuserRecipe::result,
-            ByteBufCodecs.INT, InfuserRecipe::power,
+            ByteBufCodecs.DOUBLE, InfuserRecipe::powerMult,
             ByteBufCodecs.INT, InfuserRecipe::processingTime,
             ::InfuserRecipe
         )
     }
 }
 
-class InfuserRecipeBuilder(result: ItemStack, private val inputItem: Ingredient, private val catalyst: Ingredient, private val inputFluid: FluidStack, private val power: Int, private val processingTime: Int) : SimpleRecipeBuilder(result) {
+class InfuserRecipeBuilder(result: ItemStack, private val inputItem: Ingredient, private val catalyst: Ingredient, private val inputFluid: FluidStack, private val powerMult: Double, private val processingTime: Int) : SimpleRecipeBuilder(result) {
     override fun save(output: RecipeOutput, key: ResourceLocation) {
         val advancement = output.advancement()
             .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(key))
             .rewards(AdvancementRewards.Builder.recipe(key))
             .requirements(AdvancementRequirements.Strategy.OR)
 
-        val recipe = InfuserRecipe(this.inputItem, this.catalyst, this.inputFluid, this.result, this.power, this.processingTime)
+        val recipe = InfuserRecipe(this.inputItem, this.catalyst, this.inputFluid, this.result, this.powerMult, this.processingTime)
 
         output.accept(key, recipe, advancement.build(key.withPrefix("recipes/")))
     }

@@ -90,7 +90,7 @@ open class SimpleGeneratorEntity(pos: BlockPos, blockState: BlockState) : Abstra
             val storage: IEnergyStorage? = level.getCapability(Capabilities.EnergyStorage.BLOCK, blockPos.relative(dir), dir.opposite)
             if (storage != null && storage.canReceive()) {
                 val extracted = energyHandler.energyStored
-                energyHandler.extractEnergy(extracted, false)
+                energyHandler.internalExtractEnergy(extracted, false)
                 val actual = storage.receiveEnergy(extracted, false)
                 if (extracted != actual) {
                     energyHandler.internalInsertEnergy(extracted - actual, false)

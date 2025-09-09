@@ -34,7 +34,7 @@ data class TransmogrifierInput(val state: BlockState, val stack: ItemStack) : Re
     }
 }
 
-class TransmogrifierRecipe(val inputItem: Ingredient, val result: ItemStack, val power: Int, val processingTime: Int) : Recipe<TransmogrifierInput> {
+class TransmogrifierRecipe(val inputItem: Ingredient, val result: ItemStack, val powerMult: Double, val processingTime: Int) : Recipe<TransmogrifierInput> {
     override fun matches(input: TransmogrifierInput, level: Level): Boolean {
         return this.inputItem.test(input.stack)
     }
@@ -82,28 +82,28 @@ class TransmogrifierRecipeSerializer : RecipeSerializer<TransmogrifierRecipe> {
             inst.group(
                 Ingredient.CODEC.fieldOf("ingredient").forGetter(TransmogrifierRecipe::inputItem),
                 ItemStack.CODEC.fieldOf("result").forGetter(TransmogrifierRecipe::result),
-                Codec.INT.fieldOf("power").forGetter(TransmogrifierRecipe::power),
+                Codec.DOUBLE.fieldOf("power").forGetter(TransmogrifierRecipe::powerMult),
                 Codec.INT.fieldOf("processingTime").forGetter(TransmogrifierRecipe::processingTime)
             ).apply(inst, ::TransmogrifierRecipe)
         }
         val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, TransmogrifierRecipe> = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, TransmogrifierRecipe::inputItem,
             ItemStack.STREAM_CODEC, TransmogrifierRecipe::result,
-            ByteBufCodecs.INT, TransmogrifierRecipe::power,
+            ByteBufCodecs.DOUBLE, TransmogrifierRecipe::powerMult,
             ByteBufCodecs.INT, TransmogrifierRecipe::processingTime,
             ::TransmogrifierRecipe
         )
     }
 }
 
-class TransmogrifierRecipeBuilder(result: ItemStack, private val inputItem: Ingredient, private val power: Int, private val processingTime: Int) : SimpleRecipeBuilder(result) {
+class TransmogrifierRecipeBuilder(result: ItemStack, private val inputItem: Ingredient, private val powerMult: Double, private val processingTime: Int) : SimpleRecipeBuilder(result) {
     override fun save(output: RecipeOutput, key: ResourceLocation) {
         val advancement = output.advancement()
             .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(key))
             .rewards(AdvancementRewards.Builder.recipe(key))
             .requirements(AdvancementRequirements.Strategy.OR)
 
-        val recipe = TransmogrifierRecipe(this.inputItem, this.result, this.power, this.processingTime)
+        val recipe = TransmogrifierRecipe(this.inputItem, this.result, this.powerMult, this.processingTime)
 
         output.accept(key, recipe, advancement.build(key.withPrefix("recipes/")))
     }

@@ -1,5 +1,6 @@
 package com.nred.azurum_miner.compat.jei
 
+import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_BAR
 import com.nred.azurum_miner.machine.miner.MinerScreen.Companion.ENERGY_INNER
@@ -21,6 +22,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 
 
@@ -28,6 +30,7 @@ class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<Transmogrifie
     companion object {
         val UID: ResourceLocation = azLoc("transmogrifier")
         val TYPE = RecipeType(UID, TransmogrifierRecipe::class.java)
+        val baseEnergy = CONFIG.getInt("transmogrifier.baseEnergyRequired")
     }
 
     private val icon: IDrawable = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemStack(ModMachines.TRANSMOGRIFIER.get()))
@@ -63,7 +66,7 @@ class TransmogrifierCategory(helper: IGuiHelper) : IRecipeCategory<Transmogrifie
         guiGraphics.blitSprite(ENERGY_INNER, 3, 3, 4, 4, 63)
 
         if (ScreenRectangle(2, 2, 6, 65).containsPoint(mouseX.toInt(), mouseY.toInt() + 1)) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(recipe.power)), mouseX.toInt(), mouseY.toInt())
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFE(Mth.ceil(recipe.powerMult * baseEnergy))), mouseX.toInt(), mouseY.toInt())
         }
         if (ScreenRectangle(40, 26, this.arrow.width, this.arrow.height).containsPoint(mouseX.toInt(), mouseY.toInt())) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getTime(recipe.processingTime)), mouseX.toInt(), mouseY.toInt())

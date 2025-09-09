@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:deepslate"
   },
-  "power": 100000,
+  "power": 2.0,
   "processingTime": 180,
   "result": {
     "count": 1,

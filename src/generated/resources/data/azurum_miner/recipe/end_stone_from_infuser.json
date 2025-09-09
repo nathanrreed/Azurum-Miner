@@ -8,7 +8,7 @@
   "ingredient": {
     "item": "minecraft:stone"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 20,
   "result": {
     "count": 1,

@@ -66,6 +66,8 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
     abstract var data: ContainerData
     abstract fun getProgress(): Float
 
+    val baseEnergy = CONFIG.getIntOrElse("$machineName.baseEnergyRequired", 0)
+
     override fun onLoad() {
         super.onLoad()
 

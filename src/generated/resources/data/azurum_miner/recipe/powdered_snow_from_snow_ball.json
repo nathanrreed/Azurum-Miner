@@ -4,7 +4,7 @@
   "ingredient": {
     "item": "minecraft:snowball"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 20,
   "result": {
     "amount": 10,

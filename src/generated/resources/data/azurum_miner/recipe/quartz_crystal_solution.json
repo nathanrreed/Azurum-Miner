@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "minecraft:quartz"
   },
-  "power": 150000,
+  "power": 30.0,
   "processingTime": 200,
   "result": {
     "amount": 500,

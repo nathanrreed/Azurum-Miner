@@ -8,7 +8,7 @@
   "ingredient": {
     "item": "minecraft:ice"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 200,
   "result": {
     "count": 1,

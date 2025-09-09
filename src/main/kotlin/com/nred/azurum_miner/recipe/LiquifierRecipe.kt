@@ -32,7 +32,7 @@ data class LiquifierInput(val state: BlockState, val stack: ItemStack, val fluid
     }
 }
 
-class LiquifierRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: FluidStack, val power: Int, val processingTime: Int) : Recipe<LiquifierInput> {
+class LiquifierRecipe(val inputItem: Ingredient, val inputFluid: FluidStack, val result: FluidStack, val powerMult: Double, val processingTime: Int) : Recipe<LiquifierInput> {
     override fun matches(input: LiquifierInput, level: Level): Boolean {
         return this.inputItem.test(input.stack) && FluidStack.isSameFluid(this.inputFluid, input.fluidStack)
     }
@@ -81,7 +81,7 @@ class LiquifierRecipeSerializer : RecipeSerializer<LiquifierRecipe> {
                 Ingredient.CODEC.fieldOf("ingredient").forGetter(LiquifierRecipe::inputItem),
                 FluidStack.OPTIONAL_CODEC.fieldOf("fluid_ingredient").forGetter(LiquifierRecipe::inputFluid),
                 FluidStack.CODEC.fieldOf("result").forGetter(LiquifierRecipe::result),
-                Codec.INT.fieldOf("power").forGetter(LiquifierRecipe::power),
+                Codec.DOUBLE.fieldOf("power").forGetter(LiquifierRecipe::powerMult),
                 Codec.INT.fieldOf("processingTime").forGetter(LiquifierRecipe::processingTime)
             ).apply(inst, ::LiquifierRecipe)
         }
@@ -89,24 +89,23 @@ class LiquifierRecipeSerializer : RecipeSerializer<LiquifierRecipe> {
             Ingredient.CONTENTS_STREAM_CODEC, LiquifierRecipe::inputItem,
             FluidStack.OPTIONAL_STREAM_CODEC, LiquifierRecipe::inputFluid,
             FluidStack.STREAM_CODEC, LiquifierRecipe::result,
-            ByteBufCodecs.INT, LiquifierRecipe::power,
+            ByteBufCodecs.DOUBLE, LiquifierRecipe::powerMult,
             ByteBufCodecs.INT, LiquifierRecipe::processingTime,
             ::LiquifierRecipe
         )
     }
 }
 
-class LiquifierRecipeBuilder(result: FluidStack, private val inputItem: Ingredient, private val inputFluid: FluidStack, private val power: Int, private val processingTime: Int) : SimpleFluidRecipeBuilder(result) {
-    constructor(result: FluidStack, inputItem: Ingredient, power: Int, processingTime: Int) : this(result, inputItem, FluidStack.EMPTY, power, processingTime)
+class LiquifierRecipeBuilder(result: FluidStack, private val inputItem: Ingredient, private val inputFluid: FluidStack, private val powerMult: Double, private val processingTime: Int) : SimpleFluidRecipeBuilder(result) {
+    constructor(result: FluidStack, inputItem: Ingredient, powerMult: Double, processingTime: Int) : this(result, inputItem, FluidStack.EMPTY, powerMult, processingTime)
 
     override fun save(output: RecipeOutput, key: ResourceLocation) {
         val advancement = output.advancement()
             .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(key))
             .rewards(AdvancementRewards.Builder.recipe(key))
             .requirements(AdvancementRequirements.Strategy.OR)
-        this.criteria.forEach { _ -> advancement::addCriterion }
-        // Our factory parameters are the result, the block state, and the ingredient.
-        val recipe = LiquifierRecipe(this.inputItem, this.inputFluid, this.result, this.power, this.processingTime)
+
+        val recipe = LiquifierRecipe(this.inputItem, this.inputFluid, this.result, this.powerMult, this.processingTime)
 
         output.accept(key, recipe, advancement.build(key.withPrefix("recipes/")))
     }

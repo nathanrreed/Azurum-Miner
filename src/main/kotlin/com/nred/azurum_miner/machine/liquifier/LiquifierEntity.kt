@@ -9,6 +9,7 @@ import com.nred.azurum_miner.recipe.LiquifierInput
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.core.BlockPos
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ContainerData
@@ -120,10 +121,11 @@ open class LiquifierEntity(pos: BlockPos, blockState: BlockState) : AbstractMach
         val recipe = level.recipeManager.getRecipeFor(ModRecipe.LIQUIFIER_RECIPE_TYPE.get(), LiquifierInput(state, itemStackHandler.getStackInSlot(0), fluidHandler.getFluidInTank(0)), level).getOrNull()?.value
         if (recipe != null) {
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored >= recipe.power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount && this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
+            val power = Mth.ceil(recipe.powerMult * baseEnergy)
+            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount && this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.SIMULATE) == recipe.result.amount) {
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 if (data[PROGRESS] < recipe.processingTime) {
-                    energyHandler.extractEnergy(recipe.power / recipe.processingTime, false)
+                    energyHandler.internalExtractEnergy(power / recipe.processingTime, false)
                     data[PROGRESS]++
                 } else {
                     this.fluidHandler.internalInsertFluid(recipe.result, IFluidHandler.FluidAction.EXECUTE)

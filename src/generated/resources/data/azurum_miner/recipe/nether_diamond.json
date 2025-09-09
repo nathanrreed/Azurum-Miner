@@ -10,7 +10,7 @@
   "ingredient": {
     "item": "minecraft:blaze_powder"
   },
-  "power": 5000,
+  "power": 1.0,
   "processingTime": 200,
   "result": {
     "count": 1,
