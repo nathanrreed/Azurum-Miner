@@ -22,6 +22,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
 import java.util.*
@@ -29,6 +31,7 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
 
+@OnlyIn(Dist.CLIENT)
 class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component) : AbstractContainerScreen<MinerMenu>(menu, playerInventory, title) {
     companion object {
         val BASE: ResourceLocation = azLoc("common/base")

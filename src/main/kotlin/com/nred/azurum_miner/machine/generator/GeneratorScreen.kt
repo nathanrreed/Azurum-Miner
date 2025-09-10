@@ -20,9 +20,12 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.CommonColors
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.network.PacketDistributor
 
+@OnlyIn(Dist.CLIENT)
 class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Component) : MachineScreen<GeneratorMenu>(menu, playerInventory, title) {
     companion object {
         val BASE: ResourceLocation = azLoc("generator")

@@ -6,7 +6,8 @@ import com.nred.azurum_miner.compat.cct.RegisterPeripherals.registerPeripherals
 import com.nred.azurum_miner.config.ModCommonConfig
 import com.nred.azurum_miner.config.ModCreativeModTabs
 import com.nred.azurum_miner.config.ModCreativeModTabs.MOD_TAB
-import com.nred.azurum_miner.entity.*
+import com.nred.azurum_miner.entity.EmptyMatrixItemEntity
+import com.nred.azurum_miner.entity.ModBlockEntities
 import com.nred.azurum_miner.entity.ModBlockEntities.CRYSTALLIZER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.INFUSER_ENTITY
@@ -14,33 +15,23 @@ import com.nred.azurum_miner.entity.ModBlockEntities.LIQUIFIER_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.MINER_ENTITY_TIERS
 import com.nred.azurum_miner.entity.ModBlockEntities.SIMPLE_GENERATOR_ENTITY
 import com.nred.azurum_miner.entity.ModBlockEntities.TRANSMOGRIFIER_ENTITY
-import com.nred.azurum_miner.entity.ModEntities.VOID_BULLET
+import com.nred.azurum_miner.entity.ModEntities
+import com.nred.azurum_miner.entity.VoidBulletModel
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.crystallizer.CrystallizerEntity
-import com.nred.azurum_miner.machine.crystallizer.CrystallizerScreen
-import com.nred.azurum_miner.machine.generator.*
+import com.nred.azurum_miner.machine.generator.FUEL_SLOT_SAVE
+import com.nred.azurum_miner.machine.generator.GeneratorEntity
+import com.nred.azurum_miner.machine.generator.GeneratorMenu
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
-import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
-import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerEntity
-import com.nred.azurum_miner.machine.miner.MinerScreen
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity
-import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
-import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
 import com.nred.azurum_miner.recipe.ModRecipe
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.*
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.renderer.ItemBlockRenderTypes
-import net.minecraft.client.renderer.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
-import net.minecraft.client.renderer.entity.EntityRenderers
-import net.minecraft.client.renderer.entity.ItemEntityRenderer
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -51,13 +42,11 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.dimension.LevelStem.NETHER
 import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.ModContainer
 import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.config.ModConfig
 import net.neoforged.fml.event.config.ModConfigEvent
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.neoforge.capabilities.Capabilities
@@ -65,10 +54,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.AddAttributeTooltipsEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
-import net.neoforged.neoforge.client.gui.ConfigurationScreen
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent
@@ -85,7 +71,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 import java.util.*
 
 @Mod(AzurumMiner.ID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 object AzurumMiner {
     const val ID = "azurum_miner"
     var CONFIG: CommentedConfig = CommentedConfig.inMemory()
@@ -96,15 +82,12 @@ object AzurumMiner {
     init {
         val obj = runForDist(
             clientTarget = {
-                MOD_BUS.addListener(::onClientSetup)
-                Minecraft.getInstance()
             },
             serverTarget = {
                 MOD_BUS.addListener(::onServerSetup)
                 "test"
             })
 
-        MOD_BUS.addListener(::registerScreens)
         MOD_BUS.addListener(::registerCapabilities)
         MOD_BUS.addListener(::registerConfig)
         MOD_BUS.addListener(::onCommonSetup)
@@ -135,31 +118,8 @@ object AzurumMiner {
         }
     }
 
-    private fun onClientSetup(event: FMLClientSetupEvent) {
-        for (fluid in FluidHelper.FLUIDS) {
-            ItemBlockRenderTypes.setRenderLayer(fluid.still.get(), RenderType.TRANSLUCENT)
-            ItemBlockRenderTypes.setRenderLayer(fluid.flowing.get(), RenderType.TRANSLUCENT)
-        }
-
-        BlockEntityRenderers.register(GENERATOR_ENTITY.get(), ::GeneratorRenderer)
-        EntityRenderers.register(VOID_BULLET.get(), ::VoidBulletRenderer)
-        EntityRenderers.register(ModItems.EMPTY_DIMENSIONAL_MATRIX_TYPE.get(), ::ItemEntityRenderer)
-
-        ModList.get().getModContainerById(ID).orElseThrow().registerExtensionPoint(IConfigScreenFactory::class.java, IConfigScreenFactory { container: ModContainer, last: Screen -> ConfigurationScreen(container, last) })
-    }
-
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
 
-    }
-
-    private fun registerScreens(event: RegisterMenuScreensEvent) {
-        event.register(ModMenuTypes.MINER_MENU.get(), ::MinerScreen)
-        event.register(ModMenuTypes.LIQUIFIER_MENU.get(), ::LiquifierScreen)
-        event.register(ModMenuTypes.CRYSTALLIZER_MENU.get(), ::CrystallizerScreen)
-        event.register(ModMenuTypes.INFUSER_MENU.get(), ::InfuserScreen)
-        event.register(ModMenuTypes.TRANSMOGRIFIER_MENU.get(), ::TransmogrifierScreen)
-        event.register(ModMenuTypes.GENERATOR_MENU.get(), ::GeneratorScreen)
-        event.register(ModMenuTypes.SIMPLE_GENERATOR_MENU.get(), ::SimpleGeneratorScreen)
     }
 
     private fun registerConfig(event: ModConfigEvent) {

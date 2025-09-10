@@ -11,7 +11,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 
+@OnlyIn(Dist.CLIENT)
 class SimpleGeneratorScreen(menu: SimpleGeneratorMenu, playerInventory: Inventory, title: Component) : MachineScreen<SimpleGeneratorMenu>(menu, playerInventory, title) {
     companion object {
         val BASE: ResourceLocation = azLoc("simple_generator")
