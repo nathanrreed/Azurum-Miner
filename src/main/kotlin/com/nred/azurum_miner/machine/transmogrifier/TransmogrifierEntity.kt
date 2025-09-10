@@ -108,7 +108,7 @@ open class TransmogrifierEntity(pos: BlockPos, blockState: BlockState) : Abstrac
             val power = Mth.ceil(recipe.powerMult * baseEnergy)
             level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             data[PROCESSING_TIME] = recipe.processingTime
-            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty) {
+            if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.itemStackHandler.internalInsertItem(1, recipe.result, true).isEmpty) {
                 if (data[PROGRESS] < recipe.processingTime) {
                     energyHandler.internalExtractEnergy(power / recipe.processingTime, false)
                     data[PROGRESS]++

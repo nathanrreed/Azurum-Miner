@@ -121,7 +121,7 @@ open class InfuserEntity(pos: BlockPos, blockState: BlockState) : AbstractMachin
                 level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
                 data[PROCESSING_TIME] = recipe.processingTime
 
-                if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount) {
+                if (energyHandler.energyStored >= power && data[IS_ON] == TRUE && !itemStackHandler.getStackInSlot(0).isEmpty && this.fluidHandler.internalExtractFluid(recipe.inputFluid, IFluidHandler.FluidAction.SIMULATE).amount == recipe.inputFluid.amount && this.itemStackHandler.internalInsertItem(2, recipe.result, true).isEmpty) {
                     found = true
                     if (data[PROGRESS] < recipe.processingTime) {
                         energyHandler.internalExtractEnergy(power / recipe.processingTime, false)

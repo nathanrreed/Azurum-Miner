@@ -2,6 +2,7 @@ package com.nred.azurum_miner.machine.simple_generator
 
 import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.entity.ModBlockEntities
+import com.nred.azurum_miner.machine.AbstractMachine
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
 import com.nred.azurum_miner.machine.ExtendedItemStackHandler
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorEntity.Companion.SimpleGeneratorEnum.PROCESSING_TIME
@@ -97,18 +98,22 @@ open class SimpleGeneratorEntity(pos: BlockPos, blockState: BlockState) : Abstra
                 }
             }
         }
-
+        val toReceive = CONFIG.getIntOrElse("$machineName.energyProduction", 20)
         if (data[PROCESSING_TIME] == 0) {
-            if (!itemStackHandler.getStackInSlot(0).isEmpty) {
+            if (!itemStackHandler.getStackInSlot(0).isEmpty) { // Something new to burn
                 data[PROCESSING_TIME] = itemStackHandler.getStackInSlot(0).getBurnTime(null) / 8
                 itemStackHandler.decrement(0)
+                level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
             }
         } else if (data[PROGRESS] >= data[PROCESSING_TIME]) {
             data[PROGRESS] = 0
             data[PROCESSING_TIME] = 0
-        } else {
-            energyHandler.internalInsertEnergy(CONFIG.getIntOrElse("$machineName.energyProduction", 20), false)
+        } else if (energyHandler.internalInsertEnergy(toReceive, true) == toReceive) { // Has room for energy
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, true))
+            energyHandler.internalInsertEnergy(toReceive, false)
             data[PROGRESS] += 1
+        } else {
+            level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
         }
 
         setChanged()

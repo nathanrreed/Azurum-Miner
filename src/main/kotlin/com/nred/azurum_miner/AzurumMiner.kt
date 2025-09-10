@@ -20,9 +20,7 @@ import com.nred.azurum_miner.item.ModItems
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.crystallizer.CrystallizerEntity
 import com.nred.azurum_miner.machine.crystallizer.CrystallizerScreen
-import com.nred.azurum_miner.machine.generator.GeneratorEntity
-import com.nred.azurum_miner.machine.generator.GeneratorRenderer
-import com.nred.azurum_miner.machine.generator.GeneratorScreen
+import com.nred.azurum_miner.machine.generator.*
 import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
@@ -45,6 +43,7 @@ import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.client.renderer.entity.ItemEntityRenderer
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
@@ -63,6 +62,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import net.neoforged.neoforge.client.event.AddAttributeTooltipsEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
@@ -78,6 +78,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.network.handling.IPayloadHandler
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.LOADING_CONTEXT
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
@@ -107,6 +108,7 @@ object AzurumMiner {
         MOD_BUS.addListener(::registerCapabilities)
         MOD_BUS.addListener(::registerConfig)
         MOD_BUS.addListener(::onCommonSetup)
+        FORGE_BUS.addListener(::addTooltips)
         NeoForge.EVENT_BUS.addListener(::onEntityTravelToDimension)
 
         ModCreativeModTabs.register(MOD_BUS)
@@ -243,6 +245,14 @@ object AzurumMiner {
         }
 
         event.registerFluidType(ModFluids.snow_client, ModFluids.snow_type)
+    }
+
+    fun addTooltips(event: AddAttributeTooltipsEvent) {
+        val menu = event.context.player()?.containerMenu
+        // Adds tooltip for locked slots in generator
+        if (menu is GeneratorMenu && ((!menu.itemHandler!!.getStackInSlot(0 + FUEL_SLOT_SAVE).isEmpty && menu.itemHandler.getStackInSlot(0).equals(event.stack)) || (!menu.itemHandler.getStackInSlot(1 + FUEL_SLOT_SAVE).isEmpty && menu.itemHandler.getStackInSlot(1).equals(event.stack)))) {
+            event.addTooltipLines(*Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear").map { mutableComponent -> mutableComponent as Component }.toTypedArray())
+        }
     }
 
     @SubscribeEvent
