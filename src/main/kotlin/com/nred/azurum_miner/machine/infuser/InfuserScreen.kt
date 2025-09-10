@@ -11,9 +11,12 @@ import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.network.PacketDistributor
 import kotlin.math.floor
 
+@OnlyIn(Dist.CLIENT)
 class InfuserScreen(menu: InfuserMenu, playerInventory: Inventory, title: Component) : MachineScreen<InfuserMenu>(menu, playerInventory, title) {
     companion object {
         val BASE: ResourceLocation = azLoc("infuser")

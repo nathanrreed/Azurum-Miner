@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 
-
 class Generator(properties: Properties) : AbstractMachine(properties) {
     override val typeName: String = "generator"
 

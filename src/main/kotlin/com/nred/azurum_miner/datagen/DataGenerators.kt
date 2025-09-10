@@ -9,7 +9,7 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.neoforge.data.event.GatherDataEvent
 
 @Mod(AzurumMiner.ID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 object DataGenerators {
     @SubscribeEvent
     fun gatherData(event: GatherDataEvent) {

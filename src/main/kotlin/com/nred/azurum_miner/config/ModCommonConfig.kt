@@ -1,11 +1,7 @@
 package com.nred.azurum_miner.config
 
-import com.nred.azurum_miner.AzurumMiner
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.common.ModConfigSpec
 
-@EventBusSubscriber(modid = AzurumMiner.ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.DEDICATED_SERVER])
 class ModCommonConfig {
     companion object {
         val BUILDER = ModConfigSpec.Builder()
