@@ -7,7 +7,6 @@ import com.nred.azurum_miner.machine.generator.GeneratorEntity.Companion.get
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.util.ClearPayload
 import com.nred.azurum_miner.util.FALSE
-import com.nred.azurum_miner.util.Helpers
 import com.nred.azurum_miner.util.Helpers.azLoc
 import io.netty.buffer.Unpooled
 import net.minecraft.client.Minecraft
@@ -63,23 +62,14 @@ class GeneratorScreen(menu: GeneratorMenu, playerInventory: Inventory, title: Co
         fuelSlotSave.set(DataComponents.DAMAGE, menu.containerData[FUEL_CURR])
 
         if (!fuelSlotSave.isEmpty) {
-            guiGraphics.renderFakeItem(fuelSlotSave, fuelRect.left(), fuelRect.top())
-            guiGraphics.renderItemDecorations(font, fuelSlotSave, fuelRect.left(), fuelRect.top())
-            guiGraphics.blitSprite(LOCK, fuelRect.left() + 13, fuelRect.top() + 12, 151, 6, 8)
-            if (fuelRect.containsPoint(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(font, Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear"), mouseX, mouseY)
-            }
+            guiGraphics.blitSprite(LOCK, fuelRect.left() + 13, fuelRect.top() -5, 400, 6, 8)
         }
+
         val baseSlotSave = menu.itemHandler!!.getStackInSlot(BASE_SLOT_SAVE).copy()
         baseSlotSave.set(DataComponents.MAX_DAMAGE, menu.containerData[BASE_LASTS])
         baseSlotSave.set(DataComponents.DAMAGE, menu.containerData[BASE_CURR])
         if (!baseSlotSave.isEmpty) {
-            guiGraphics.renderFakeItem(baseSlotSave, baseRect.left(), baseRect.top())
-            guiGraphics.renderItemDecorations(font, baseSlotSave, baseRect.left(), baseRect.top())
-            guiGraphics.blitSprite(LOCK, baseRect.left() + 13, baseRect.top() + 12, 151, 6, 8)
-            if (baseRect.containsPoint(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(font, Helpers.itemComponentSplit("tooltip.azurum_miner.generator.clear"), mouseX, mouseY)
-            }
+            guiGraphics.blitSprite(LOCK, baseRect.left() + 13, baseRect.top() -5, 400, 6, 8)
         }
 
         if (hasFuel == FALSE || hasBase == FALSE || matrixSlot.isEmpty || menu.energyStorage!!.energyStored >= menu.energyStorage!!.maxEnergyStored) {

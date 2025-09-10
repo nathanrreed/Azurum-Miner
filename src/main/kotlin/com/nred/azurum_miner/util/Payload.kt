@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.util
 
 import com.nred.azurum_miner.machine.AbstractMachineBlockEntity
+import com.nred.azurum_miner.machine.crystallizer.CrystallizerEntity
 import com.nred.azurum_miner.machine.generator.BASE_SLOT_SAVE
 import com.nred.azurum_miner.machine.generator.FUEL_SLOT_SAVE
 import com.nred.azurum_miner.machine.generator.GeneratorEntity
@@ -60,6 +61,11 @@ class ServerPayloadHandler {
 
                 "transmogrifier" -> when (data.name) {
                     "ENUM" -> (context.player().level().getBlockEntity(data.pos) as TransmogrifierEntity).updateEnumData(data.index, data.value)
+                    else -> throw UnsupportedOperationException("Unknown packet type: ${data.name}")
+                }
+
+                "crystallizer" -> when (data.name) {
+                    "ENUM" -> (context.player().level().getBlockEntity(data.pos) as CrystallizerEntity).updateEnumData(data.index, data.value)
                     else -> throw UnsupportedOperationException("Unknown packet type: ${data.name}")
                 }
             }

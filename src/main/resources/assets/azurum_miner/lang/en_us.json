@@ -253,7 +253,7 @@
     "tooltip.azurum_miner.generator": "Draws energy from other dimensions\nHold §eShift§r for more info",
     "tooltip.azurum_miner.generator.base": "Base: %s",
     "tooltip.azurum_miner.generator.chance": "Production chance per tick: %s%%",
-    "tooltip.azurum_miner.generator.clear": "§bCtrl + Left Click§r to clear\n§cItem will be deleted§r",
+    "tooltip.azurum_miner.generator.clear": "§bCtrl + Left Click§r to clear\n§cLocked item part will be deleted§r",
     "tooltip.azurum_miner.generator.error_base": "Missing Base",
     "tooltip.azurum_miner.generator.error_fuel": "Missing Fuel",
     "tooltip.azurum_miner.generator.error_full": "Energy Level at Capacity",
