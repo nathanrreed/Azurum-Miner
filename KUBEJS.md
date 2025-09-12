@@ -37,7 +37,7 @@ Crystallizer Recipe Template:
 		},
 		"power": 1.0, // Multiplier of baseEnergyRequired
 		"processingTime": 60, // in ticks
-		"rate": 0.5,
+		"rate": 0.5, // Chance to use the seed crystal
 		"result": {
 			"count": 2,
 			"id": "minecraft:quartz"
@@ -79,7 +79,7 @@ Infuser Recipe with second input Template:
 		"ingredient": { // item input
 			"item": "minecraft:ice"
 		},
-		"power": 1.0,
+		"power": 1.0, // Multiplier of baseEnergyRequired
 		"processingTime": 60, // in ticks
 		"result": {
 			"count": 9,
