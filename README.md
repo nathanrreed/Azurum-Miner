@@ -21,6 +21,10 @@ Adds 5 Levels of Miners each with the ability to mine a specific tier of ore. Ea
 
 ---
 
-> To add ores to a miner level add to the item tag for miner_ore_tier1_tag, miner_ore_tier2_tag, etc they will be added to the corresponding tier of miner and all subsequent tiers.
+> To add ores to a miner level add to the item tag for miner_material_tag, miner_ore_tier1_tag, miner_ore_tier2_tag, etc they will be added to the corresponding tier of miner and all subsequent tiers.
+miner tags can be viewed [here](src/generated/resources/data/azurum_miner/tags/item)
+
+### [KubeJS Recipe Info](KUBEJS.md)
+
 
 Licensed under MIT License
