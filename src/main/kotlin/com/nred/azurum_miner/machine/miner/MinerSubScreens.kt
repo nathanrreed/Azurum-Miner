@@ -20,6 +20,7 @@ import com.nred.azurum_miner.util.Helpers.compC
 import com.nred.azurum_miner.util.Helpers.compCat
 import com.nred.azurum_miner.util.Helpers.componentSplit
 import com.nred.azurum_miner.util.MinerFilterPayloadToServer
+import com.nred.azurum_miner.util.MinerSetActivePayload
 import com.nred.azurum_miner.util.Payload
 import com.nred.azurum_miner.util.TRUE
 import net.minecraft.client.Minecraft
@@ -58,14 +59,14 @@ import kotlin.math.min
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE as TooltipPositioner
 
 @OnlyIn(Dist.CLIENT)
-class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
+class UpgradeTab(val menu: MinerMenu) : RenderTab(TITLE) {
     val infoBoxLayout: GridLayout
     val pointsData = menu.pointsContainerData
     val data = menu.containerData
     val font: Font = Minecraft.getInstance().font
 
     companion object {
-        private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.main.title")
+        private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.upgrades.title")
         val POINTS_BUTTON: ResourceLocation = azLoc("common/points_button")
         val POINTS_BUTTON_DISABLED: ResourceLocation = azLoc("common/points_button_disabled")
         val POINTS_BUTTON_HOVER: ResourceLocation = azLoc("common/points_button_hover")
@@ -91,24 +92,15 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
-        var error: Component? = null
-        if (data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble() > menu.energyStorage.energyStored) {
-            error = Component.translatable("tooltip.azurum_miner.miner.error.no_power")
-        } else if (data[IS_STOPPED] == 1) {
-            error = Component.translatable("tooltip.azurum_miner.miner.error.no_space")
-        }
-
-        if (error != null) {
-            for ((idx, line) in font.split(error, 150).withIndex()) {
-                guiGraphics.drawString(font, line, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 76 + idx * 9, 0xFF0000, true)
-            }
-        }
     }
 
-    override fun onSwap() {
+    override fun onSwapTo() {
         for (slot in this.menu.filterSlots) {
             slot.active = false
         }
+    }
+
+    override fun onSwapFrom() {
     }
 
     override fun doLayout(rectangle: ScreenRectangle) {
@@ -210,7 +202,6 @@ class MainTab(val menu: MinerMenu) : RenderTab(TITLE) {
                             this.init = true
                             if (numModifierSlots > this.num) {
                                 this.active = true
-
                             }
                         }
                     }
@@ -282,9 +273,9 @@ class InfoBox(x: Int, y: Int, width: Int, height: Int, val menu: MinerMenu) : Ab
 }
 
 @OnlyIn(Dist.CLIENT)
-class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
+class FilterTab(val menu: MinerMenu) : RenderTab(TITLE) {
     companion object {
-        private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.options.title")
+        private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.filters.title")
     }
 
     val editBoxes = ArrayList<FilterEditBox>()
@@ -306,7 +297,7 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
     }
 
-    override fun onSwap() {
+    override fun onSwapTo() {
         for (slot in this.menu.filterSlots) {
             slot.active = true
         }
@@ -336,6 +327,9 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
         }
     }
 
+    override fun onSwapFrom() {
+    }
+
     override fun doLayout(rectangle: ScreenRectangle) {
         this.layout.arrangeElements()
         FrameLayout.alignInRectangle(this.layout, rectangle, 0.82f, 0.165f)
@@ -343,8 +337,77 @@ class OptionsTab(val menu: MinerMenu) : RenderTab(TITLE) {
 }
 
 @OnlyIn(Dist.CLIENT)
+class InventoryTab(val menu: MinerMenu) : RenderTab(TITLE) {
+    companion object {
+        private val TITLE: Component = Component.translatable("tab." + AzurumMiner.ID + ".miner.inventory.title")
+        private val CONTAINER_BACKGROUND: ResourceLocation = azLoc("common/container")
+    }
+
+    var rect: ScreenRectangle = ScreenRectangle.empty()
+    val infoBoxLayout: GridLayout = GridLayout()
+    val data = menu.containerData
+    val font: Font = Minecraft.getInstance().font
+
+    init {
+        val infoBox = infoBoxLayout.createRowHelper(1)
+        infoBox.addChild(InfoBox(0, 0, 70, 90, menu), LayoutSettings.defaults().alignHorizontallyLeft().paddingHorizontal(2))
+    }
+
+
+    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
+        guiGraphics.blitSprite(CONTAINER_BACKGROUND, rect.left() + 22, rect.top() + 21, 126, 54)
+
+        var error: Component?
+        var colour = 0xFF0000
+        if (data[ENERGY_NEEDED].toDouble() / data[TICKS_PER_OP].toDouble() > menu.energyStorage.energyStored) {
+            error = Component.translatable("tooltip.azurum_miner.miner.error.no_power")
+        } else if (data[IS_STOPPED] == 1) {
+            error = Component.translatable("tooltip.azurum_miner.miner.error.no_space")
+        } else {
+            error = Component.translatable("tooltip.azurum_miner.miner.error.none")
+            colour = 0x00EE00
+        }
+
+        if (error != null) {
+            for ((idx, line) in font.split(error, 150).withIndex()) {
+                guiGraphics.drawString(font, line, this.infoBoxLayout.x - 138, this.infoBoxLayout.y + 78 + idx * 9, colour, true)
+            }
+        }
+    }
+
+    override fun onSwapTo() {
+        for (slot in this.menu.filterSlots) {
+            slot.active = false
+        }
+
+        this.menu.invSlots.forEach { slot -> slot.active = true }
+        PacketDistributor.sendToServer(MinerSetActivePayload(true))
+    }
+
+    override fun onSwapFrom() {
+        this.menu.invSlots.forEach { slot -> slot.active = false }
+        PacketDistributor.sendToServer(MinerSetActivePayload(false))
+    }
+
+    override fun doLayout(rectangle: ScreenRectangle) {
+        rect = rectangle
+
+        this.infoBoxLayout.arrangeElements()
+        FrameLayout.alignInRectangle(this.infoBoxLayout, rectangle, 0.980f, 0.05f)
+    }
+
+    override fun visitChildren(consumer: Consumer<AbstractWidget>) {
+        super.visitChildren(consumer)
+        infoBoxLayout.visitWidgets(consumer)
+    }
+}
+
+@OnlyIn(Dist.CLIENT)
 class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) : EditBox(Minecraft.getInstance().font, width, height, Component.literal(menu.filters[idx])) {
-    val SPRITES = WidgetSprites(azLoc("miner/text_field"), azLoc("miner/text_field_disabled"), azLoc("miner/text_field_highlighted"))
+    companion object {
+        val SPRITES = WidgetSprites(azLoc("miner/text_field"), azLoc("miner/text_field_disabled"), azLoc("miner/text_field_highlighted"))
+    }
+
     var ingredients: Ingredient = Ingredient.EMPTY
     val foundTags = ArrayList<TagKey<Item>>()
     var init = false
@@ -363,7 +426,7 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        guiGraphics.blitSprite(this.SPRITES.get(this.isActive, this.isFocused), this.x, this.y, 0, this.getWidth(), this.getHeight())
+        guiGraphics.blitSprite(SPRITES.get(this.isActive, this.isFocused), this.x, this.y, 0, this.getWidth(), this.getHeight())
 
         if (!init && this.value == "" && this.menu.filters[this.idx] != "") {
             this.value = this.menu.filters[this.idx]
@@ -393,7 +456,10 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
 }
 
 class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBox, val ingredientSlot: Boolean = false) : AbstractWidget(0, 0, 18, 18, Component.empty()) {
-    val SLOT: ResourceLocation = azLoc("common/slot")
+    companion object {
+        val SLOT: ResourceLocation = azLoc("common/slot")
+    }
+
     var index = 0
     var frame = 0
     var dontUse = false
@@ -468,7 +534,7 @@ class FilterBox(val idx: Int, val data: ContainerData, val editBox: FilterEditBo
             if (!this.editBox.menu.carried.isEmpty) {
                 if (this.editBox.menu.filterSlots[idx].mayPlace(this.editBox.menu.carried)) {
                     this.editBox.menu.filterSlots[this.idx].set(this.editBox.menu.carried.copy())
-                    this.minecraft.player!!.connection.send(FilterSetPayload(this.editBox.menu.carried.copy(), this.idx))
+                    this.minecraft.player!!.connection.send(FilterSetPayload(this.editBox.menu.carried.copyWithCount(1), this.idx))
                 }
             } else {
                 this.editBox.menu.filterSlots[this.idx].set(ItemStack.EMPTY)

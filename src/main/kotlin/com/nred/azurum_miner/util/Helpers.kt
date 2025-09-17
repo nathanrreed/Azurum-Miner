@@ -69,8 +69,8 @@ object Helpers {
     private const val VANILLA_FIRST_SLOT_INDEX: Int = 0
     private val TE_INVENTORY_FIRST_SLOT_INDEX: Int = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT
 
-    fun quickMoveStack(playerIn: Player, pIndex: Int, slots: NonNullList<Slot>, moveItemStackTo: (ItemStack, Int, Int, Boolean) -> Boolean, TE_INVENTORY_SLOT_COUNT: Int): ItemStack {
-        val sourceSlot: Slot? = slots[pIndex]
+    fun quickMoveStack(playerIn: Player, pIndex: Int, slots: NonNullList<Slot>, moveItemStackTo: (ItemStack, Int, Int, Boolean) -> Boolean, TE_INVENTORY_SLOT_COUNT: Int, skip_slots: Int = 0): ItemStack {
+        val sourceSlot: Slot? = slots.getOrNull(pIndex)
         if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY //EMPTY_ITEM
 
         val sourceStack = sourceSlot.item
@@ -79,7 +79,7 @@ object Helpers {
         // Check if the slot clicked is one of the vanilla container slots
         if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
             // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
+            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX + skip_slots, TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY // EMPTY_ITEM
             }
         } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {

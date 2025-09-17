@@ -1,5 +1,3 @@
-@file:Suppress("PrivatePropertyName")
-
 package com.nred.azurum_miner.screen
 
 import com.google.common.collect.ImmutableList
@@ -20,6 +18,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
 import java.text.DecimalFormat
 import kotlin.math.max
@@ -93,17 +92,17 @@ abstract class GuiCommon {
             return (listPlayerInventoryPos() + listPlayerHotbarPos())
         }
     }
-
 }
 
 abstract class RenderTab(title: Component) : GridLayoutTab(title) {
     abstract fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int)
-    abstract fun onSwap()
+    abstract fun onSwapTo()
+    abstract fun onSwapFrom()
 }
 
 class VerticalTabNavigationBar(private val x: Int, private val y: Int, private val tabManager: TabManager, tabButtons: Iterable<SpriteTabButton>) : AbstractContainerEventHandler(), Renderable, NarratableEntry {
     private val tabs: ArrayList<RenderTab> = ArrayList(tabButtons.toList().size)
-    private val tabButtons: ImmutableList<SpriteTabButton> = ImmutableList.copyOf(tabButtons)
+    val tabButtons: ImmutableList<SpriteTabButton> = ImmutableList.copyOf(tabButtons)
     private val layout: LinearLayout = LinearLayout(x, y, LinearLayout.Orientation.VERTICAL)
     private var currentTab: SpriteTabButton = tabButtons.first()
 
@@ -126,11 +125,12 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
 
     fun setTab(tabButton: SpriteTabButton, playClickSound: Boolean) {
         if (this.currentTab != tabButton) {
+            currentTab.tab().onSwapFrom()
             this.currentTab.isSelected = false
             this.currentTab = tabButton
             tabButton.isSelected = true
             this.tabManager.setCurrentTab(tabButton.tab(), playClickSound)
-            tabButton.tab().onSwap()
+            tabButton.tab().onSwapTo()
         }
     }
 
@@ -206,18 +206,22 @@ class VerticalTabNavigationBar(private val x: Int, private val y: Int, private v
     }
 }
 
-@Suppress("PrivatePropertyName")
-class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height: Int) : TabButton(tabManager, tab, width, height) {
-    private val TAB = azLoc("miner/tab")
+class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height: Int, val icon: ResourceLocation) : TabButton(tabManager, tab, width, height) {
+    companion object {
+        val TAB = azLoc("miner/tab")
+        val INV_ICON = azLoc("miner/inv_icon")
+        val FILTER_ICON = azLoc("miner/filter_icon")
+        val OPTIONS_ICON = azLoc("miner/options_icon")
+        private val TAB_COLOURS = listOf(listOf(0.945f, 0f, 0f), listOf(0.165f, 0.682f, 0.702f), listOf(0.165f, 0.682f, 0.165f))
+    }
+
     private var navigationBar: VerticalTabNavigationBar? = null
     private var selected: Boolean = false
     private var color: List<Float>
 
-    private val colors = listOf(listOf(0.945f, 0f, 0f), listOf(0.165f, 0.682f, 0.702f))
-
     init {
         this.tooltip = Tooltip.create(tab.tabTitle)
-        this.color = colors[0]
+        this.color = TAB_COLOURS[0]
     }
 
     fun setNavBar(navigationBar: VerticalTabNavigationBar) {
@@ -225,7 +229,7 @@ class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height
     }
 
     fun setColor(int: Int) {
-        this.color = colors[int]
+        this.color = TAB_COLOURS[int]
     }
 
     override fun tab(): RenderTab {
@@ -266,14 +270,10 @@ class SpriteTabButton(tabManager: TabManager, tab: RenderTab, width: Int, height
         }
 
         guiGraphics.blitSprite(TAB, this.width, this.height, 0, 0, x, this.y, 2, width, this.height)
+        guiGraphics.blitSprite(icon, 8, 8, 0, 0, x + 3, this.y + 5, 2, width - 3, 8)
 
         guiGraphics.setColor(1f, 1f, 1f, 1f)
     }
-
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        return super.keyPressed(keyCode, scanCode, modifiers)
-    }
-
 }
 
 fun colorToFloat(color: Int): FloatArray {
