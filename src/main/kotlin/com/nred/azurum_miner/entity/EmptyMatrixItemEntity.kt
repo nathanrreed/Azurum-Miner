@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
 
 
-// TODO kotlinforforge functions not working!
+// TODO kotlinforforge 3.9 functions not working!
 fun Vec3.toVec3i(): Vec3i = Vec3i(Mth.floor(x), Mth.floor(y), Mth.floor(z))
 fun BlockPos.toVec3(): Vec3 = Vec3.atLowerCornerOf(this)
 
