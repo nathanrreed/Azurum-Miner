@@ -183,6 +183,7 @@ object AzurumMiner {
         val registrar = event.registrar("1")
         registrar.playToServer(Payload.TYPE, Payload.STREAM_CODEC, IPayloadHandler(ServerPayloadHandler::handleDataOnNetwork))
         registrar.playToServer(MinerFilterPayloadToServer.TYPE, MinerFilterPayloadToServer.STREAM_CODEC, IPayloadHandler(MinerFilterPayloadHandler::handleDataOnServer))
+        registrar.playToServer(MinerSetActivePayload.TYPE, MinerSetActivePayload.STREAM_CODEC, IPayloadHandler(MinerSetActivePayloadHandler::handleDataOnServer))
         registrar.playToServer(FilterSetPayload.TYPE, FilterSetPayload.STREAM_CODEC, IPayloadHandler(FilterSetPayloadHandler::handleDataOnServer))
         registrar.playToServer(ClearPayload.TYPE, ClearPayload.STREAM_CODEC, IPayloadHandler(ClearPayloadHandler::handleDataOnServer))
     }

@@ -52,6 +52,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     var modifierPoints = intArrayOf(0, 0, 0, 0, 0)
     var filters = mutableListOf("", "", "")
     private var nextIsMiss: Boolean? = null
+    var oreOutput: ItemStack = ItemStack.EMPTY
 
     override var data: ContainerData = object : ContainerData {
         override fun get(index: Int): Int {
@@ -130,24 +131,20 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         return stack.`is`(FluidHelper.FLUIDS["molten_ore"].still)
     }
 
-    override val itemStackHandler = object : ExtendedItemStackHandler(4) {
+    override val itemStackHandler = object : ExtendedItemStackHandler(3 + NUM_INV_SLOTS) {
         override fun onContentsChanged(slot: Int) {
             setChanged()
             if (!level!!.isClientSide()) {
                 level!!.sendBlockUpdated(blockPos, getBlockState(), getBlockState(), Block.UPDATE_ALL)
 
-                if (slot != OUTPUT) {
+                if (slot < OUTPUT) {
                     data[HAS_FILTER] = hasFilter()
                 }
             }
         }
 
-        override fun setStackInSlot(slot: Int, stack: ItemStack) {
-            super.setStackInSlot(slot, stack.copy())
-        }
-
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
-            if (slot == OUTPUT) {
+            if (slot >= OUTPUT) {
                 return true
             } else if ((data[NUM_FILTERS] > slot || this@MinerEntity.level!!.isClientSide) && (this@MinerEntity.foundOres.any { ore -> ore.`is`(stack.item) } || this@MinerEntity.foundMaterials.any { mat -> mat.`is`(stack.item) })) {
                 return true
@@ -158,15 +155,15 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
             if (simulate)
                 return stack
-            return super.insertItem(slot, stack.copy(), false)
+            return super.insertItem(slot, stack, false)
         }
 
         override fun itemOutput(slot: Int): Boolean {
-            return slot == OUTPUT
+            return slot >= OUTPUT
         }
 
         override fun getSlotLimit(slot: Int): Int {
-            if (slot == OUTPUT)
+            if (slot >= OUTPUT)
                 return 64
             return 1
         }
@@ -178,6 +175,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
     companion object {
         const val FLUID_SIZE = 50000
+        const val NUM_INV_SLOTS = 21
 
         enum class MinerVariablesEnum {
             TOTAL_MODIFIER_POINTS, NUM_MODIFIER_SLOTS, TICKS_PER_OP, RESET_PER_TICK_CHANCE, ENERGY_NEEDED, ACCURACY,
@@ -399,6 +397,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         tag.putIntArray("modifierPoints", modifierPoints)
         tag.put("energy", energyHandler.serializeNBT(registries))
 
+        tag.put("oreOutput", oreOutput.saveOptional(registries))
+
         for (i in 0..<filters.size) {
             tag.putString("filter_$i", filters[i])
         }
@@ -414,11 +414,16 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         super.loadAdditional(tag, registries)
 
         itemStackHandler.deserializeNBT(registries, tag.getCompound("inventory"))
+        if (itemStackHandler.slots != 3 + NUM_INV_SLOTS) { // Resized after 1.3.11
+            itemStackHandler.setSize(3 + NUM_INV_SLOTS)
+        }
         fluidHandler.deserializeNBT(registries, tag.getCompound("fluids"))
 
         if (tag.getIntArray("vars").size == variablesSize) {
             variables = tag.getIntArray("vars")
         }
+
+        oreOutput = ItemStack.parseOptional(registries, tag.getCompound("oreOutput"))
 
         modifierPoints = tag.getIntArray("modifierPoints")
         energyHandler.deserializeNBT(registries, tag.get("energy")!!)
@@ -442,7 +447,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     }
 
     fun getTicks(willBeNext: Boolean? = null): Int {
-        val output = if ((nextIsMiss != null && this.nextIsMiss!!) || (willBeNext != null && willBeNext == true)) {
+        val output = if ((nextIsMiss != null && this.nextIsMiss!!) || (willBeNext != null && willBeNext)) {
             ((data[TICKS_PER_OP] * (data[MISS_TICKS_PER_OP_CHANGE] / 100.0)).toInt())
         } else {
             data[TICKS_PER_OP]
@@ -458,8 +463,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
     }
 
     override fun drops() {
-        val inventory = SimpleContainer(itemStackHandler.slots)
-        inventory.setItem(OUTPUT, itemStackHandler.getStackInSlot(OUTPUT))
+        val inventory = SimpleContainer(NUM_INV_SLOTS)
+        for (i in 0..<NUM_INV_SLOTS) {
+            inventory.setItem(i, itemStackHandler.getStackInSlot(OUTPUT + i))
+        }
         Containers.dropContents(this.level!!, this.worldPosition, inventory)
     }
 
@@ -479,16 +486,29 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
                     willNextBeMiss()
                     setChanged(level, pos, state)
                 } else { // HIT
-                    if (itemStackHandler.getStackInSlot(OUTPUT).isEmpty) {
-                        itemStackHandler.setStackInSlot(OUTPUT, calculateNext()) // OUTPUT
-                        useFluid()
-                        data[PROGRESS] = 0
-                        willNextBeMiss()
-                        setChanged(level, pos, state)
-                    } else {
+                    if (oreOutput.isEmpty)
+                        oreOutput = calculateNext().copy()
+                    var space = false
+                    for (i in 0..<NUM_INV_SLOTS) {
+                        if (itemStackHandler.internalInsertItem(OUTPUT + i, oreOutput, true).isEmpty) {
+                            itemStackHandler.internalInsertItem(OUTPUT + i, oreOutput, false)
+                            space = true
+                            break
+                        }
+                    }
+
+                    if (!space) { // Full
                         level.setBlockAndUpdate(pos, state.setValue(AbstractMachine.MACHINE_ON, false))
                         data[IS_STOPPED] = TRUE
+                        return
                     }
+
+                    oreOutput = ItemStack.EMPTY
+
+                    useFluid()
+                    data[PROGRESS] = 0
+                    willNextBeMiss()
+                    setChanged(level, pos, state)
                 }
             }
         } else {
@@ -523,7 +543,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         } else if (value <= materialChance + data[RAW_CHANCE]) { // RAW
             var rawItem: List<ItemStack?>
             do {
-                rawItem = level!!.server!!.reloadableRegistries().getLootTable(Block.byItem(foundOres.random().item).lootTable).getRandomItems(LootParams.Builder(level as ServerLevel).create(LootContextParamSets.EMPTY)).filter { it.tags.anyMatch { it == Tags.Items.RAW_MATERIALS || it == Tags.Items.GEMS || it == Tags.Items.DUSTS } || it.`is`(Items.COAL) }
+                rawItem = level!!.server!!.reloadableRegistries().getLootTable(Block.byItem(foundOres.random().item).lootTable).getRandomItems(LootParams.Builder(level as ServerLevel).create(LootContextParamSets.EMPTY)).filter { it.tags.anyMatch { tag -> tag == Tags.Items.RAW_MATERIALS || tag == Tags.Items.GEMS || tag == Tags.Items.DUSTS } || it.`is`(Items.COAL) }
             } while (rawItem.isEmpty())
             return rawItem.random()!!.copyWithCount(1)
         } else { // ORE
@@ -558,11 +578,11 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         if (!itemStackHandler.getStackInSlot(index).isEmpty) {
             return listOf(itemStackHandler.getStackInSlot(index))
         }
-        return listOf(*Ingredient.of(ItemTags.create(ResourceLocation.parse(filters[index]))).items.filter { it -> (foundOres + foundMaterials).any { tag -> it.`is`(tag.item) } }.toTypedArray())
+        return listOf(*Ingredient.of(ItemTags.create(ResourceLocation.parse(filters[index]))).items.filter { item -> (foundOres + foundMaterials).any { tag -> item.`is`(tag.item) } }.toTypedArray())
     }
 
     fun getFilterOptions(): List<ItemStack> {
-        val options = arrayListOf(*filters.flatMap { Ingredient.of(ItemTags.create(ResourceLocation.parse(it))).items.filter { it -> (foundOres + foundMaterials).any { tag -> it.`is`(tag.item) } } }.toTypedArray())
+        val options = arrayListOf(*filters.flatMap { Ingredient.of(ItemTags.create(ResourceLocation.parse(it))).items.filter { item -> (foundOres + foundMaterials).any { tag -> item.`is`(tag.item) } } }.toTypedArray())
 
         for (i in 0..<OUTPUT) {
             if ((foundOres + foundMaterials).any { it.`is`(itemStackHandler.getStackInSlot(i).item) }) {

@@ -3,11 +3,11 @@ package com.nred.azurum_miner.machine.miner
 import com.nred.azurum_miner.datagen.ModItemTagProvider
 import com.nred.azurum_miner.machine.ModMachines
 import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.MinerVariablesEnum
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.NUM_INV_SLOTS
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.ModMenuTypes
 import com.nred.azurum_miner.util.CustomFluidStackHandler
 import com.nred.azurum_miner.util.Helpers
-import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -38,6 +38,7 @@ class MinerMenu : AbstractContainerMenu {
     var tier: Int
     val filters = mutableListOf("", "", "")
     val filterSlots = ArrayList<FilterSlot>()
+    val invSlots = ArrayList<HidableSlot>()
     val foundTags = ArrayList<TagKey<Item>>()
     var containerId: Int
 
@@ -70,6 +71,14 @@ class MinerMenu : AbstractContainerMenu {
         this.filterSlots += FilterSlot(this.itemHandler, 2, 11, 40, this)
         this.addSlot(this.filterSlots.last())
 
+        // Inventory tab slots
+        for (j in 0..<3) {
+            for (k in 0..<7) {
+                this.invSlots += HidableSlot(this.itemHandler, j * 7 + k + 3, k * 18 + 13, j * 18 - 10, this)
+                this.addSlot(this.invSlots.last())
+            }
+        }
+
         for (i in 0..this.tier) {
             foundTags += ModItemTagProvider.oreTierTag[i]
         }
@@ -81,7 +90,9 @@ class MinerMenu : AbstractContainerMenu {
             this(containerId, inventory, ContainerLevelAccess.NULL, extraData.readBlockPos(), SimpleContainerData(MinerVariablesEnum.entries.size + MinerVariablesEnum.entries.size), SimpleContainerData(5), extraData.readInt())
 
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
-        return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 0) // No quick move for filters
+        if (invSlots[0].active) // On inventory screen
+            return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 3 + NUM_INV_SLOTS, 3) // No quick move for filters
+        return Helpers.quickMoveStack(player, index, this.slots, ::moveItemStackTo, 0, 0)
     }
 
     override fun stillValid(player: Player): Boolean {
@@ -90,14 +101,7 @@ class MinerMenu : AbstractContainerMenu {
 
     class FilterSlot(itemHandler: IItemHandler, index: Int, xPosition: Int, yPosition: Int, val menu: MinerMenu) : SlotItemHandler(itemHandler, index, xPosition, yPosition) {
         var dontUse = false
-            set(value) {
-                field = value
-            }
-
         var active = false
-            set(value) {
-                field = value
-            }
 
         override fun isFake(): Boolean {
             return true
@@ -112,15 +116,31 @@ class MinerMenu : AbstractContainerMenu {
         }
 
         override fun mayPlace(stack: ItemStack): Boolean {
-            return if (stack.isEmpty || !Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(menu.filters[index]))).items.filter { it -> menu.foundTags.any { tag -> it.`is`(tag) } }.stream()).hasNoItems()) false else this.itemHandler.isItemValid(this.index, stack)
+            return if (stack.isEmpty || !Ingredient.of(Ingredient.of(ItemTags.create(ResourceLocation.parse(menu.filters[index]))).items.filter { item -> menu.foundTags.any { tag -> item.`is`(tag) } }.stream()).hasNoItems()) false else this.itemHandler.isItemValid(this.index, stack)
+        }
+
+        override fun set(stack: ItemStack) {
+            super.set(stack.copyWithCount(1))
         }
 
         override fun mayPickup(playerIn: Player): Boolean {
             return false
         }
+    }
 
-        override fun safeInsert(stack: ItemStack): ItemStack {
-            return super.safeInsert(stack)
+    class HidableSlot(itemHandler: IItemHandler, index: Int, xPosition: Int, yPosition: Int, val menu: MinerMenu) : SlotItemHandler(itemHandler, index, xPosition, yPosition) {
+        var active: Boolean = true
+
+        override fun isActive(): Boolean { // Only draw if filter is unlocked
+            return this.active
+        }
+
+        override fun mayPlace(stack: ItemStack): Boolean {
+            return this.active
+        }
+
+        override fun mayPickup(playerIn: Player): Boolean {
+            return this.active
         }
     }
 }

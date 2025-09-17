@@ -73,6 +73,28 @@ class ServerPayloadHandler {
     }
 }
 
+class MinerSetActivePayload(val active: Boolean) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<MinerSetActivePayload>(azLoc("miner_set_active_client_to_server"))
+        val STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, MinerSetActivePayload::active, ::MinerSetActivePayload)
+    }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> {
+        return TYPE
+    }
+}
+
+class MinerSetActivePayloadHandler {
+    companion object {
+        fun handleDataOnServer(data: MinerSetActivePayload, context: IPayloadContext) {
+            val menu = context.player().containerMenu
+            if (menu is MinerMenu) {
+                menu.invSlots.forEach { slot -> slot.active = data.active }
+            }
+        }
+    }
+}
+
 class MinerFilterPayloadToServer(val idx: Int, val string: String, val pos: BlockPos, val reply: Boolean = false) : CustomPacketPayload {
     companion object {
         val TYPE = CustomPacketPayload.Type<MinerFilterPayloadToServer>(azLoc("miner_filter_handler_server"))

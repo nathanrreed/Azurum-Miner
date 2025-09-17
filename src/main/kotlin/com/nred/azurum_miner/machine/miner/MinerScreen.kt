@@ -7,6 +7,9 @@ import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.get
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.listPlayerInventoryHotbarPos
 import com.nred.azurum_miner.screen.SpriteTabButton
+import com.nred.azurum_miner.screen.SpriteTabButton.Companion.FILTER_ICON
+import com.nred.azurum_miner.screen.SpriteTabButton.Companion.INV_ICON
+import com.nred.azurum_miner.screen.SpriteTabButton.Companion.OPTIONS_ICON
 import com.nred.azurum_miner.screen.VerticalTabNavigationBar
 import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Helpers.componentSplit
@@ -14,7 +17,6 @@ import com.nred.azurum_miner.util.Payload
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.components.tabs.TabManager
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -26,7 +28,6 @@ import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.neoforge.network.PacketDistributor
 import java.text.DecimalFormat
-import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -53,7 +54,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         x = (width - imageWidth) / 2
         y = (height - imageHeight) / 2 - 32
         base = ScreenRectangle(x - 10, y, imageWidth + 57, imageHeight + 33)
-        powerButton = ScreenRectangle(base.left() + 4, base.bottom() - 94, 12, 13)
+        powerButton = ScreenRectangle(base.left() + 4, base.bottom() - 98, 12, 13)
         energy = ScreenRectangle(base.left() + 7, base.top() + 14, 6, 84)
     }
 
@@ -74,13 +75,15 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
         this.inventoryLabelX = 10
 
         tabManager.setTabArea(base)
-        val mainTab = MainTab(menu)
-        val optionsTab = OptionsTab(menu)
+        val upgradeTab = UpgradeTab(menu)
+        val filterTab = FilterTab(menu)
+        val inventoryTab = InventoryTab(menu)
 
-        val btn = SpriteTabButton(tabManager, mainTab, 12, 18)
-        val btn2 = SpriteTabButton(tabManager, optionsTab, 12, 18)
+        val upgradeBtn = SpriteTabButton(tabManager, upgradeTab, 12, 18, OPTIONS_ICON)
+        val filterBtn = SpriteTabButton(tabManager, filterTab, 12, 18, FILTER_ICON)
+        val invButton = SpriteTabButton(tabManager, inventoryTab, 12, 18, INV_ICON)
 
-        this.navigationBar = VerticalTabNavigationBar(x - 21, base.top() + 6, tabManager, listOf(btn, btn2))
+        this.navigationBar = VerticalTabNavigationBar(x - 21, base.top() + 6, tabManager, listOf(invButton, upgradeBtn, filterBtn))
 
         this.addRenderableWidget(navigationBar)
     }
@@ -189,7 +192,7 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         val edit = this.focused
-        if (tabManager.currentTab is OptionsTab && edit is EditBox) {
+        if (tabManager.currentTab is FilterTab && edit is EditBox) {
             if (edit.isActive && edit.isFocused) {
                 if (keyCode == InputConstants.KEY_NUMPADENTER || keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_ESCAPE) {
                     edit.isFocused = false
@@ -197,12 +200,16 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
                 }
                 return edit.keyPressed(keyCode, scanCode, modifiers)
             }
+        } else if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true
+        } else if (keyCode >= InputConstants.KEY_1 && keyCode <= InputConstants.KEY_3) {
+            navigationBar.loadCurrentTab(keyCode - InputConstants.KEY_1)
+            return true
+        } else if ((keyCode == InputConstants.KEY_NUMPADENTER || keyCode == InputConstants.KEY_RETURN) && navigationBar.isFocused) {
+            navigationBar.loadCurrentTab(navigationBar.tabButtons.indexOf(navigationBar.focused))
+            return true
         }
-        return super.keyPressed(keyCode, scanCode, modifiers)
-    }
-
-    override fun getChildAt(mouseX: Double, mouseY: Double): Optional<GuiEventListener?> {
-        return super.getChildAt(mouseX, mouseY)
+        return false
     }
 
     override fun getTabOrderGroup(): Int {

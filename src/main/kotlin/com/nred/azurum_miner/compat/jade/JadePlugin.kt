@@ -6,6 +6,7 @@ import com.nred.azurum_miner.machine.infuser.InfuserEntity
 import com.nred.azurum_miner.machine.liquifier.LiquifierEntity
 import com.nred.azurum_miner.machine.miner.Miner
 import com.nred.azurum_miner.machine.miner.MinerEntity
+import com.nred.azurum_miner.machine.miner.MinerEntity.Companion.NUM_INV_SLOTS
 import com.nred.azurum_miner.machine.miner.OUTPUT
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierEntity
 import com.nred.azurum_miner.util.Helpers.azLoc
@@ -48,10 +49,12 @@ enum class MinerItemHider : IServerExtensionProvider<ItemStack>, IClientExtensio
 
         override fun getGroups(accessor: Accessor<*>): List<ViewGroup<ItemStack>> {
             val entity = accessor.target as MinerEntity
-            if (!entity.itemStackHandler.getStackInSlot(OUTPUT).isEmpty) {
-                return listOf(ViewGroup(listOf(entity.itemStackHandler.getStackInSlot(OUTPUT))))
+            val list = arrayListOf<ItemStack>()
+            for (i in 0..<NUM_INV_SLOTS) {
+                list += entity.itemStackHandler.getStackInSlot(OUTPUT + i)
             }
-            return emptyList()
+
+            return listOf(ViewGroup(list))
         }
     }
 }

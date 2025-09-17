@@ -14,7 +14,7 @@ import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
 import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.miner.MinerScreen
-import com.nred.azurum_miner.machine.miner.OptionsTab
+import com.nred.azurum_miner.machine.miner.FilterTab
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
@@ -96,7 +96,7 @@ class EmiPlugin : EmiPlugin {
         registry.addExclusionArea(GeneratorScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(SimpleGeneratorScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
         registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left(), screen.base.top(), screen.base.width, screen.base.height)) }
-        registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top() + 6, 10, 37)) }
+        registry.addExclusionArea(MinerScreen::class.java) { screen, consumer -> consumer.accept(Bounds(screen.base.left() - 10, screen.base.top() + 6, 10, 56)) } // Tabs
 
         registry.addRecipeHandler(ModMenuTypes.INFUSER_MENU.get(), object : StandardRecipeHandler<InfuserMenu> {
             override fun getInputSources(handler: InfuserMenu): List<Slot> {
@@ -200,7 +200,7 @@ class EmiPlugin : EmiPlugin {
 
         // For Miner filters
         registry.addDragDropHandler(MinerScreen::class.java) { screen, stack, mouseX, mouseY ->
-            if (screen.tabManager.currentTab is OptionsTab) {
+            if (screen.tabManager.currentTab is FilterTab) {
                 for (slot in screen.menu.filterSlots) {
                     if (slot.active && slot.mayPlace(stack.emiStacks[0].itemStack) && ScreenRectangle(slot.x + screen.x, slot.y + 32 + screen.base.top(), 18, 18).containsPoint(mouseX, mouseY)) { // Slot found
                         slot.set(stack.emiStacks[0].itemStack)
