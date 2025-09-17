@@ -143,7 +143,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
 
         override fun setStackInSlot(slot: Int, stack: ItemStack) {
-            super.setStackInSlot(slot, stack.copyWithCount(1))
+            super.setStackInSlot(slot, stack.copy())
         }
 
         override fun isItemValid(slot: Int, stack: ItemStack): Boolean {
@@ -158,7 +158,7 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
             if (simulate)
                 return stack
-            return super.insertItem(slot, stack.copyWithCount(1), false)
+            return super.insertItem(slot, stack.copy(), false)
         }
 
         override fun itemOutput(slot: Int): Boolean {
@@ -166,6 +166,8 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
         }
 
         override fun getSlotLimit(slot: Int): Int {
+            if (slot == OUTPUT)
+                return 64
             return 1
         }
     }
