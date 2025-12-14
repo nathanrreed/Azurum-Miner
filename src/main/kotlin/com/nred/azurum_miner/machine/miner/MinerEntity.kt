@@ -382,6 +382,10 @@ open class MinerEntity(pos: BlockPos, blockState: BlockState, private val tier: 
 
         this.foundMaterials += Ingredient.of(ModItemTagProvider.materialTag).items
 
+        if (!filters.all { s -> ResourceLocation.isValidPath(s) }) { // Recover if bad input was put in
+            filters = mutableListOf("", "", "")
+        }
+
         calculateModifiers()
 
         if (this.nextIsMiss == null) {
