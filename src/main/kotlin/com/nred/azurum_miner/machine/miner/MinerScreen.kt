@@ -192,14 +192,12 @@ class MinerScreen(menu: MinerMenu, playerInventory: Inventory, title: Component)
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         val edit = this.focused
-        if (tabManager.currentTab is FilterTab && edit is EditBox) {
-            if (edit.isActive && edit.isFocused) {
-                if (keyCode == InputConstants.KEY_NUMPADENTER || keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_ESCAPE) {
-                    edit.isFocused = false
-                    return true
-                }
-                return edit.keyPressed(keyCode, scanCode, modifiers)
+        if (tabManager.currentTab is FilterTab && edit is EditBox && edit.isActive && edit.isFocused) {
+            if (keyCode == InputConstants.KEY_NUMPADENTER || keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_ESCAPE) {
+                edit.isFocused = false
+                return true
             }
+            return edit.keyPressed(keyCode, scanCode, modifiers)
         } else if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true
         } else if (keyCode >= InputConstants.KEY_1 && keyCode <= InputConstants.KEY_3) {
