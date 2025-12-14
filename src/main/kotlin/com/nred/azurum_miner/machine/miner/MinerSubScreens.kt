@@ -14,15 +14,11 @@ import com.nred.azurum_miner.screen.GuiCommon.Companion.getBuckets
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import com.nred.azurum_miner.screen.RenderTab
-import com.nred.azurum_miner.util.FilterSetPayload
+import com.nred.azurum_miner.util.*
 import com.nred.azurum_miner.util.Helpers.azLoc
 import com.nred.azurum_miner.util.Helpers.compC
 import com.nred.azurum_miner.util.Helpers.compCat
 import com.nred.azurum_miner.util.Helpers.componentSplit
-import com.nred.azurum_miner.util.MinerFilterPayloadToServer
-import com.nred.azurum_miner.util.MinerSetActivePayload
-import com.nred.azurum_miner.util.Payload
-import com.nred.azurum_miner.util.TRUE
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
@@ -423,6 +419,8 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
         for (i in 0..this.menu.tier) {
             this.foundTags += ModItemTagProvider.oreTierTag[i]
         }
+
+        setFilter { s -> ResourceLocation.isValidPath(s) } // Fixes bad inputs
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {

@@ -158,12 +158,12 @@ abstract class AbstractMachineBlockEntity(type: BlockEntityType<*>, val machineN
     override fun collectImplicitComponents(components: DataComponentMap.Builder) {
         val tag = CompoundTag()
         saveAdditional(tag, level!!.registryAccess())
-        components.set<CustomData>(DataComponents.CUSTOM_DATA, CustomData.of(tag))
+        components.set(DataComponents.CUSTOM_DATA, CustomData.of(tag))
         super.collectImplicitComponents(components)
     }
 
     override fun applyImplicitComponents(componentInput: DataComponentInput) {
-        componentInput.getOrDefault<CustomData>(DataComponents.CUSTOM_DATA, CustomData.EMPTY).loadInto(this, level!!.registryAccess())
+        componentInput.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).loadInto(this, level!!.registryAccess())
         super.applyImplicitComponents(componentInput)
     }
 
