@@ -3,6 +3,9 @@
   "category": "misc",
   "index": 4,
   "key": {
+    "B": {
+      "item": "azurum_miner:conglomerate_of_ore_block"
+    },
     "D": {
       "item": "azurum_miner:ender_diamond"
     },
@@ -22,7 +25,7 @@
   "pattern": [
     "SGS",
     "DMD",
-    "SPS"
+    "BPB"
   ],
   "result": {
     "count": 1,

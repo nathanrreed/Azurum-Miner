@@ -6,6 +6,9 @@
     "D": {
       "item": "azurum_miner:nether_diamond"
     },
+    "G": {
+      "item": "azurum_miner:azurum_gear"
+    },
     "I": {
       "item": "minecraft:iron_block"
     },
@@ -19,7 +22,7 @@
   "pattern": [
     "IPI",
     "DMD",
-    "IPI"
+    "IGI"
   ],
   "result": {
     "count": 1,

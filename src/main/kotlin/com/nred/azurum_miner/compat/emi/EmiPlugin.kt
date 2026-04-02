@@ -1,6 +1,5 @@
 package com.nred.azurum_miner.compat.emi
 
-import com.nred.azurum_miner.AzurumMiner
 import com.nred.azurum_miner.AzurumMiner.CONFIG
 import com.nred.azurum_miner.fluid.ModFluids
 import com.nred.azurum_miner.item.ModItems
@@ -12,9 +11,9 @@ import com.nred.azurum_miner.machine.infuser.InfuserMenu
 import com.nred.azurum_miner.machine.infuser.InfuserScreen
 import com.nred.azurum_miner.machine.liquifier.LiquifierMenu
 import com.nred.azurum_miner.machine.liquifier.LiquifierScreen
+import com.nred.azurum_miner.machine.miner.FilterTab
 import com.nred.azurum_miner.machine.miner.MinerMenu
 import com.nred.azurum_miner.machine.miner.MinerScreen
-import com.nred.azurum_miner.machine.miner.FilterTab
 import com.nred.azurum_miner.machine.simple_generator.SimpleGeneratorScreen
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierMenu
 import com.nred.azurum_miner.machine.transmogrifier.TransmogrifierScreen
@@ -265,39 +264,17 @@ class EmiPlugin : EmiPlugin {
         for (time: Int in fuels.keys) {
             val ingredients = Ingredient.of(*fuels.get(time)!!.toTypedArray())
             if (ingredients.hasNoItems()) continue
-            registry.addRecipe(EmiSimpleGeneratorRecipe(azLoc("simple_generator"), EmiIngredient.of(ingredients), time))
+            registry.addRecipe(EmiSimpleGeneratorRecipe(azLoc("/simple_generator/$time"), EmiIngredient.of(ingredients), time))
         }
 
         val bases = manager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get()).filter { it.value.typeName == "base" }.map { it.value }
-        val workaround = object : EmiIngredientRecipe() {
-            override fun getIngredient(): EmiIngredient {
-                return EmiIngredient.of(Ingredient.EMPTY)
-            }
-
-            override fun getStacks(): List<EmiStack> {
-                return bases.map { EmiStack.of(it.input) }
-            }
-
-            override fun getRecipeContext(stack: EmiStack?, offset: Int): EmiRecipe? {
-                return null
-            }
-
-            override fun getCategory(): EmiRecipeCategory {
-                return VanillaEmiRecipeCategories.INFO
-            }
-
-            override fun getId(): ResourceLocation {
-                return azLoc("generator_bases")
-            }
-        }
-        registry.addRecipe(workaround)
         for (recipe in manager.getAllRecipesFor(ModRecipe.GENERATOR_RECIPE_TYPE.get())) {
             if (recipe.value.typeName == "fuel") {
-                registry.addRecipe(GeneratorRecipe(recipe.id, EmiStack.of(recipe.value.input), bases, recipe.value.power, recipe.value.lasts, workaround))
+                registry.addRecipe(GeneratorRecipe(recipe.id, EmiStack.of(recipe.value.input), bases, recipe.value.power, recipe.value.lasts))
             }
         }
 
-        registry.addRecipe(EmiPortalRecipe(ResourceLocation.parse(AzurumMiner.ID + ":/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))
+        registry.addRecipe(EmiPortalRecipe(azLoc("/dimensional_matrix"), listOf(EmiIngredient.of(Ingredient.of(ItemStack(ModItems.EMPTY_DIMENSIONAL_MATRIX.asItem(), 1)))), EmiStack.of(ModItems.DIMENSIONAL_MATRIX, 1), 2400))
 
         registry.addRecipe(EmiInfoRecipe(listOf(NeoForgeEmiIngredient.of(FluidIngredient.of(ModFluids.snow_still.get())), EmiIngredient.of(Ingredient.of(Items.POWDER_SNOW_BUCKET))), listOf(Component.translatable("emi.azurum_miner.powder_snow")), azLoc("/powder_snow_bucket_from_fake_block")))
         registry.addRecipe(

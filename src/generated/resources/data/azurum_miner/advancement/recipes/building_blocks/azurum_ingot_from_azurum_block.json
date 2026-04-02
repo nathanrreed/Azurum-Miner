@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "azurum_miner:azurum"
+        "recipe": "azurum_miner:azurum_ingot_from_azurum_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "azurum_miner:azurum"
+      "azurum_miner:azurum_ingot_from_azurum_block"
     ]
   }
 }

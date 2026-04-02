@@ -13,7 +13,6 @@ import com.nred.azurum_miner.screen.GuiCommon.Companion.getFE
 import com.nred.azurum_miner.screen.GuiCommon.Companion.getTime
 import dev.emi.emi.api.recipe.BasicEmiRecipe
 import dev.emi.emi.api.recipe.EmiInfoRecipe
-import dev.emi.emi.api.recipe.EmiIngredientRecipe
 import dev.emi.emi.api.stack.EmiIngredient
 import dev.emi.emi.api.stack.EmiStack
 import dev.emi.emi.api.widget.SlotWidget
@@ -51,13 +50,13 @@ class ConnectedSlotWidget(stack: EmiIngredient, x: Int, y: Int, val slot: Int, v
     }
 }
 
-class GeneratorRecipe(recipeId: ResourceLocation, val input: EmiStack, val bases: List<GeneratorRecipe>, val power: Int, val lasts: Int, val workaround: EmiIngredientRecipe) : BasicEmiRecipe(GENERATOR_CATEGORY, recipeId, 130, 69) {
+class GeneratorRecipe(recipeId: ResourceLocation, val input: EmiStack, val bases: List<GeneratorRecipe>, val power: Int, val lasts: Int) : BasicEmiRecipe(GENERATOR_CATEGORY, recipeId, 130, 69) {
     val font: Font = Minecraft.getInstance().font
 
     init {
         this.inputs.add(input)
 
-        this.inputs.add(workaround.inputs[0])
+        this.inputs.add(EmiIngredient.of(bases.map { EmiStack.of(it.input) }))
         this.inputs.add(EmiIngredient.of(Ingredient.of(ModItems.DIMENSIONAL_MATRIX)))
         this.catalysts.add(EmiIngredient.of(Ingredient.of(ModMachines.GENERATOR)))
         this.outputs.add(EmiStack.of(ModItems.ENERGY_SHARD))
@@ -75,7 +74,7 @@ class GeneratorRecipe(recipeId: ResourceLocation, val input: EmiStack, val bases
         })
 
         widgets.add(ConnectedSlotWidget(inputs[0], 2, 12, FUEL_SLOT, this))
-        widgets.add(ConnectedSlotWidget(inputs[1], 2, 42, BASE_SLOT, this).recipeContext(workaround))
+        widgets.add(ConnectedSlotWidget(inputs[1], 2, 42, BASE_SLOT, this))
         widgets.add(ConnectedSlotWidget(inputs[2], 102, 12, MATRIX_SLOT))
         widgets.add(ConnectedSlotWidget(outputs[0], 100, 38, OUTPUT_SLOT, this).large(true).backgroundTexture(ResourceLocation.fromNamespaceAndPath("emi", "textures/gui/widgets.png"), 18, 0).recipeContext(EmiInfoRecipe(listOf<EmiIngredient>(), listOf<Component>(), null)))
     }

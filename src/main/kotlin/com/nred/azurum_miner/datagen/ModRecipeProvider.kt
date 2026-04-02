@@ -71,18 +71,14 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
         for (ore in ORES) {
             if (ore.isOre && !ore.isGem) {
                 oreSmelting(recipeOutput, listOf(ore.raw!!, ore.ore, ore.deepslate_ore), RecipeCategory.MISC, ore.ingot!!, 0.25f, 200, ore.ore_name, true)
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.block, 1).requires(ore.ingot!!, 9).unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.ingot!!, 9).requires(ore.block, 1).unlockedBy(getHasName(ore.block), has(ore.block)).save(recipeOutput, AzurumMiner.ID + ":" + ore.ore_name + "_ingot_from_" + ore.ore_name + "_block")
             }
 
-            if (ore.isOre) {
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.ingot!!, 1).requires(ore.nugget!!, 9).unlockedBy(getHasName(ore.nugget!!), has(ore.nugget!!)).save(recipeOutput, AzurumMiner.ID + ":" + ore.ore_name + "_ingot_from_" + ore.ore_name + "_nuggets")
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.nugget!!, 9).requires(ore.ingot!!, 1).unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
-            }
+            ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.block, 1).requires(ore.ingot!!, 9).unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
+            ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.ingot!!, 9).requires(ore.block, 1).unlockedBy(getHasName(ore.block), has(ore.block)).save(recipeOutput, AzurumMiner.ID + ":" + ore.ore_name + "_ingot_from_" + ore.ore_name + "_block")
+            ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.ingot!!, 1).requires(ore.nugget!!, 9).unlockedBy(getHasName(ore.nugget!!), has(ore.nugget!!)).save(recipeOutput, AzurumMiner.ID + ":" + ore.ore_name + "_ingot_from_" + ore.ore_name + "_nuggets")
+            ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.nugget!!, 9).requires(ore.ingot!!, 1).unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
 
             if (ore.isGem) {
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.block, 1).requires(ore.gem!!, 9).unlockedBy(getHasName(ore.gem!!), has(ore.gem!!)).save(recipeOutput)
-                ShapelessRecipeBuilder.shapeless(BUILDING_BLOCKS, ore.gem!!, 9).requires(ore.block, 1).unlockedBy(getHasName(ore.block), has(ore.block)).save(recipeOutput)
                 oreSmelting(recipeOutput, listOf(ore.ore, ore.deepslate_ore), RecipeCategory.MISC, ore.gem!!, 0.25f, 200, ore.ore_name, true)
             }
 
@@ -170,8 +166,8 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
 
         for (ore in listOf("azurum", "galibium", "thelxium", "palestium").map { ORES[it] }) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ore.gear!!).pattern(" I ").pattern("IBI").pattern(" I ")
-                .define('I', ore.ingot!!).define('B', ore.block)
-                .unlockedBy(getHasName(ore.ingot!!), has(ore.ingot!!)).save(recipeOutput)
+                .define('I', ore.nugget!!).define('B', ore.block)
+                .unlockedBy(getHasName(ore.block), has(ore.block)).save(recipeOutput)
         }
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SIMPLE_VOID_PROCESSOR).pattern(" C ").pattern("GPG").pattern(" C ")
@@ -214,12 +210,12 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
             .define('C', COPPER_BLOCK).define('D', DIAMOND).define('P', SIMPLE_VOID_PROCESSOR)
             .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(recipeOutput)
 
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[1], 1, 4).pattern("IPI").pattern("DMD").pattern("IPI")
-            .define('I', IRON_BLOCK).define('D', NETHER_DIAMOND).define('P', SIMPLE_VOID_PROCESSOR).define('M', ModMachines.MINER_BLOCK_TIERS[0])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[1], 1, 4).pattern("IPI").pattern("DMD").pattern("IGI")
+            .define('I', IRON_BLOCK).define('D', NETHER_DIAMOND).define('P', SIMPLE_VOID_PROCESSOR).define('G', ORES["azurum"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[0])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[0]), has(ModMachines.MINER_BLOCK_TIERS[0])).save(recipeOutput)
 
-        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[2], 1, 4).pattern("SGS").pattern("DMD").pattern("SPS")
-            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
+        ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[2], 1, 4).pattern("SGS").pattern("DMD").pattern("BPB")
+            .define('S', CONGLOMERATE_OF_ORE_SHARD).define('B', CONGLOMERATE_OF_ORE_BLOCK).define('D', ENDER_DIAMOND).define('P', VOID_PROCESSOR).define('G', ORES["galibium"].gear!!).define('M', ModMachines.MINER_BLOCK_TIERS[1])
             .unlockedBy(getHasName(ModMachines.MINER_BLOCK_TIERS[1]), has(ModMachines.MINER_BLOCK_TIERS[1])).save(recipeOutput)
 
         ShapedRecipeBuilderTransform(RecipeCategory.MISC, ModMachines.MINER_BLOCK_TIERS[3], 1, 4).pattern("GEG").pattern("SMS").pattern("GPG")
