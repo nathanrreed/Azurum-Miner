@@ -1,8 +1,5 @@
 {
   "values": [
-    "azurum_miner:azurum_ore",
-    "azurum_miner:thelxium_ore",
-    "azurum_miner:galibium_ore",
-    "azurum_miner:palestium_ore"
+    "azurum_miner:azurum_ore"
   ]
 }

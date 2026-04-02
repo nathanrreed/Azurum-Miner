@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "azurum_ingot",
+  "key": {
+    "#": "azurum_miner:azurum_nugget"
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "azurum_miner:azurum_ingot"
+  }
+}

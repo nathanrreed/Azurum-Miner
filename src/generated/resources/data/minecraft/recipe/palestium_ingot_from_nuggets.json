@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "palestium_ingot",
+  "key": {
+    "#": "azurum_miner:palestium_nugget"
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "azurum_miner:palestium_ingot"
+  }
+}

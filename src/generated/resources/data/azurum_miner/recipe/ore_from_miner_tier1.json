@@ -1,7 +1,0 @@
-{
-  "type": "azurum_miner:miner_recipe",
-  "result": {
-    "tag": "azurum_miner:miner_ore_tier1_tag"
-  },
-  "tier": 1
-}

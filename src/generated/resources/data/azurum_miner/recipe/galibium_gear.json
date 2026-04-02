@@ -2,20 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "azurum_miner:galibium_block"
-    },
-    "I": {
-      "item": "azurum_miner:galibium_ingot"
-    }
+    "B": "azurum_miner:galibium_block",
+    "N": "azurum_miner:galibium_nugget"
   },
   "pattern": [
-    " I ",
-    "IBI",
-    " I "
+    " N ",
+    "NBN",
+    " N "
   ],
   "result": {
-    "count": 1,
     "id": "azurum_miner:galibium_gear"
   }
 }

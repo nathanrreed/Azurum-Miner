@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "azurum_ingot",
+  "ingredients": [
+    "azurum_miner:azurum_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "azurum_miner:azurum_ingot"
+  }
+}

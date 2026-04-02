@@ -1,30 +1,10 @@
-<div align="center">
-<h1>Azurum Miner</h1>
-<a href="https://www.curseforge.com/minecraft/mc-mods/azurum-miner">
-<img src="https://img.shields.io/curseforge/dt/1157278?style=for-the-badge&logo=curseforge&logoSize=auto" alt="CurseForge Downloads" /></a>
-
-<a href="https://modrinth.com/mod/azurum-miner">
-<img src="https://img.shields.io/modrinth/dt/azurum-miner?style=for-the-badge&logo=modrinth&logoSize=auto" alt="Modrinth Downloads" /></a>
-
-<a href="https://github.com/nathanrreed/Azurum-Miner/releases/latest">
-<img src="https://img.shields.io/github/downloads/nathanrreed/Azurum-Miner/total?style=for-the-badge&logo=github&logoSize=auto" alt="GitHub Downloads" /></a>
-</div>
-<br />
-
-Built using [KotlinForForge](https://github.com/thedarkcolour/KotlinForForge) for Minecraft 1.21.1
-
-Adds a Void Miner to mine ores from thin air
-
-Adds 5 Levels of Miners each with the ability to mine a specific tier of ore. Each tier contains more valuable ores. There is also a mini levelling system inside the miners to upgrade aspects of their operation
-
-### Adding ore types to the miner
-
----
-
-> To add ores to a miner level add to the item tag for miner_material_tag, miner_ore_tier1_tag, miner_ore_tier2_tag, etc they will be added to the corresponding tier of miner and all subsequent tiers.
-miner tags can be viewed [here](src/generated/resources/data/azurum_miner/tags/item)
-
-### [KubeJS Recipe Info](KUBEJS.md)
+| Pre              | Azurum Shard | Azurum         | Galibium                   | Thelxium           | Palestium | ?                |
+|------------------|--------------|----------------|----------------------------|--------------------|-----------|------------------|
+| Simple Generator | Miner 1      | Miner 2        | Miner 3                    | Miner 4            | Miner 5   | Portal Automater |
+| Redstone Machine | Liquifier    | Upgrade Etcher | Dimensional Transmogrifier | Crystalizer        | Upgrade 4 | Upgrade 5        |
+|                  | Infuser      | Upgrade 1      | Upgrade 2                  | Upgrade 3          |           |                  |
+|                  |              |                |                            | Dimensional Siphon |           |                  |
 
 
-Licensed under MIT License
+
+

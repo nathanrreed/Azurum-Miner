@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "azurum_miner:azurum_ingot"
+  ],
+  "result": {
+    "count": 9,
+    "id": "azurum_miner:azurum_nugget"
+  }
+}

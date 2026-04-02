@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "azurum_miner:azurum_ore",
+  "step": "underground_ores"
+}

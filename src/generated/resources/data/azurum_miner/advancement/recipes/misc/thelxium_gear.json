@@ -7,11 +7,11 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_thelxium_ingot": {
+    "has_thelxium_block": {
       "conditions": {
         "items": [
           {
-            "items": "azurum_miner:thelxium_ingot"
+            "items": "azurum_miner:thelxium_block"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_thelxium_ingot"
+      "has_thelxium_block"
     ]
   ],
   "rewards": {

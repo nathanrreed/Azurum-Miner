@@ -49,7 +49,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "azurum_miner:azurum"
+              "name": "azurum_miner:azurum_shard"
             }
           ]
         }

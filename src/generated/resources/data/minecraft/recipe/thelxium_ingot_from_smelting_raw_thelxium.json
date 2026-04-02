@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "group": "thelxium_ingot",
+  "ingredient": "azurum_miner:raw_thelxium",
+  "result": {
+    "id": "azurum_miner:thelxium_ingot"
+  }
+}

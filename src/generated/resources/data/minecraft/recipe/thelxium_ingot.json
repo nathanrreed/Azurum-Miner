@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "thelxium_ingot",
+  "ingredients": [
+    "azurum_miner:thelxium_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "azurum_miner:thelxium_ingot"
+  }
+}

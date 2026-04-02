@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "G": {
-      "item": "azurum_miner:thelxium_gear"
-    },
-    "L": {
-      "item": "minecraft:redstone_lamp"
-    },
-    "P": {
-      "item": "azurum_miner:void_processor"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    }
+    "D": "minecraft:diamond",
+    "G": "azurum_miner:thelxium_gear",
+    "L": "minecraft:redstone_lamp",
+    "P": "azurum_miner:void_processor",
+    "R": "minecraft:redstone"
   },
   "pattern": [
     "RLR",
@@ -24,7 +14,6 @@
     "GDG"
   ],
   "result": {
-    "count": 1,
     "id": "azurum_miner:elaborate_void_processor"
   }
 }

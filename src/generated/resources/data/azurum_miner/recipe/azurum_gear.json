@@ -2,20 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "azurum_miner:azurum_block"
-    },
-    "I": {
-      "item": "azurum_miner:azurum_ingot"
-    }
+    "B": "azurum_miner:azurum_block",
+    "N": "azurum_miner:azurum_nugget"
   },
   "pattern": [
-    " I ",
-    "IBI",
-    " I "
+    " N ",
+    "NBN",
+    " N "
   ],
   "result": {
-    "count": 1,
     "id": "azurum_miner:azurum_gear"
   }
 }

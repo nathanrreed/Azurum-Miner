@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_palestium_ingot": {
+    "has_palestium_block": {
       "conditions": {
         "items": [
           {
-            "items": "azurum_miner:palestium_ingot"
+            "items": "azurum_miner:palestium_block"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_palestium_ingot"
+      "has_palestium_block"
     ]
   ],
   "rewards": {

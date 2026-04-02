@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "palestium_ingot",
+  "ingredient": "azurum_miner:palestium_deepslate_ore",
+  "result": {
+    "id": "azurum_miner:palestium_ingot"
+  }
+}

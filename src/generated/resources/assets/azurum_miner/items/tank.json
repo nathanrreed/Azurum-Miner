@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "azurum_miner:block/tank",
+    "model": {
+      "type": "azurum_miner:tank_special"
+    }
+  }
+}

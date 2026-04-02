@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_azurum": {
+    "has_azurum_shard": {
       "conditions": {
         "items": [
           {
-            "items": "azurum_miner:azurum"
+            "items": "azurum_miner:azurum_shard"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_azurum"
+      "has_azurum_shard"
     ]
   ],
   "rewards": {

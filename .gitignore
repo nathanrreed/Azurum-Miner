@@ -21,6 +21,7 @@ build
 eclipse
 run
 runs
+run-data
 
-.kotlin
+repo
 *.cache

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "E": {
-      "item": "azurum_miner:energy_shard"
-    },
-    "N": {
-      "item": "azurum_miner:nether_diamond"
-    },
-    "O": {
-      "item": "minecraft:obsidian"
-    }
+    "E": "azurum_miner:energy_shard",
+    "N": "azurum_miner:nether_diamond",
+    "O": "minecraft:obsidian"
   },
   "pattern": [
     "NEN",
@@ -18,7 +12,6 @@
     "NEN"
   ],
   "result": {
-    "count": 1,
     "id": "azurum_miner:energized_obsidian_block"
   }
 }

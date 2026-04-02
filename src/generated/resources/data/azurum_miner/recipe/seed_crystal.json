@@ -2,27 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "azurum_miner:azurum"
-    },
-    {
-      "item": "azurum_miner:azurum"
-    },
+    "azurum_miner:azurum_shard",
+    "azurum_miner:azurum_shard",
     [
-      {
-        "item": "minecraft:diamond"
-      },
-      {
-        "item": "minecraft:emerald"
-      }
+      "minecraft:diamond",
+      "minecraft:emerald"
     ],
     [
-      {
-        "item": "minecraft:quartz"
-      },
-      {
-        "item": "minecraft:prismarine_crystals"
-      }
+      "minecraft:quartz",
+      "minecraft:prismarine_crystals"
     ]
   ],
   "result": {

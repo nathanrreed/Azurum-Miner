@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "cover_is_mask": false,
+    "fluid": "minecraft:empty",
+    "textures": {
+      "base": "azurum_miner:item/pipette",
+      "fluid": "azurum_miner:item/pipette_mask",
+      "particle": "azurum_miner:item/pipette"
+    }
+  }
+}

@@ -1,8 +1,5 @@
 {
   "values": [
-    "azurum_miner:azurum_deepslate_ore",
-    "azurum_miner:thelxium_deepslate_ore",
-    "azurum_miner:galibium_deepslate_ore",
-    "azurum_miner:palestium_deepslate_ore"
+    "azurum_miner:azurum_deepslate_ore"
   ]
 }
