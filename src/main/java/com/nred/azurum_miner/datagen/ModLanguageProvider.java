@@ -58,6 +58,14 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.fluid_detail", "%s: %s");
         add(MODID + ".tooltip.fluid_capacity", "Capacity: %s");
         add(MODID + ".tooltip.fluid_empty", "Empty");
+
+        add(MODID + ".tooltip.side.input", "Input");
+        add(MODID + ".tooltip.side.output", "Output");
+        add(MODID + ".tooltip.side.auto_output", "Auto Output");
+        add(MODID + ".tooltip.side.input_output", "Auto Input");
+        add(MODID + ".tooltip.side.none", "None");
+        add(MODID + ".tooltip.side.edit", "Enter Edit mode");
+        add(MODID + ".tooltip.side.save", "Save Changes");
     }
 
     private void screens() {
@@ -73,7 +81,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".configuration.speed_colour.tooltip", "Default color used for speed info in RGB");
 
         add(MODID + ".configuration.fluid_colour", "Fluid Color");
-        add(MODID + ".configuration.fluid_colour.tooltip", "Default color used for fluid info in RGB");
+        add(MODID + ".configuration.fluid_colour.tooltip", "Default color used for isFluid info in RGB");
         add(MODID + ".configuration.capacity_colour", "Capacity Color");
         add(MODID + ".configuration.capacity_colour.tooltip", "Default color used for capacity info in RGB");
 

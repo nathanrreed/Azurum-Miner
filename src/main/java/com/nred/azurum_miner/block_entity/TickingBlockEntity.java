@@ -82,6 +82,10 @@ public abstract class TickingBlockEntity extends BlockEntity implements ITicking
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
             fluidBlockEntity.getFluidHandler(null).deserialize(input);
         }
+
+        if (this instanceof ISidedBlockEntity sidedBlockEntity) {
+            sidedBlockEntity.loadSideModes(input);
+        }
     }
 
     @Override
@@ -90,6 +94,10 @@ public abstract class TickingBlockEntity extends BlockEntity implements ITicking
 
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
             fluidBlockEntity.getFluidHandler(null).serialize(output);
+        }
+
+        if (this instanceof ISidedBlockEntity sidedBlockEntity) {
+            sidedBlockEntity.saveSideModes(output);
         }
     }
 }

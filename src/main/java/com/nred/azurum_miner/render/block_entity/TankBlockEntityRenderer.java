@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Transparency;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.nred.azurum_miner.block_entity.TankBlockEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.FluidModel;
@@ -44,6 +45,7 @@ import java.util.stream.Stream;
 
 import static com.nred.azurum_miner.registration.BlockRegistration.TANK_BLOCK;
 import static com.nred.azurum_miner.render.block_entity.TankBlockEntityRenderer.TankBlockEntityRenderState;
+import static com.nred.azurum_miner.util.Helpers.azLoc;
 
 public class TankBlockEntityRenderer implements BlockEntityRenderer<TankBlockEntity, TankBlockEntityRenderState> {
     private List<BlockStateModelPart> fluidModelParts = null;
@@ -105,7 +107,7 @@ public class TankBlockEntityRenderer implements BlockEntityRenderer<TankBlockEnt
             }
         }
 
-        submitNodeCollector.submitBlockModel(poseStack, RenderTypes.cutoutMovingBlock(), modelItemParts, BlockModelRenderState.EMPTY_TINTS, lightCoords, overlayCoords, 0);
+        submitNodeCollector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), modelItemParts, BlockModelRenderState.EMPTY_TINTS, lightCoords, overlayCoords, 0);
 
         if (fluidContent == null || fluidContent.getAmount() == 0) return;
 

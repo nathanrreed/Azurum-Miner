@@ -43,7 +43,7 @@ public abstract class TickingBlock<T extends TickingBlockEntity> extends BaseEnt
 
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (FluidUtil.interactWithFluidHandler(player, hand, level, pos, hitResult.getDirection())) { // TODO check if should be contained
+        if (FluidUtil.interactWithFluidHandler(player, hand, level, pos, null)) { // TODO check if should be contained
             return InteractionResult.SUCCESS;
         } else {
             return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);

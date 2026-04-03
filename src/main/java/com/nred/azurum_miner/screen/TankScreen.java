@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.screen;
 
 import com.nred.azurum_miner.menu.TankMenu;
+import com.nred.azurum_miner.widget.SideModeWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -18,6 +19,7 @@ public class TankScreen extends AbstractContainerScreen<TankMenu> {
     @Override
     protected void init() {
         super.init();
+        addRenderableWidget(new SideModeWidget<>(leftPos - 62, topPos + 2, menu.blockEntity, true));
     }
 
     @Override
