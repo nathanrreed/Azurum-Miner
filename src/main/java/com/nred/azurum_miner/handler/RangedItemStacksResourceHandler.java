@@ -9,12 +9,13 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.apache.commons.lang3.IntegerRange;
 
 public class RangedItemStacksResourceHandler extends ItemStacksResourceHandler {
-    private final IntegerRange inputRange;
-    private final IntegerRange outputRange;
+    public final IntegerRange inputRange;
+    public final IntegerRange outputRange;
     private final BlockEntity blockEntity;
 
-    public RangedItemStacksResourceHandler(int size, IntegerRange inputRange, IntegerRange outputRange, BlockEntity blockEntity) {
-        super(size);
+    public RangedItemStacksResourceHandler(IntegerRange inputRange, IntegerRange outputRange, BlockEntity blockEntity) {
+        super((Math.max(inputRange.getMaximum(), outputRange.getMaximum()) + 1));
+        assert !inputRange.isOverlappedBy(outputRange);
         this.inputRange = inputRange;
         this.outputRange = outputRange;
         this.blockEntity = blockEntity;

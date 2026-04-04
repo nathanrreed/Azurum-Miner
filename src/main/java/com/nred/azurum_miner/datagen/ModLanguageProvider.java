@@ -62,9 +62,11 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.side.input", "Input");
         add(MODID + ".tooltip.side.output", "Output");
         add(MODID + ".tooltip.side.auto_output", "Auto Output");
-        add(MODID + ".tooltip.side.input_output", "Auto Input");
+        add(MODID + ".tooltip.side.input_output", "Input Output");
         add(MODID + ".tooltip.side.none", "None");
-        add(MODID + ".tooltip.side.edit", "Enter Edit mode");
+        add(MODID + ".tooltip.side.edit", "Enter Batch Edit mode (Changes won't be applied until they are saved)");
+        add(MODID + ".tooltip.side.item", "Item Sides");
+        add(MODID + ".tooltip.side.fluid", "Fluid Sides");
         add(MODID + ".tooltip.side.save", "Save Changes");
     }
 

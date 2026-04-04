@@ -7,8 +7,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface ITickingBlockEntity {
     static <T extends BlockEntity & ITickingBlockEntity> void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
+        if (blockEntity instanceof IItemBlockEntity itemBlockEntity) {
+            itemBlockEntity.autoOutputItemToSides(level, pos); // TODO add auto input?
+        }
         if (blockEntity instanceof IFluidBlockEntity fluidBlockEntity) {
-            fluidBlockEntity.pushFluidToSides(level, pos);
+            fluidBlockEntity.autoOutputFluidToSides(level, pos); // TODO add auto input?
         }
     }
 }

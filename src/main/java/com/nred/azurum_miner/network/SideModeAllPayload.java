@@ -34,6 +34,8 @@ public record SideModeAllPayload(Map<Direction, ResourceHandlerSideMode> modeMap
             if (context.player().level().getBlockEntity(data.blockPos) instanceof ISidedBlockEntity sidedBlockEntity) {
                 sidedBlockEntity.setSideModes(data.modeMap, data.isFluid);
             }
+        }).thenRun(()->{
+           context.reply(new AckSideModeAllPayload(data.isFluid));
         });
     }
 }

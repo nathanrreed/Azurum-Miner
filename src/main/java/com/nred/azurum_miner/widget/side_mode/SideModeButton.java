@@ -1,9 +1,10 @@
-package com.nred.azurum_miner.widget;
+package com.nred.azurum_miner.widget.side_mode;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.nred.azurum_miner.block_entity.ISidedBlockEntity;
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
 import com.nred.azurum_miner.network.SideModePayload;
+import com.nred.azurum_miner.widget.ShrinkingButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -19,15 +20,15 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import static com.nred.azurum_miner.util.Helpers.azLoc;
 
-public class SlotModeButton<T extends BlockEntity & ISidedBlockEntity> extends Button {
+public class SideModeButton<T extends BlockEntity & ISidedBlockEntity> extends ShrinkingButton {
     private static final Identifier SLOT = azLoc("widget/side_mode/direction_slot");
     private final T blockEntity;
-    private final SlotModeSaveButton<T> saveButton;
+    private final SideModeSaveButton<T> saveButton;
     private final Direction side;
     private final boolean isFluid;
 
-    protected SlotModeButton(int x, int y, T blockEntity, SlotModeSaveButton<T> saveButton, Direction side, boolean isFluid) {
-        super(x, y, 18, 18, Component.empty(), null, Button.DEFAULT_NARRATION);
+    protected SideModeButton(T blockEntity, SideModeSaveButton<T> saveButton, Direction side, boolean isFluid) {
+        super(0, 0, 18, 18, Component.empty(), null, Button.DEFAULT_NARRATION);
         this.blockEntity = blockEntity;
         this.saveButton = saveButton;
         this.side = side;
@@ -42,7 +43,7 @@ public class SlotModeButton<T extends BlockEntity & ISidedBlockEntity> extends B
 
     @Override
     public void onPress(InputWithModifiers input) {
-        ResourceHandlerSideMode newMode = getMode().getNext(input.input() == InputConstants.MOUSE_BUTTON_RIGHT);
+        ResourceHandlerSideMode newMode = input.hasShiftDown() ? ResourceHandlerSideMode.NONE : getMode().getNext(input.input() == InputConstants.MOUSE_BUTTON_RIGHT);
         setTooltip(Tooltip.create(newMode.getComponent()));
         if (saveButton.editMode) { // Don't send to server
             saveButton.sideModeMap.replace(side, newMode);
