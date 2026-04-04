@@ -23,13 +23,17 @@ public enum ResourceHandlerSideMode implements StringRepresentable {
         return this == OUTPUT || this == AUTO_OUTPUT || this == INPUT_OUTPUT;
     }
 
+    public boolean isBlocked() {
+        return this == NONE;
+    }
+
     public int getColour() {
         return switch (this) { // TODO move to config
-            case INPUT -> 0xFFBBDD55;
-            case OUTPUT -> 0xFF2222FF;
-            case AUTO_OUTPUT -> 0xFF6622FF;
-            case INPUT_OUTPUT -> 0xFF888822;
-            case NONE -> 0xFFAAAAAA;
+            case INPUT -> 0xFF99FF33;
+            case OUTPUT -> 0xFF33FFFF;
+            case AUTO_OUTPUT -> 0xFF9933FF;
+            case INPUT_OUTPUT -> 0xFFFF3399;
+            case NONE -> 0xFFA0A0A0;
         };
     }
 

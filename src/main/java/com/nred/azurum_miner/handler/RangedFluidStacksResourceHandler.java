@@ -24,10 +24,6 @@ public class RangedFluidStacksResourceHandler extends FluidStacksResourceHandler
     protected void onContentsChanged(int index, FluidStack previousContents) {
         super.onContentsChanged(index, previousContents);
         blockEntity.setChanged();
-
-        if (blockEntity.getLevel() != null && !blockEntity.getLevel().isClientSide()) {
-            blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
-        }
     }
 
     public int insertInternal(int index, FluidResource resource, int amount, TransactionContext transaction) {

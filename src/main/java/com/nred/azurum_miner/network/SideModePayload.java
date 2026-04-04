@@ -1,6 +1,6 @@
 package com.nred.azurum_miner.network;
 
-import com.nred.azurum_miner.block_entity.ISidedBlockEntity;
+import com.nred.azurum_miner.block_entity.SidedTickingBlockEntity;
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public record SideModePayload(Direction direction, BlockPos blockPos, ResourceHa
 
     public static void handleOnServer(final SideModePayload data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player().level().getBlockEntity(data.blockPos) instanceof ISidedBlockEntity sidedBlockEntity) {
+            if (context.player().level().getBlockEntity(data.blockPos) instanceof SidedTickingBlockEntity sidedBlockEntity) {
                 sidedBlockEntity.setSideMode(data.direction, data.newMode, data.isFluid);
             }
         });

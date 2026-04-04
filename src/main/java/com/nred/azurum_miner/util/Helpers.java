@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.FluidStateModelSet;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
@@ -41,5 +42,15 @@ public class Helpers {
             return Component.literal(numberFormater.format(amount / 1000) + " B").withStyle(ChatFormatting.WHITE);
         }
         return Component.literal(numberFormater.format(amount) + " mB").withStyle(ChatFormatting.WHITE);
+    }
+
+    public static Direction getRelative(Direction facing, Direction direction) {
+        return switch (direction) {
+            case UP, DOWN -> direction;
+            case NORTH -> facing;
+            case EAST -> facing.getCounterClockWise();
+            case SOUTH -> facing.getOpposite();
+            case WEST -> facing.getClockWise();
+        };
     }
 }

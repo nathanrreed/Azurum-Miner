@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 import static com.nred.azurum_miner.AzurumMiner.MODID;
 import static com.nred.azurum_miner.registration.BlockEntityRegistration.TANK_BLOCK_ENTITY;
 
-public class TankBlockEntity extends TickingBlockEntity implements IItemBlockEntity, IFluidBlockEntity {
+public class TankBlockEntity extends SidedTickingBlockEntity implements IItemBlockEntity, IFluidBlockEntity {
     public TankBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(TANK_BLOCK_ENTITY.get(), worldPosition, blockState);
     }

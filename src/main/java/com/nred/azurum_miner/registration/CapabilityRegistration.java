@@ -18,7 +18,9 @@ import static com.nred.azurum_miner.registration.ItemRegistration.PIPETTE;
 public class CapabilityRegistration {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.Fluid.BLOCK, TANK_BLOCK_ENTITY.get(), TankBlockEntity::getFluidHandler);
+        event.registerBlockEntity(Capabilities.Fluid.BLOCK, TANK_BLOCK_ENTITY.get(), TankBlockEntity::getFluidHandler); // TODO make auto do this
+        event.registerBlockEntity(Capabilities.Item.BLOCK, TANK_BLOCK_ENTITY.get(), TankBlockEntity::getItemHandler);
+
         event.registerItem(Capabilities.Fluid.ITEM, (_, access) -> new ItemAccessFluidHandler(access, SIMPLE_FLUID_COMPONENT.get(), TankBlockEntity.CAPACITY), TANK_BLOCK);
         event.registerItem(Capabilities.Fluid.ITEM, (_, access) -> new ItemAccessFluidHandler(access, SIMPLE_FLUID_COMPONENT.get(), PipetteItem.CAPACITY), PIPETTE);
     }

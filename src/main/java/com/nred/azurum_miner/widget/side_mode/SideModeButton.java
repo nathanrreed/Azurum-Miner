@@ -45,7 +45,7 @@ public class SideModeButton<T extends BlockEntity & ISidedBlockEntity> extends S
     public void onPress(InputWithModifiers input) {
         ResourceHandlerSideMode newMode = input.hasShiftDown() ? ResourceHandlerSideMode.NONE : getMode().getNext(input.input() == InputConstants.MOUSE_BUTTON_RIGHT);
         setTooltip(Tooltip.create(newMode.getComponent()));
-        if (saveButton.editMode) { // Don't send to server
+        if (saveButton.editMode) { // Don't send to server yet
             saveButton.sideModeMap.replace(side, newMode);
         } else {
             ClientPacketDistributor.sendToServer(new SideModePayload(side, blockEntity.getBlockPos(), newMode, isFluid));

@@ -13,6 +13,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import static com.nred.azurum_miner.util.Helpers.azLoc;
+import static com.nred.azurum_miner.util.Helpers.getRelative;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 public class SideModeWidget<T extends BlockEntity & ISidedBlockEntity> extends GridLayout implements Renderable {
     private static final Identifier BACKGROUND = azLoc("widget/side_mode/background");
@@ -25,6 +27,7 @@ public class SideModeWidget<T extends BlockEntity & ISidedBlockEntity> extends G
     public SideModeWidget(T blockEntity, boolean isFluid) {
         super();
         this.isFluid = isFluid;
+        this.spacing(1);
 
         SideModeHideButton hideButton = isFluid ?
                 new SideModeHideButton(_ -> {
@@ -40,12 +43,12 @@ public class SideModeWidget<T extends BlockEntity & ISidedBlockEntity> extends G
         save_button = new SideModeSaveButton<>(blockEntity, isFluid);
         this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.UP, isFluid), 0, 1, newCellSettings().paddingTop(3));
         this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.DOWN, isFluid), 2, 1, newCellSettings().paddingBottom(3));
-        this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.NORTH, isFluid), 1, 1);
-        this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.EAST, isFluid), 1, 2, newCellSettings().paddingRight(3));
-        this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.SOUTH, isFluid), 2, 0, newCellSettings().paddingLeft(3).paddingBottom(3));
-        this.addChild(new SideModeButton<>(blockEntity, save_button, Direction.WEST, isFluid), 1, 0, newCellSettings().paddingLeft(3));
+        this.addChild(new SideModeButton<>(blockEntity, save_button, getRelative(blockEntity.getBlockState().getValue(FACING), Direction.NORTH), isFluid), 1, 1);
+        this.addChild(new SideModeButton<>(blockEntity, save_button, getRelative(blockEntity.getBlockState().getValue(FACING), Direction.EAST), isFluid), 1, 2, newCellSettings().paddingRight(3));
+        this.addChild(new SideModeButton<>(blockEntity, save_button, getRelative(blockEntity.getBlockState().getValue(FACING), Direction.SOUTH), isFluid), 2, 0, newCellSettings().paddingLeft(3).paddingBottom(3));
+        this.addChild(new SideModeButton<>(blockEntity, save_button, getRelative(blockEntity.getBlockState().getValue(FACING), Direction.WEST), isFluid), 1, 0, newCellSettings().paddingLeft(3));
 
-        this.addChild(hideButton, 0, 2, newCellSettings().alignHorizontallyRight().alignVerticallyTop().paddingRight(2).paddingTop(2).paddingLeft(-1).paddingBottom(-1));
+        this.addChild(hideButton, 0, 2, newCellSettings().alignHorizontallyRight().alignVerticallyTop().paddingRight(2).paddingTop(2).paddingLeft(-3).paddingBottom(-3));
         this.addChild(save_button, 2, 2, newCellSettings().align(0.65f, 0.55f));
 
         if (isFluid) {

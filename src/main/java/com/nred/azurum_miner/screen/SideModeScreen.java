@@ -25,7 +25,7 @@ public class SideModeScreen<B extends BlockEntity & ISidedBlockEntity, M extends
     @Override
     protected void init() {
         super.init();
-        layout = new LinearLayout(leftPos - 61, topPos, LinearLayout.Orientation.VERTICAL).spacing(2);
+        layout = new LinearLayout(leftPos - 63, topPos, LinearLayout.Orientation.VERTICAL).spacing(2);
 
         if (menu.blockEntity instanceof IItemBlockEntity) {
             sideModeWidgetItem = new SideModeWidget<>(menu.blockEntity, false);
@@ -38,7 +38,7 @@ public class SideModeScreen<B extends BlockEntity & ISidedBlockEntity, M extends
             layout.addChild(sideModeWidgetFluid, layout.newCellSettings().alignHorizontallyRight());
         }
 
-        layout.addChild(SpacerElement.width(60));
+        layout.addChild(SpacerElement.width(62));
 
         this.layout.visitWidgets(this::addRenderableWidget);
         this.layout.arrangeElements();
