@@ -3,6 +3,7 @@ package com.nred.azurum_miner.block_entity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.SimpleMapCodec;
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
+import com.nred.azurum_miner.widget.side_mode.SideModeType;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 
@@ -11,17 +12,25 @@ import java.util.Map;
 public interface ISidedBlockEntity {
     SimpleMapCodec<Direction, ResourceHandlerSideMode> CODEC = Codec.simpleMap(Direction.CODEC, ResourceHandlerSideMode.CODEC, StringRepresentable.keys(ResourceHandlerSideMode.values()));
 
-    default ResourceHandlerSideMode getSideMode(Direction side, boolean isFluid) {
-        return isFluid ? getSideFluidMode(side) : getSideItemMode(side);
+    default ResourceHandlerSideMode getSideMode(Direction side, SideModeType sideModeType) {
+        return switch (sideModeType) {
+            case ITEM -> getSideItemMode(side);
+            case FLUID -> getSideFluidMode(side);
+            default -> throw new IllegalStateException("Unexpected value: " + sideModeType);
+        };
     }
 
     ResourceHandlerSideMode getSideItemMode(Direction side);
 
     ResourceHandlerSideMode getSideFluidMode(Direction side);
 
-    void setSideMode(Direction side, ResourceHandlerSideMode mode, boolean isFluid);
+    default ResourceHandlerSideMode getSideEnergyMode(Direction side) {
+        return null;
+    }
 
-    Map<Direction, ResourceHandlerSideMode> getSideModes(boolean isFluid);
+    void setSideMode(Direction side, ResourceHandlerSideMode mode, SideModeType sideModeType);
 
-    void setSideModes(Map<Direction, ResourceHandlerSideMode> sideModeMap, boolean isFluid);
+    Map<Direction, ResourceHandlerSideMode> getSideModes(SideModeType sideModeType);
+
+    void setSideModes(Map<Direction, ResourceHandlerSideMode> sideModeMap, SideModeType sideModeType);
 }

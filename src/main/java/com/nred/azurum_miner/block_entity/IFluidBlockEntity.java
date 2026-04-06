@@ -1,27 +1,37 @@
 package com.nred.azurum_miner.block_entity;
 
-import com.nred.azurum_miner.handler.RangedFluidStacksResourceHandler;
+import com.nred.azurum_miner.handler.AwareFluidStacksResourceHandler;
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
-import com.nred.azurum_miner.handler.SidedFluidStacksResourceHandler;
+import com.nred.azurum_miner.handler.SidedDelegatingResourceHandler;
+import com.nred.azurum_miner.widget.side_mode.SideModeType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.CombinedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import org.apache.commons.lang3.IntegerRange;
 
 public interface IFluidBlockEntity extends ISidedBlockEntity {
-    RangedFluidStacksResourceHandler getFluidHandler();
+    CombinedResourceHandler<FluidResource> getFluidHandler();
 
-    default FluidStacksResourceHandler getFluidHandler(Direction side) {
+    IntegerRange getFluidInputRange();
+
+    IntegerRange getFluidOutputRange();
+
+    AwareFluidStacksResourceHandler getInternalFluidHandler();
+
+    BlockPos getBlockPos();
+
+    default ResourceHandler<FluidResource> getFluidHandler(Direction side) {
         if (side == null) {
             return getFluidHandler();
         } else if (getSideFluidMode(side).isBlocked()) {
             return null;
         } else {
-            return new SidedFluidStacksResourceHandler(getFluidHandler(), this, side);
+            return new SidedDelegatingResourceHandler<>(getFluidHandler(), this, side, SideModeType.FLUID);
         }
     }
 

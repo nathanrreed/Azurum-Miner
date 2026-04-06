@@ -25,20 +25,20 @@ public class SideModeButton<T extends BlockEntity & ISidedBlockEntity> extends S
     private final T blockEntity;
     private final SideModeSaveButton<T> saveButton;
     private final Direction side;
-    private final boolean isFluid;
+    private final SideModeType sideModeType;
 
-    protected SideModeButton(T blockEntity, SideModeSaveButton<T> saveButton, Direction side, boolean isFluid) {
+    protected SideModeButton(T blockEntity, SideModeSaveButton<T> saveButton, Direction side, SideModeType sideModeType) {
         super(0, 0, 18, 18, Component.empty(), null, Button.DEFAULT_NARRATION);
         this.blockEntity = blockEntity;
         this.saveButton = saveButton;
         this.side = side;
-        this.isFluid = isFluid;
+        this.sideModeType = sideModeType;
 
-        setTooltip(Tooltip.create(blockEntity.getSideMode(side, isFluid).getComponent()));
+        setTooltip(Tooltip.create(blockEntity.getSideMode(side, sideModeType).getComponent()));
     }
 
     public ResourceHandlerSideMode getMode() {
-        return saveButton.editMode ? saveButton.sideModeMap.get(side) : blockEntity.getSideMode(side, isFluid);
+        return saveButton.editMode ? saveButton.sideModeMap.get(side) : blockEntity.getSideMode(side, sideModeType);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SideModeButton<T extends BlockEntity & ISidedBlockEntity> extends S
         if (saveButton.editMode) { // Don't send to server yet
             saveButton.sideModeMap.replace(side, newMode);
         } else {
-            ClientPacketDistributor.sendToServer(new SideModePayload(side, blockEntity.getBlockPos(), newMode, isFluid));
+            ClientPacketDistributor.sendToServer(new SideModePayload(side, blockEntity.getBlockPos(), newMode, sideModeType));
         }
     }
 

@@ -59,14 +59,18 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.fluid_capacity", "Capacity: %s");
         add(MODID + ".tooltip.fluid_empty", "Empty");
 
+        add(MODID + ".tooltip.side_bar.item", "Item Sides Config");
+        add(MODID + ".tooltip.side_bar.fluid", "Fluid Sides Config");
+        add(MODID + ".tooltip.side_bar.energy", "Energy Sides Config");
+        add(MODID + ".tooltip.side_bar.info", "Block Info");
+        add(MODID + ".tooltip.tank_info", "Left click with a fluid container item on the tank to fill it\n\nRight click with a fluid container item on the tank to empty it\n\nShift + Left click on the tank to empty it");
+
         add(MODID + ".tooltip.side.input", "Input");
         add(MODID + ".tooltip.side.output", "Output");
         add(MODID + ".tooltip.side.auto_output", "Auto Output");
         add(MODID + ".tooltip.side.input_output", "Input Output");
         add(MODID + ".tooltip.side.none", "None");
         add(MODID + ".tooltip.side.edit", "Enter Batch Edit mode (Changes won't be applied until they are saved)");
-        add(MODID + ".tooltip.side.item", "Item Sides");
-        add(MODID + ".tooltip.side.fluid", "Fluid Sides");
         add(MODID + ".tooltip.side.save", "Save Changes");
     }
 

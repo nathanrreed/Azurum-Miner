@@ -31,6 +31,16 @@ public class Config {
             .define("units.use_buckets", false);
 
 
+    public static final ModConfigSpec.BooleanValue USE_RIGHT_SIDE = BUILDER
+            .translation(MODID + ".configuration.use_right_side")
+            .define("use_right_side", false);
+
+    public static final ModConfigSpec.BooleanValue ALLOW_MULTIPLE_OPEN = BUILDER
+            .translation(MODID + ".configuration.allow_multiple_open")
+            .define("allow_multiple_open", false);
+
+    // TODO add colours
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {

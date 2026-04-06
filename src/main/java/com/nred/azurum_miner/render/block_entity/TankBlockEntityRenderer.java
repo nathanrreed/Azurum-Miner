@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 
 import static com.nred.azurum_miner.registration.BlockRegistration.TANK_BLOCK;
 import static com.nred.azurum_miner.render.block_entity.TankBlockEntityRenderer.TankBlockEntityRenderState;
-import static com.nred.azurum_miner.util.Helpers.azLoc;
 
 public class TankBlockEntityRenderer implements BlockEntityRenderer<TankBlockEntity, TankBlockEntityRenderState> {
     private List<BlockStateModelPart> fluidModelParts = null;
@@ -68,9 +67,9 @@ public class TankBlockEntityRenderer implements BlockEntityRenderer<TankBlockEnt
     public void extractRenderState(TankBlockEntity blockEntity, TankBlockEntityRenderState renderState, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTicks, cameraPosition, breakProgress);
 
-        renderState.fluidStack = blockEntity.getFluidHandler(null).getResource(0);
-        renderState.capacity = blockEntity.getFluidHandler(null).getCapacityAsLong(0, renderState.fluidStack);
-        renderState.amount = blockEntity.getFluidHandler(null).getAmountAsLong(0);
+        renderState.fluidStack = blockEntity.getInternalFluidHandler().getResource(0);
+        renderState.capacity = blockEntity.getInternalFluidHandler().getCapacityAsLong(0, renderState.fluidStack);
+        renderState.amount = blockEntity.getInternalFluidHandler().getAmountAsLong(0);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.nred.azurum_miner.network;
 
 import com.nred.azurum_miner.block_entity.ISidedBlockEntity;
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
+import com.nred.azurum_miner.widget.side_mode.SideModeType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,13 +15,13 @@ import java.util.Map;
 
 import static com.nred.azurum_miner.util.Helpers.azLoc;
 
-public record SideModeAllPayload(Map<Direction, ResourceHandlerSideMode> modeMap, BlockPos blockPos, boolean isFluid) implements CustomPacketPayload {
+public record SideModeAllPayload(Map<Direction, ResourceHandlerSideMode> modeMap, BlockPos blockPos, SideModeType sideModeType) implements CustomPacketPayload {
     public static final Type<SideModeAllPayload> TYPE = new Type<>(azLoc("side_mode_all"));
 
     public static final StreamCodec<ByteBuf, SideModeAllPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodec(ISidedBlockEntity.CODEC.codec()), SideModeAllPayload::modeMap,
             ByteBufCodecs.fromCodec(BlockPos.CODEC), SideModeAllPayload::blockPos,
-            ByteBufCodecs.BOOL, SideModeAllPayload::isFluid,
+            ByteBufCodecs.fromCodec(SideModeType.CODEC), SideModeAllPayload::sideModeType,
             SideModeAllPayload::new
     );
 
@@ -32,10 +33,10 @@ public record SideModeAllPayload(Map<Direction, ResourceHandlerSideMode> modeMap
     public static void handleOnServer(final SideModeAllPayload data, final IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().level().getBlockEntity(data.blockPos) instanceof ISidedBlockEntity sidedBlockEntity) {
-                sidedBlockEntity.setSideModes(data.modeMap, data.isFluid);
+                sidedBlockEntity.setSideModes(data.modeMap, data.sideModeType);
             }
         }).thenRun(()->{
-           context.reply(new AckSideModeAllPayload(data.isFluid));
+           context.reply(new AckSideModeAllPayload(data.sideModeType));
         });
     }
 }

@@ -1,7 +1,7 @@
 package com.nred.azurum_miner.menu;
 
 import com.nred.azurum_miner.block_entity.IItemBlockEntity;
-import com.nred.azurum_miner.handler.RangedItemStacksResourceHandler;
+import com.nred.azurum_miner.handler.AwareItemStacksResourceHandler;
 import com.nred.azurum_miner.handler.ResourceHandlerTypedSlot.ResourceHandlerInputSlot;
 import com.nred.azurum_miner.handler.ResourceHandlerTypedSlot.ResourceHandlerOutputSlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,28 +18,32 @@ import static com.nred.azurum_miner.registration.MenuRegistration.TANK_MENU;
 
 public class BlockEntityMenu<T extends BlockEntity> extends AbstractContainerMenu {
     public T blockEntity;
+    public Player player;
     private IntegerRange itemInputSlots = IntegerRange.of(0, 0);
     private IntegerRange itemOutputSlots = IntegerRange.of(0, 0);
 
     public BlockEntityMenu(MenuType<?> menuType, SlotLookup slotLookup, int containerId, Inventory playerInventory, FriendlyByteBuf extraData) { // Client
-        this(TANK_MENU.get(), slotLookup, containerId, playerInventory, (T) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(menuType, slotLookup, containerId, playerInventory, (T) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     public BlockEntityMenu(MenuType<?> menuType, SlotLookup slotLookup, int containerId, Inventory playerInventory, T blockEntity) { // Server
         super(menuType, containerId);
         this.blockEntity = blockEntity;
+        this.player = playerInventory.player;
 
         this.addStandardInventorySlots(playerInventory, 8, 84);
 
         if (blockEntity instanceof IItemBlockEntity itemBlockEntity) {
-            RangedItemStacksResourceHandler itemHandler = itemBlockEntity.getItemHandler();
-            this.itemInputSlots = itemHandler.inputRange;
-            this.itemOutputSlots = itemHandler.outputRange;
+            AwareItemStacksResourceHandler itemHandler = itemBlockEntity.getInternalItemHandler();
+
+            this.itemInputSlots = itemBlockEntity.getItemInputRange();
+            this.itemOutputSlots = itemBlockEntity.getItemOutputRange();
+
             for (int i = 0; i < itemHandler.size(); i++) {
                 if (itemInputSlots.contains(i)) {
-                    this.addSlot(new ResourceHandlerInputSlot(itemHandler, itemHandler::set, i, slotLookup.getItemX(i), slotLookup.getItemY(i)));
+                    this.addSlot(new ResourceHandlerInputSlot(itemHandler, itemHandler::set, i, slotLookup.getItemSlot(i)));
                 } else if (itemOutputSlots.contains(i)) {
-                    this.addSlot(new ResourceHandlerOutputSlot(itemHandler, itemHandler::set, i, slotLookup.getItemX(i), slotLookup.getItemY(i)));
+                    this.addSlot(new ResourceHandlerOutputSlot(itemHandler, itemHandler::set, i, slotLookup.getItemSlot(i)));
                 }
             }
         }

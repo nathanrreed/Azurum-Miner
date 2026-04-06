@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.block_entity;
 
 import com.nred.azurum_miner.handler.ResourceHandlerSideMode;
+import com.nred.azurum_miner.widget.side_mode.SideModeType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
@@ -25,6 +26,7 @@ import static com.nred.azurum_miner.registration.DataComponentRegistration.SIMPL
 public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
     public final Map<Direction, ResourceHandlerSideMode> itemSideModes;
     public final Map<Direction, ResourceHandlerSideMode> fluidSideModes;
+    public final Map<Direction, ResourceHandlerSideMode> energySideModes;
 
     public SidedTickingBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -39,6 +41,11 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         } else {
             fluidSideModes = null;
         }
+        if (this instanceof IEnergyBlockEntity) {
+            energySideModes = ResourceHandlerSideMode.getDefaultEnergy();
+        } else {
+            energySideModes = null;
+        }
     }
 
     @Override
@@ -48,7 +55,7 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
             List<SimpleFluidContent> fluidContent = components.getOrDefault(FLUID_COMPONENT.get(), components.has(SIMPLE_FLUID_COMPONENT.get()) ? List.of(components.get(SIMPLE_FLUID_COMPONENT.get())) : List.of());
             for (int i = 0; i < fluidContent.size(); i++) {
-                fluidBlockEntity.getFluidHandler(null).set(i, FluidResource.of(fluidContent.get(i).getFluid()), fluidContent.get(i).getAmount());
+                fluidBlockEntity.getInternalFluidHandler().set(i, FluidResource.of(fluidContent.get(i).getFluid()), fluidContent.get(i).getAmount());
             }
         }
     }
@@ -58,7 +65,7 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         super.collectImplicitComponents(components);
 
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
-            FluidStacksResourceHandler fluidHandler = fluidBlockEntity.getFluidHandler(null);
+            FluidStacksResourceHandler fluidHandler = fluidBlockEntity.getInternalFluidHandler();
             ArrayList<SimpleFluidContent> fluidContents = new ArrayList<>(fluidHandler.size());
             for (int i = 0; i < fluidHandler.size(); i++) {
                 fluidContents.add(SimpleFluidContent.copyOf(fluidHandler.getResource(i).toStack(fluidHandler.getAmountAsInt(i))));
@@ -80,17 +87,29 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         return fluidSideModes.get(side);
     }
 
-    public void setSideMode(Direction side, ResourceHandlerSideMode mode, boolean isFluid) {
-        (isFluid ? fluidSideModes : itemSideModes).replace(side, mode);
+    public void setSideMode(Direction side, ResourceHandlerSideMode mode, SideModeType sideModeType) {
+        switch (sideModeType) {
+            case ITEM -> itemSideModes.replace(side, mode);
+            case FLUID -> fluidSideModes.replace(side, mode);
+            case ENERGY -> energySideModes.replace(side, mode);
+        }
         setChanged();
     }
 
-    public Map<Direction, ResourceHandlerSideMode> getSideModes(boolean isFluid) {
-        return (isFluid ? fluidSideModes : itemSideModes);
+    public Map<Direction, ResourceHandlerSideMode> getSideModes(SideModeType sideModeType) {
+        return switch (sideModeType) {
+            case ITEM -> itemSideModes;
+            case FLUID -> fluidSideModes;
+            case ENERGY -> energySideModes;
+        };
     }
 
-    public void setSideModes(Map<Direction, ResourceHandlerSideMode> sideModeMap, boolean isFluid) {
-        (isFluid ? fluidSideModes : itemSideModes).putAll(sideModeMap);
+    public void setSideModes(Map<Direction, ResourceHandlerSideMode> sideModeMap, SideModeType sideModeType) {
+        switch (sideModeType) {
+            case ITEM -> itemSideModes.putAll(sideModeMap);
+            case FLUID -> fluidSideModes.putAll(sideModeMap);
+            case ENERGY -> energySideModes.putAll(sideModeMap);
+        }
         setChanged();
     }
 
@@ -107,7 +126,7 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         super.loadAdditional(input);
 
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
-            fluidBlockEntity.getFluidHandler(null).deserialize(input);
+            fluidBlockEntity.getInternalFluidHandler().deserialize(input);
             fluidSideModes.putAll(input.read("fluid_side_modes", CODEC.codec()).get());
         }
 
@@ -121,7 +140,7 @@ public abstract class SidedTickingBlockEntity extends TickingBlockEntity {
         super.saveAdditional(output);
 
         if (this instanceof IFluidBlockEntity fluidBlockEntity) {
-            fluidBlockEntity.getFluidHandler(null).serialize(output);
+            fluidBlockEntity.getInternalFluidHandler().serialize(output);
             output.store("fluid_side_modes", CODEC.codec(), fluidSideModes);
         }
 

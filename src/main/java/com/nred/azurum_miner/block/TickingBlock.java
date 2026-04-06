@@ -46,7 +46,7 @@ public abstract class TickingBlock<T extends TickingBlockEntity> extends BaseEnt
 
     @Override
     public @Nullable <Q extends BlockEntity> BlockEntityTicker<Q> getTicker(Level level, BlockState blockState, BlockEntityType<Q> type) {
-        return createTickerHelper(type, entityType.get(), ITickingBlockEntity::tick);
+        return createTickerHelper(type, entityType.get(), ITickingBlockEntity::serverTick);
     }
 
     @Override

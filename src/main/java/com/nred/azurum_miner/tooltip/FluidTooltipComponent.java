@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 
 import java.util.List;
@@ -20,6 +21,11 @@ public class FluidTooltipComponent implements ClientTooltipComponent, TooltipCom
 
     public FluidTooltipComponent(SimpleFluidContent fluidContent, int capacity) {
         this.fluidContent = fluidContent;
+        this.capacity = capacity;
+    }
+
+    public FluidTooltipComponent(FluidStack fluidStack, int capacity) {
+        this.fluidContent = SimpleFluidContent.copyOf(fluidStack);
         this.capacity = capacity;
     }
 

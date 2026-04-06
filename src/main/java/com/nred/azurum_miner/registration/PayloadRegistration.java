@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.registration;
 
 import com.nred.azurum_miner.network.AckSideModeAllPayload;
+import com.nred.azurum_miner.network.FluidTankTransferPayload;
 import com.nred.azurum_miner.network.SideModeAllPayload;
 import com.nred.azurum_miner.network.SideModePayload;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,6 +17,7 @@ public class PayloadRegistration {
 
         registrar.playToServer(SideModePayload.TYPE, SideModePayload.STREAM_CODEC, SideModePayload::handleOnServer);
         registrar.playToServer(SideModeAllPayload.TYPE, SideModeAllPayload.STREAM_CODEC, SideModeAllPayload::handleOnServer);
+        registrar.playToServer(FluidTankTransferPayload.TYPE, FluidTankTransferPayload.STREAM_CODEC, FluidTankTransferPayload::handleOnServer);
 
         registrar.playToClient(AckSideModeAllPayload.TYPE, AckSideModeAllPayload.STREAM_CODEC);
     }

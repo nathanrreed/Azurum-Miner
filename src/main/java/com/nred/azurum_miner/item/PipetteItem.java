@@ -1,6 +1,5 @@
 package com.nred.azurum_miner.item;
 
-import com.nred.azurum_miner.block_entity.TankBlockEntity;
 import com.nred.azurum_miner.tooltip.FluidTooltipComponent;
 import com.nred.azurum_miner.util.Helpers;
 import net.minecraft.util.Mth;
@@ -39,6 +38,6 @@ public class PipetteItem extends Item {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack itemStack) {
-        return Optional.of(new FluidTooltipComponent(itemStack.getOrDefault(SIMPLE_FLUID_COMPONENT, SimpleFluidContent.EMPTY), TankBlockEntity.CAPACITY));
+        return Optional.of(new FluidTooltipComponent(itemStack.getOrDefault(SIMPLE_FLUID_COMPONENT, SimpleFluidContent.EMPTY), CAPACITY));
     }
 }

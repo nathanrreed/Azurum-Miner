@@ -25,14 +25,19 @@ public class SideModeSaveButton<T extends BlockEntity & ISidedBlockEntity> exten
     private static final Identifier EDIT = azLoc("widget/side_mode/edit");
 
     public final T blockEntity;
-    public final boolean isFluid;
+    public final SideModeType type;
     public boolean editMode = false;
-    public Map<Direction, ResourceHandlerSideMode> sideModeMap = ResourceHandlerSideMode.getDefault();
+    public Map<Direction, ResourceHandlerSideMode> sideModeMap;
 
-    protected SideModeSaveButton(T blockEntity, boolean isFluid) {
+    protected SideModeSaveButton(T blockEntity, SideModeType type) {
         super(0, 0, 11, 11, Component.empty(), SideModeSaveButton::onPress, Button.DEFAULT_NARRATION);
         this.blockEntity = blockEntity;
-        this.isFluid = isFluid;
+        this.type = type;
+
+        switch (type) {
+            case ITEM, FLUID -> sideModeMap = ResourceHandlerSideMode.getDefault();
+            case ENERGY -> sideModeMap = ResourceHandlerSideMode.getDefaultEnergy();
+        }
 
         setTooltip(Tooltip.create(Component.translatable(MODID + ".tooltip.side.edit")));
     }
@@ -42,9 +47,9 @@ public class SideModeSaveButton<T extends BlockEntity & ISidedBlockEntity> exten
             if (!btn.editMode) {
                 btn.editMode = true;
                 btn.setTooltip(Tooltip.create(Component.translatable(MODID + ".tooltip.side.save")));
-                btn.sideModeMap.putAll(btn.blockEntity.getSideModes(btn.isFluid));
+                btn.sideModeMap.putAll(btn.blockEntity.getSideModes(btn.type));
             } else {
-                ClientPacketDistributor.sendToServer(new SideModeAllPayload(btn.sideModeMap, btn.blockEntity.getBlockPos(), btn.isFluid));
+                ClientPacketDistributor.sendToServer(new SideModeAllPayload(btn.sideModeMap, btn.blockEntity.getBlockPos(), btn.type));
                 btn.setTooltip(Tooltip.create(Component.translatable(MODID + ".tooltip.side.edit")));
             }
         }
