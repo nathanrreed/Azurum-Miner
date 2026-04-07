@@ -1,9 +1,12 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id 'java-library'
     id 'idea'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
+    id 'net.darkhax.curseforgegradle' version "1.1.15"
     id 'net.neoforged.moddev' version '1.0.11'
 
     id 'org.jetbrains.kotlin.jvm' version '2.1.20'
@@ -102,7 +105,6 @@ repositories {
     }
 }
 
-
 dependencies {
     implementation "thedarkcolour:kotlinforforge-neoforge:${kotlin_version}"
 
@@ -152,6 +154,47 @@ publishing {
         maven {
             url "file://${project.projectDir}/repo"
         }
+    }
+}
+
+if (System.getenv("MODRINTH_TOKEN")) {
+    modrinth {
+        token = System.getenv("MODRINTH_TOKEN")
+        projectId = "azurum-miner"
+        versionNumber = "${mod_version}"
+        versionType = "${release_type}"
+        uploadFile = jar
+        gameVersions.add("${minecraft_version}")
+        loaders = ["neoforge"]
+        dependencies {
+            required.project "kotlin-for-forge"
+            optional.project "emi"
+            optional.project "jei"
+            optional.project "jade"
+            optional.project "cc-tweaked"
+        }
+        changelog = rootProject.file("Changelog.md").text
+        syncBodyFrom = rootProject.file("README.md").text
+    }
+}
+
+if (System.getenv("CURSEFORGE_KEY")) {
+    tasks.register('publishCurseForge', TaskPublishCurseForge) {
+        setGroup('publishing')
+        setDescription('Upload project to CurseForge')
+        apiToken = System.getenv('CURSEFORGE_KEY')
+
+        // The main file to upload
+        def mainFile = upload(1157278, jar)
+        mainFile.releaseType = "${release_type}"
+        mainFile.addJavaVersion("Java 21")
+        mainFile.addGameVersion("${minecraft_version}")
+        mainFile.addModLoader("NeoForge")
+        mainFile.changelog = rootProject.file("Changelog.md").text
+        mainFile.changelogType = 'markdown'
+
+        mainFile.addRequirement("kotlin-for-forge")
+        mainFile.addOptional("emi", "jei", "jade", "cc-tweaked")
     }
 }
 

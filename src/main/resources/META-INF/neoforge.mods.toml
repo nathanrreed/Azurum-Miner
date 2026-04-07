@@ -1,8 +1,9 @@
 # Make sure this is set to "kotlinforforge"
 modLoader="kotlinforforge"
-# Make sure this is set to the appropriate version range
 loaderVersion="${loader_version_range}"
 license='${mod_license}'
+
+updateJSONURL="https://api.modrinth.com/updates/azurum-miner/forge_updates.json?neoforge=only"
 
 [[mods]]
 modId="${mod_id}"
@@ -32,9 +33,3 @@ description='''${mod_description}'''
 
 [[mixins]]
 config="azurum_miner.mixins.json"
-
-# Features are specific properties of the game environment, that you may want to declare you require. This example declares
-# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
-# stop your mod loading on the server for example.
-#[features.${mod_id}]
-#openGLVersion="[3.2,)"
