@@ -21,11 +21,11 @@ jobs:
         with:
           file: gradle.properties
           all: true
-          
-      - name: Setup JDK 21
+
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: ${{ steps.gradle_props.outputs.java_version }}
           distribution: 'temurin'
 
       - name: Setup Gradle
@@ -42,8 +42,8 @@ jobs:
           tag_name: v${{ steps.gradle_props.outputs.minecraft_version }}-${{ steps.gradle_props.outputs.mod_version }}
           target_commitish: ${{ github.sha }}
 
-#      - name: Publish
-#        run: sh gradlew curseforge modrinth publish
-#        env:
-#          CURSEFORGE_KEY: ${{ secrets.CURSEFORGE_KEY }}
-#          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish
+        run: sh gradlew curseforge modrinth publish
+        env:
+          CURSEFORGE_KEY: ${{ secrets.CURSEFORGE_KEY }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
