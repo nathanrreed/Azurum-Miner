@@ -43,9 +43,13 @@ public interface IItemBlockEntity extends ISidedBlockEntity {
                 ResourceHandler<ItemResource> external = level.getCapability(Capabilities.Item.BLOCK, pos.relative(direction), direction.getOpposite());
                 ResourceHandler<ItemResource> internal = getItemHandler(direction);
                 if (internal != null && external != null) {
-                    ResourceHandlerUtil.moveStacking(internal, external, this::pushFilter, 8, null); // TODO change speed?
+                    ResourceHandlerUtil.moveStacking(internal, external, this::pushFilter, this.amountOfItemsToTransfer(), null);
                 }
             }
         }
+    }
+
+    default int amountOfItemsToTransfer() {
+        return 8;
     }
 }

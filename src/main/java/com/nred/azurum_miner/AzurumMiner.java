@@ -1,7 +1,8 @@
 package com.nred.azurum_miner;
 
 import com.mojang.logging.LogUtils;
-import com.nred.azurum_miner.config.Config;
+import com.nred.azurum_miner.config.ClientConfig;
+import com.nred.azurum_miner.config.ServerConfig;
 import com.nred.azurum_miner.registration.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,7 +26,8 @@ public class AzurumMiner {
 
         NeoForge.EVENT_BUS.register(this);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

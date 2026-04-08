@@ -45,9 +45,13 @@ public interface IFluidBlockEntity extends ISidedBlockEntity {
                 ResourceHandler<FluidResource> external = level.getCapability(Capabilities.Fluid.BLOCK, pos.relative(direction), direction.getOpposite());
                 ResourceHandler<FluidResource> internal = getFluidHandler(direction);
                 if (internal != null && external != null) {
-                    ResourceHandlerUtil.moveStacking(internal, external, this::pushFilter, 2000, null); // TODO customize amount?
+                    ResourceHandlerUtil.moveStacking(internal, external, this::pushFilter, this.amountOfFluidToTransfer(), null);
                 }
             }
         }
+    }
+
+    default int amountOfFluidToTransfer() {
+        return 2000;
     }
 }

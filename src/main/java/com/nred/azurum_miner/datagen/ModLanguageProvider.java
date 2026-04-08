@@ -62,7 +62,19 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.side_bar.item", "Item Sides Config");
         add(MODID + ".tooltip.side_bar.fluid", "Fluid Sides Config");
         add(MODID + ".tooltip.side_bar.energy", "Energy Sides Config");
-        add(MODID + ".tooltip.side_bar.info", "Block Info");
+        add(MODID + ".tooltip.side_bar.info", "Additional Information");
+        add(MODID + ".tooltip.side_bar.rate", "Transfer Rates");
+        add(MODID + ".tooltip.side_bar.stats", "Statistics");
+
+
+        add(MODID + ".tooltip.side_bar.item_rate", "Item Transfer Rate");
+        add(MODID + ".tooltip.side_bar.fluid_rate", "Fluid Transfer Rate");
+        add(MODID + ".tooltip.side_bar.energy_rate", "Energy Transfer Rate");
+
+        add(MODID + ".tooltip.side_bar.item_rate_per_t", "I: %s/t");
+        add(MODID + ".tooltip.side_bar.fluid_rate_per_t", "F: %s/t");
+        add(MODID + ".tooltip.side_bar.energy_rate_per_t", "E: %s/t");
+
         add(MODID + ".tooltip.tank_info", "Left click with a fluid container item on the tank to fill it\n\nRight click with a fluid container item on the tank to empty it\n\nShift + Left click on the tank to empty it");
 
         add(MODID + ".tooltip.side.input", "Input");
@@ -94,5 +106,11 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".configuration.units", "Units Settings");
         add(MODID + ".configuration.use_buckets", "Use Bucket Units");
         add(MODID + ".configuration.use_buckets.tooltip", "Use Buckets instead of mB");
+
+        add(MODID + ".configuration.side_bar", "Sidebar Settings");
+        add(MODID + ".configuration.allow_multiple_open", "Allows multiple sidebar elements to be open at the same time");
+        add(MODID + ".configuration.show_transfer_rates", "Adds Transfer Rates Element to the sidebar");
+        add(MODID + ".configuration.use_right_side", "Places the sidebar on the right side");
+
     }
 }

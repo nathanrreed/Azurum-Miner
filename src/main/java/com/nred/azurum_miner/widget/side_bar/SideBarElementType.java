@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.nred.azurum_miner.config.Config.ALLOW_MULTIPLE_OPEN;
+import static com.nred.azurum_miner.config.ClientConfig.ALLOW_MULTIPLE_OPEN;
 import static com.nred.azurum_miner.util.Helpers.azLoc;
 
 public enum SideBarElementType implements StringRepresentable {
-    ITEM, FLUID, ENERGY, INFO;
+    ITEM, FLUID, ENERGY, INFO, STATS, RATE;
 
     public static final ArrayList<Boolean> open_list = new ArrayList<>(Arrays.stream(values()).map(_ -> Boolean.FALSE).toList());
 
@@ -29,7 +29,7 @@ public enum SideBarElementType implements StringRepresentable {
     public boolean isItemIcon() {
         return switch (this) {
             case ITEM, FLUID -> true;
-            case INFO, ENERGY -> false;
+            case INFO, ENERGY, STATS, RATE -> false;
         };
     }
 
@@ -37,8 +37,18 @@ public enum SideBarElementType implements StringRepresentable {
         return (switch (this) {
             case ITEM -> Items.CHEST;
             case FLUID -> Items.WATER_BUCKET;
+            case ENERGY -> Items.REDSTONE;
             default -> throw new IllegalStateException("Unexpected value: " + this);
         }).getDefaultInstance();
+    }
+
+    public Identifier spriteIcon() {
+        return switch (this) {
+            case INFO -> azLoc("widget/side_bar/info");
+            case STATS -> azLoc("widget/side_bar/stats");
+            case RATE -> azLoc("widget/side_bar/output");
+            default -> throw new IllegalStateException("Unexpected value: " + this);
+        };
     }
 
     public SideModeType getSideModeType() {
@@ -46,14 +56,6 @@ public enum SideBarElementType implements StringRepresentable {
             case ITEM -> SideModeType.ITEM;
             case FLUID -> SideModeType.FLUID;
             case ENERGY -> SideModeType.ENERGY;
-            default -> throw new IllegalStateException("Unexpected value: " + this);
-        };
-    }
-
-    public Identifier spriteIcon() {
-        return switch (this) {
-            case INFO -> azLoc("widget/side_bar/info");
-            case ENERGY -> azLoc("widget/side_bar/energy"); // TODO
             default -> throw new IllegalStateException("Unexpected value: " + this);
         };
     }
@@ -70,7 +72,7 @@ public enum SideBarElementType implements StringRepresentable {
 
     public int paddingOutside() {
         return switch (this) {
-            case ITEM, FLUID, ENERGY -> -3;
+            case ITEM, FLUID, ENERGY, STATS, RATE -> -3;
             default -> 0;
         };
     }
@@ -86,8 +88,10 @@ public enum SideBarElementType implements StringRepresentable {
         return switch (this) {
             case ITEM -> 0xFFD08739;
             case FLUID -> 0xFF5276AD;
-            case ENERGY -> 0xFFad5252;
-            case INFO -> 0xFFa5aeac;
+            case ENERGY -> 0xFFAD5252;
+            case INFO -> 0xFFA5AEAC;
+            case STATS -> 0xFF46AE97;
+            case RATE -> 0xFFAE4675;
         };
     }
 

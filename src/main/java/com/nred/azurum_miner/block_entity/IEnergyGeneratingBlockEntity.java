@@ -15,7 +15,7 @@ public interface IEnergyGeneratingBlockEntity extends IEnergyBlockEntity {
                 EnergyHandler external = level.getCapability(Capabilities.Energy.BLOCK, pos.relative(direction), direction.getOpposite());
                 EnergyHandler internal = getEnergyHandler(direction);
                 if (internal != null && external != null) {
-                    EnergyHandlerUtil.move(internal, external, 10000, null); // TODO customize amount?
+                    EnergyHandlerUtil.move(internal, external, this.amountOfEnergyToTransfer(), null);
                 }
             }
         }

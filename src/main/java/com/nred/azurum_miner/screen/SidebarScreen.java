@@ -1,16 +1,10 @@
 package com.nred.azurum_miner.screen;
 
-import com.nred.azurum_miner.block_entity.IFluidBlockEntity;
-import com.nred.azurum_miner.block_entity.IInfoBlockEntity;
-import com.nred.azurum_miner.block_entity.IItemBlockEntity;
-import com.nred.azurum_miner.block_entity.ISidedBlockEntity;
+import com.nred.azurum_miner.block_entity.*;
 import com.nred.azurum_miner.menu.BlockEntityMenu;
 import com.nred.azurum_miner.menu.SlotLookup;
 import com.nred.azurum_miner.widget.FluidWidget;
-import com.nred.azurum_miner.widget.side_bar.CollapsableWidget;
-import com.nred.azurum_miner.widget.side_bar.InfoWidget;
-import com.nred.azurum_miner.widget.side_bar.SideBarElementType;
-import com.nred.azurum_miner.widget.side_bar.SideBarHideButton;
+import com.nred.azurum_miner.widget.side_bar.*;
 import com.nred.azurum_miner.widget.side_mode.SideModeWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -24,7 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 
-import static com.nred.azurum_miner.config.Config.USE_RIGHT_SIDE;
+import static com.nred.azurum_miner.config.ClientConfig.SHOW_TRANSFER_RATES;
+import static com.nred.azurum_miner.config.ClientConfig.USE_RIGHT_SIDE;
 
 public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends BlockEntityMenu<B>> extends AbstractContainerScreen<M> {
     private final Identifier background;
@@ -68,11 +63,20 @@ public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends 
         if (menu.blockEntity instanceof IFluidBlockEntity) {
             addRenderableOnly(new SideModeWidget<>(menu.blockEntity, this, SideBarElementType.FLUID));
         }
+        if (menu.blockEntity instanceof IEnergyBlockEntity) {
+            addRenderableOnly(new SideModeWidget<>(menu.blockEntity, this, SideBarElementType.ENERGY));
+        }
+
+        if (SHOW_TRANSFER_RATES.get() && !this.renderables.isEmpty()) {
+            addRenderableOnly(new TransferInfoWidget(menu.blockEntity, this));
+        }
+
+        // TODO make stats ?
+
         if (menu.blockEntity instanceof IInfoBlockEntity) {
             addRenderableOnly(new InfoWidget(this));
         }
 
-        // TODO make stats ?
         this.layout.visitWidgets(this::addRenderableWidget);
         arrangeSidebar();
     }
@@ -104,7 +108,7 @@ public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends 
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) { // TODO move to super
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, this.background, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);

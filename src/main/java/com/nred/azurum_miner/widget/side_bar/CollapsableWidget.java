@@ -18,6 +18,10 @@ public class CollapsableWidget extends GridLayout implements Renderable {
     public final SideBarHideButton sideBarHideButton;
 
     public CollapsableWidget(SidebarScreen<?, ?> screen, SideBarElementType type) {
+        this(screen, type, -1);
+    }
+
+    public CollapsableWidget(SidebarScreen<?, ?> screen, SideBarElementType type, int size) {
         super();
         this.screen = screen;
         this.type = type;
@@ -27,7 +31,12 @@ public class CollapsableWidget extends GridLayout implements Renderable {
 
         this.sideBarHideButton = new SideBarHideButton(screen, type);
 
-        this.addChild(sideBarHideButton, 0, screen.rightSided ? 0 : 2, type.getCellSettings(newCellSettings(), screen.rightSided));
+        LayoutSettings settings = type.getCellSettings(newCellSettings(), screen.rightSided);
+        if (size > 0) {
+            settings.paddingBottom(size * -5);
+        }
+
+        this.addChild(sideBarHideButton, 0, screen.rightSided ? 0 : 2, settings);
     }
 
     @Override

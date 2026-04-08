@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.fluid.FluidTintSource;
 
 import java.text.NumberFormat;
 
-import static com.nred.azurum_miner.config.Config.USE_BUCKETS;
+import static com.nred.azurum_miner.config.ClientConfig.USE_BUCKETS;
 
 public class Helpers {
     public static Identifier azLoc(String path) {
@@ -34,14 +34,62 @@ public class Helpers {
         return getColorTint(fluid, -1);
     }
 
+    public static NumberFormat numberFormater = NumberFormat.getInstance();
+    public static NumberFormat decimalFormater = makeDecimalFormater();
+
+    private static NumberFormat makeDecimalFormater() {
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumFractionDigits(1);
+        numberFormat.setMaximumFractionDigits(2);
+        return numberFormat;
+    }
 
     public static Component getFluidAmount(int amount) {
-        NumberFormat numberFormater = NumberFormat.getInstance();
         if (USE_BUCKETS.get()) {
-            numberFormater.setMinimumFractionDigits(1);
-            return Component.literal(numberFormater.format(amount / 1000) + " B").withStyle(ChatFormatting.WHITE);
+
+            return Component.literal(decimalFormater.format(amount / 1000) + " B").withStyle(ChatFormatting.WHITE);
         }
         return Component.literal(numberFormater.format(amount) + " mB").withStyle(ChatFormatting.WHITE);
+    }
+
+    public static Component getEnergyAmount(double amount) {
+        String string;
+        if ((amount / 1000000000.0) >= 0.999999) {
+            string = String.format("%.1f GFE", amount / 1000000000.0);
+        } else if ((amount / 1000000.0) >= 0.999999) {
+            string = String.format("%.1f MFE", amount / 1000000.0);
+        } else if ((amount / 1000.0) >= 0.999999) {
+            string = String.format("%.1f kFE", amount / 1000.0);
+        } else {
+            string = String.format("%.1f FE", amount);
+        }
+
+        return Component.literal(string).withStyle(ChatFormatting.WHITE);
+    }
+
+    public static String getTime(double ticks) {
+        if (ticks <= 0) {
+            return "0s";
+        }
+
+        double time = Math.max(ticks / 20.0, 0.0);
+        double hours = time / 3600.0;
+        time %= 3600.0;
+        double mins = time / 60.0;
+        time %= 60.0;
+
+        var str = "";
+        if (hours >= 1) {
+            str += String.format("%.1fh ", hours);
+        }
+        if (mins >= 1) {
+            str += String.format("%.1fm ", mins);
+        }
+        if (time >= 0) {
+            str += String.format("%.1fs", time);
+        }
+
+        return str.trim();
     }
 
     public static Direction getRelative(Direction facing, Direction direction) {

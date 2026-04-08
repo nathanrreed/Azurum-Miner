@@ -11,8 +11,8 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import java.util.List;
 
 import static com.nred.azurum_miner.AzurumMiner.MODID;
-import static com.nred.azurum_miner.config.Config.CAPACITY_COLOUR;
-import static com.nred.azurum_miner.config.Config.FLUID_COLOUR;
+import static com.nred.azurum_miner.config.ClientConfig.CAPACITY_COLOUR;
+import static com.nred.azurum_miner.config.ClientConfig.FLUID_COLOUR;
 import static com.nred.azurum_miner.util.Helpers.getFluidAmount;
 
 public class FluidTooltipComponent implements ClientTooltipComponent, TooltipComponent {

@@ -20,4 +20,8 @@ public interface IEnergyBlockEntity extends ISidedBlockEntity {
             return new SidedEnergyHandler(getEnergyHandler(), this, side);
         }
     }
+
+    default int amountOfEnergyToTransfer() {
+        return 10000;
+    }
 }

@@ -16,7 +16,7 @@ public interface ISidedBlockEntity {
         return switch (sideModeType) {
             case ITEM -> getSideItemMode(side);
             case FLUID -> getSideFluidMode(side);
-            default -> throw new IllegalStateException("Unexpected value: " + sideModeType);
+            case ENERGY -> getSideEnergyMode(side);
         };
     }
 

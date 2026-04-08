@@ -1,7 +1,6 @@
 package com.nred.azurum_miner;
 
 import com.nred.azurum_miner.config.ModConfigScreen;
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -20,7 +19,5 @@ public class ModClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        AzurumMiner.LOGGER.info("HELLO FROM CLIENT SETUP");
-        AzurumMiner.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }

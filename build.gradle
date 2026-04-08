@@ -1,8 +1,12 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
+    id "com.modrinth.minotaur" version "2.+"
+    id 'net.darkhax.curseforgegradle' version "1.1.15"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -161,6 +165,41 @@ publishing {
             url "file://${project.projectDir}/repo"
         }
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "azurum-miner"
+    versionNumber = "${mod_version}"
+    versionType = "${release_type}"
+    uploadFile = jar
+    gameVersions.add("${minecraft_version}")
+    loaders = ["neoforge"]
+    dependencies {
+        optional.project "emi"
+        optional.project "jei"
+        optional.project "jade"
+        optional.project "cc-tweaked"
+    }
+    changelog = rootProject.file("Changelog.md").text
+    syncBodyFrom = rootProject.file("README.md").text
+}
+
+tasks.register('curseforge', TaskPublishCurseForge) {
+    setGroup('publishing')
+    setDescription('Upload project to CurseForge')
+    apiToken = System.getenv('CURSEFORGE_KEY')
+
+    // The main file to upload
+    def mainFile = upload(1157278, jar)
+    mainFile.releaseType = "${release_type}"
+    mainFile.addJavaVersion("Java ${java_version}")
+    mainFile.addGameVersion("${minecraft_version}")
+    mainFile.addModLoader("NeoForge")
+    mainFile.changelog = rootProject.file("Changelog.md").text
+    mainFile.changelogType = 'markdown'
+
+    mainFile.addOptional("emi", "jei", "jade", "cc-tweaked")
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
 import net.minecraft.network.chat.Component;
 
-import static com.nred.azurum_miner.config.Config.USE_RIGHT_SIDE;
+import static com.nred.azurum_miner.config.ClientConfig.USE_RIGHT_SIDE;
 
 public class ScrollingTextWidget extends FittingMultiLineTextWidget {
     private static final Font font = Minecraft.getInstance().font;
