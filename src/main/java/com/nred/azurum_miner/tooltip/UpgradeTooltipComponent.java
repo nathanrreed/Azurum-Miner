@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.tooltip;
 
 import com.nred.azurum_miner.data_components.UpgradeComponent;
+import com.nred.azurum_miner.util.DataMapUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static com.nred.azurum_miner.AzurumMiner.MODID;
 import static com.nred.azurum_miner.config.ClientConfig.*;
-import static com.nred.azurum_miner.config.ServerConfig.UPGRADE_MB_PER_TICK;
+import static com.nred.azurum_miner.registration.DataMapRegistration.COOLING_TYPE_DATA;
 import static com.nred.azurum_miner.util.Helpers.getPercentage;
 
 public class UpgradeTooltipComponent implements ClientTooltipComponent, TooltipComponent {
@@ -34,9 +35,9 @@ public class UpgradeTooltipComponent implements ClientTooltipComponent, TooltipC
 
     public List<Component> getText() {
         return List.of(
+                Component.translatable(MODID + ".tooltip.upgrade.coolant", upgradeContent.fluidStack().getFluidType().getDescription().copy().withStyle(ChatFormatting.WHITE).append(" " + DataMapUtil.dataMapFluid(COOLING_TYPE_DATA,upgradeContent.fluidStack().getFluid()).coolant_per_cycle() + "mB")).withColor(FLUID_COLOUR.get()),
                 Component.translatable(MODID + ".tooltip.upgrade.speed", getPercentage(upgradeContent.speed())).withColor(SPEED_COLOUR.get()),
-                Component.translatable(MODID + ".tooltip.upgrade.energy", getPercentage(upgradeContent.energy())).withColor(ENERGY_COLOUR.get()),
-                Component.translatable(MODID + ".tooltip.upgrade.coolant", upgradeContent.fluidStack().getFluidType().getDescription().copy().withStyle(ChatFormatting.WHITE).append(" " + UPGRADE_MB_PER_TICK.get() + "mB/t")).withColor(FLUID_COLOUR.get())
+                Component.translatable(MODID + ".tooltip.upgrade.energy", getPercentage(upgradeContent.energy())).withColor(ENERGY_COLOUR.get())
         );
     }
 

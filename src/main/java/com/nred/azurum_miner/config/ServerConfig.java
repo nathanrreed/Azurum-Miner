@@ -4,14 +4,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-import static com.nred.azurum_miner.AzurumMiner.MODID;
-
 public class ServerConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec.IntValue UPGRADE_MB_PER_TICK = BUILDER
-            .translation(MODID + ".configuration.coolant_mb_per_tick")
-            .defineInRange("upgrades.coolant_mb_per_tick", 10, 1, Integer.MAX_VALUE);
+//    public static final ModConfigSpec.IntValue UPGRADE_MB_PER_TICK = BUILDER
+//            .translation(MODID + ".configuration.coolant_mb_per_tick")
+//            .defineInRange("upgrades.coolant_mb_per_tick", 10, 1, Integer.MAX_VALUE);
 
 
     public static final ModConfigSpec SPEC = BUILDER.build();

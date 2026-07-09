@@ -1,14 +1,17 @@
 {
   "values": {
     "minecraft:empty": {
-      "max_heat": 64
+      "coolant_per_cycle": 0,
+      "max_heat": 48
     },
     "minecraft:lava": {
+      "coolant_per_cycle": 250,
       "energy": -0.5,
       "max_heat": 16,
       "speed": 4.0
     },
     "minecraft:water": {
+      "coolant_per_cycle": 1000,
       "max_heat": 128
     }
   }

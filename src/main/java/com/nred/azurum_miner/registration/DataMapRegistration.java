@@ -2,6 +2,7 @@ package com.nred.azurum_miner.registration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.nred.azurum_miner.util.DataMapUtil;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -38,21 +39,23 @@ public class DataMapRegistration {
         }
     }
 
-    public record CoolantTypeData(int max_heat, double speed, double energy) implements TooltipDataMap<Fluid> {
-        public CoolantTypeData(int max_heat) {
-            this(max_heat, 0, 0);
+    public record CoolantTypeData(int max_heat, double speed, double energy, int coolant_per_cycle) implements TooltipDataMap<Fluid> {
+        public CoolantTypeData(int max_heat, int coolant_per_cycle) {
+            this(max_heat, 0, 0, coolant_per_cycle);
         }
 
         public static final Codec<CoolantTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.fieldOf("max_heat").forGetter(CoolantTypeData::max_heat),
                 Codec.DOUBLE.optionalFieldOf("speed", 0.0).forGetter(CoolantTypeData::speed),
-                Codec.DOUBLE.optionalFieldOf("energy", 0.0).forGetter(CoolantTypeData::energy)
+                Codec.DOUBLE.optionalFieldOf("energy", 0.0).forGetter(CoolantTypeData::energy),
+                Codec.INT.fieldOf("coolant_per_cycle").forGetter(CoolantTypeData::coolant_per_cycle)
         ).apply(instance, CoolantTypeData::new));
 
         @Override
         public Tooltip tooltip(Fluid element) {
             return Tooltip.create(Component.translatable(MODID + ".tooltip.upgrade.coolant_type_data",
                     Component.translatable(element.getFluidType().getDescriptionId()),
+                    Component.translatable(MODID + ".tooltip.upgrade.coolant", DataMapUtil.dataMapFluid(COOLING_TYPE_DATA, element).coolant_per_cycle() + "mB").withColor(FLUID_COLOUR.get()),
                     Component.translatable(MODID + ".tooltip.upgrade.max_heat", "§f" + max_heat).withColor(HEAT_COLOUR.get()),
                     Component.translatable(MODID + ".tooltip.upgrade.speed", getPercentage(speed)).withColor(SPEED_COLOUR.get()),
                     Component.translatable(MODID + ".tooltip.upgrade.energy", getPercentage(energy)).withColor(ENERGY_COLOUR.get())

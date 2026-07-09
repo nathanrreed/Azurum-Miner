@@ -16,6 +16,7 @@ public class ModDataMapProvider extends DataMapProvider {
         super(packOutput, lookupProvider);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void gather(HolderLookup.Provider provider) {
         this.builder(CARD_TYPE_DATA)
@@ -26,18 +27,18 @@ public class ModDataMapProvider extends DataMapProvider {
         ;
 
         this.builder(COOLING_TYPE_DATA)
-                .add(Fluids.EMPTY.builtInRegistryHolder(), new CoolantTypeData(64), false)
-                .add(Fluids.WATER.builtInRegistryHolder(), new CoolantTypeData(128), false)
-                .add(Fluids.LAVA.builtInRegistryHolder(), new CoolantTypeData(16, 4.0, -0.5), false)
+                .add(Fluids.EMPTY.builtInRegistryHolder(), new CoolantTypeData(48, 0), false)
+                .add(Fluids.WATER.builtInRegistryHolder(), new CoolantTypeData(128, 1000), false)
+                .add(Fluids.LAVA.builtInRegistryHolder(), new CoolantTypeData(16, 4.0, -0.5, 250), false)
         ;
         this.builder(MODIFIER_TYPE_DATA)
-                .add(Items.REDSTONE.builtInRegistryHolder(), new ModifierTypeData(1, 2, 0.1, 0.12), false)
+                .add(Items.REDSTONE.builtInRegistryHolder(), new ModifierTypeData(1, 3, 0.1, 0.12), false)
                 .add(Items.GLOWSTONE_DUST.builtInRegistryHolder(), new ModifierTypeData(2, 4, 0.0, -0.15), false)
-                .add(Items.LAPIS_LAZULI.builtInRegistryHolder(), new ModifierTypeData(3, 0, 0.3, 0.2), false)
-                .add(Items.ENDER_PEARL.builtInRegistryHolder(), new ModifierTypeData(5, 2, -0.2, 0.5), false)
-                .add(Items.BLAZE_POWDER.builtInRegistryHolder(), new ModifierTypeData(6, 32, 5.0, 1.5), false)
-                .add(Items.DIAMOND.builtInRegistryHolder(), new ModifierTypeData(8, 12, 1.0, 1.5), false)
-                .add(Items.EMERALD.builtInRegistryHolder(), new ModifierTypeData(12, 16, 1.5, 0.5), false)
+                .add(Items.LAPIS_LAZULI.builtInRegistryHolder(), new ModifierTypeData(4, 0, 0.2, 0.2), false)
+                .add(Items.ENDER_PEARL.builtInRegistryHolder(), new ModifierTypeData(5, 2, -0.2, -0.5), false)
+                .add(Items.BLAZE_POWDER.builtInRegistryHolder(), new ModifierTypeData(8, 32, 2.0, 1.5), false)
+                .add(Items.DIAMOND.builtInRegistryHolder(), new ModifierTypeData(10, 12, 1.0, 1.5), false)
+                .add(Items.EMERALD.builtInRegistryHolder(), new ModifierTypeData(20, 16, 1.5, 0.5), false)
 
         // TODO add uniques like chunk loading or silk touch for miner?
 

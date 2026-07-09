@@ -114,7 +114,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.upgrade.complexity.desc", "Complexity: a constraint as well as the multiple for what is needed to craft the upgrade");
 
         add(MODID + ".tooltip.upgrade.card_type_data", "%s\n%s");
-        add(MODID + ".tooltip.upgrade.coolant_type_data", "%s\n%s\n%s\n%s");
+        add(MODID + ".tooltip.upgrade.coolant_type_data", "%s\n%s per cycle\n%s\n%s\n%s");
         add(MODID + ".tooltip.upgrade.modifier_type_data", "%s\n%s\n%s\n%s\n%s");
 
         add(MODID + ".tooltip.upgrade.card_type", "Card Type");
@@ -163,9 +163,5 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".configuration.show_transfer_rates.tooltip", "Adds Transfer Rates Element to the sidebar");
         add(MODID + ".configuration.use_right_side", "Right Sided Sidebar");
         add(MODID + ".configuration.use_right_side.tooltip", "Places the sidebar on the right side");
-
-        add(MODID + ".configuration.upgrades", "Upgrade Settings");
-        add(MODID + ".configuration.coolant_mb_per_tick", "Coolant usage");
-        add(MODID + ".configuration.coolant_mb_per_tick.tooltip", "Amount of coolant in mB needed per tick to operate the machine with the upgrade");
     }
 }
