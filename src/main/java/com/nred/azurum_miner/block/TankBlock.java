@@ -19,6 +19,8 @@ public class TankBlock extends TickingBlock<TankBlockEntity> {
 
     public static final MapCodec<TankBlock> CODEC = simpleCodec(TankBlock::new);
 
+    // TODO add size variants?
+
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;

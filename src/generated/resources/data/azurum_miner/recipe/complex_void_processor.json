@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "minecraft:crafter",
     "D": "azurum_miner:conglomerate_of_ore_shard",

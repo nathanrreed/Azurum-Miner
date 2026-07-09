@@ -48,7 +48,7 @@ public class ModConfigScreen extends ConfigurationScreen.ConfigurationSectionScr
         if (element.widget() instanceof Button btn) {
             return new Element(element.name(), element.tooltip(),
                     Button.builder(btn.getMessage(),
-                                    button -> minecraft.setScreen(sectionCache.computeIfAbsent(key,
+                                    button -> minecraft.gui.setScreen(sectionCache.computeIfAbsent(key,
                                             k -> new ModConfigScreen(context, this, subconfig.valueMap(), key, subsection.entrySet(), Component.translatable(getTranslationKey(key))).rebuild())))
                             .tooltip(Tooltip.create(getTooltipComponent(key, null)))
                             .width(btn.getWidth())

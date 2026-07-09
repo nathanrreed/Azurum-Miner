@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public abstract class TickingBlockEntity extends BlockEntity implements ITickingBlockEntity, MenuProvider { // TODO BaseContainerBlockEntity implements WorldlyContainer
+public abstract class TickingBlockEntity extends BlockEntity implements ITickingBlockEntity, MenuProvider {
     public TickingBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
     }

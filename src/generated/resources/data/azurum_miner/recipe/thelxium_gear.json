@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "B": "azurum_miner:thelxium_block",
     "N": "azurum_miner:thelxium_nugget"

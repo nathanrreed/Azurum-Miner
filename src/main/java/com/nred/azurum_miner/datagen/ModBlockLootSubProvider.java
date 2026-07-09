@@ -48,6 +48,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
         dropSelf(CONGLOMERATE_OF_ORE_BLOCK.get());
         dropSelf(CONGLOMERATE_OF_ORE.get());
         dropSelf(ENERGIZED_OBSIDIAN.get());
+        dropSelf(UPGRADE_TABLE_BLOCK.get());
 
         createTankDrop(TANK_BLOCK.get());
 

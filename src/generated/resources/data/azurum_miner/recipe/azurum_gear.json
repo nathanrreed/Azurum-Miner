@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "B": "azurum_miner:azurum_block",
     "N": "azurum_miner:azurum_nugget"

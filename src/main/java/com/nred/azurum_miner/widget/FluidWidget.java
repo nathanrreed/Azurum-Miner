@@ -2,6 +2,7 @@ package com.nred.azurum_miner.widget;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.nred.azurum_miner.block_entity.IFluidBlockEntity;
+import com.nred.azurum_miner.menu.BasicBlockEntityMenu;
 import com.nred.azurum_miner.menu.BlockEntityMenu;
 import com.nred.azurum_miner.network.FluidTankTransferPayload;
 import com.nred.azurum_miner.network.FluidTankTransferPayload.FluidTransferAction;
@@ -32,13 +33,13 @@ import static com.nred.azurum_miner.util.Helpers.azLoc;
 
 public class FluidWidget<T extends IFluidBlockEntity> extends AbstractWidget {
     private final T blockEntity;
-    private final BlockEntityMenu<?> menu;
+    private final BasicBlockEntityMenu<?> menu;
     private final int index;
     private final RangedResourceHandler<FluidResource> fluidHandler;
 
     private static final Identifier TANK = azLoc("widget/tank/fluid_tank");
 
-    public FluidWidget(T blockEntity, BlockEntityMenu<?> menu, int x, int y, ScreenRectangle rectangle, int index) {
+    public FluidWidget(T blockEntity, BasicBlockEntityMenu<?> menu, int x, int y, ScreenRectangle rectangle, int index) {
         super(x + rectangle.left(), y + rectangle.top(), rectangle.width(), rectangle.height(), Component.empty()); // TODO
         this.blockEntity = blockEntity;
         this.menu = menu;

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "A": "azurum_miner:azurum_nugget",
     "E": "azurum_miner:ender_diamond",

@@ -9,7 +9,6 @@ issueTrackerURL="https://github.com/nathanrreed/Azurum-Miner/issues/"
     updateJSONURL="https://api.modrinth.com/updates/azurum-miner/forge_updates.json?neoforge=only"
     displayURL="https://github.com/nathanrreed/Azurum-Miner"
     authors="${mod_authors}"
-    #credits="" #optional
     description='''${mod_description}'''
 
 [[mixins]]

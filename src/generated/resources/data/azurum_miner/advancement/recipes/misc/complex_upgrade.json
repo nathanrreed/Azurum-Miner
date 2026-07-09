@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_complex_upgrade": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:complex_void_processor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:complex_upgrade"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_complex_upgrade"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:complex_upgrade"
+    ]
+  }
+}

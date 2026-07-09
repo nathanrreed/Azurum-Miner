@@ -7,31 +7,24 @@ import com.nred.azurum_miner.handler.ResourceHandlerTypedSlot.ResourceHandlerOut
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.IntegerRange;
 
-import static com.nred.azurum_miner.registration.MenuRegistration.TANK_MENU;
-
-public class BlockEntityMenu<T extends BlockEntity> extends AbstractContainerMenu {
-    public T blockEntity;
-    public Player player;
-    private IntegerRange itemInputSlots = IntegerRange.of(0, 0);
-    private IntegerRange itemOutputSlots = IntegerRange.of(0, 0);
+public class BlockEntityMenu<T extends BlockEntity> extends BasicBlockEntityMenu<T> {
+    protected IntegerRange itemInputSlots = IntegerRange.of(0, 0);
+    protected IntegerRange itemOutputSlots = IntegerRange.of(0, 0);
 
     public BlockEntityMenu(MenuType<?> menuType, SlotLookup slotLookup, int containerId, Inventory playerInventory, FriendlyByteBuf extraData) { // Client
         this(menuType, slotLookup, containerId, playerInventory, (T) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     public BlockEntityMenu(MenuType<?> menuType, SlotLookup slotLookup, int containerId, Inventory playerInventory, T blockEntity) { // Server
-        super(menuType, containerId);
-        this.blockEntity = blockEntity;
-        this.player = playerInventory.player;
+        super(menuType, containerId, playerInventory, blockEntity);
 
-        this.addStandardInventorySlots(playerInventory, 8, 84);
+        this.addStandardInventorySlots(playerInventory, slotLookup.invX(), slotLookup.invY());
 
         if (blockEntity instanceof IItemBlockEntity itemBlockEntity) {
             AwareItemStacksResourceHandler itemHandler = itemBlockEntity.getInternalItemHandler();
@@ -94,10 +87,5 @@ public class BlockEntityMenu<T extends BlockEntity> extends AbstractContainerMen
         }
 
         return quickMovedStack;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return player.isWithinBlockInteractionRange(blockEntity.getBlockPos(), 4.0);
     }
 }

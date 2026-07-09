@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "thelxium_ingot",
   "key": {
     "#": "azurum_miner:thelxium_nugget"

@@ -1,0 +1,46 @@
+{
+  "values": {
+    "minecraft:blaze_powder": {
+      "complexity": 6,
+      "energy": 1.5,
+      "heat": 32,
+      "speed": 5.0
+    },
+    "minecraft:diamond": {
+      "complexity": 8,
+      "energy": 1.5,
+      "heat": 12,
+      "speed": 1.0
+    },
+    "minecraft:emerald": {
+      "complexity": 12,
+      "energy": 0.5,
+      "heat": 16,
+      "speed": 1.5
+    },
+    "minecraft:ender_pearl": {
+      "complexity": 5,
+      "energy": 0.5,
+      "heat": 2,
+      "speed": -0.2
+    },
+    "minecraft:glowstone_dust": {
+      "complexity": 2,
+      "energy": -0.15,
+      "heat": 4,
+      "speed": 0.0
+    },
+    "minecraft:lapis_lazuli": {
+      "complexity": 3,
+      "energy": 0.2,
+      "heat": 0,
+      "speed": 0.3
+    },
+    "minecraft:redstone": {
+      "complexity": 1,
+      "energy": 0.12,
+      "heat": 2,
+      "speed": 0.1
+    }
+  }
+}

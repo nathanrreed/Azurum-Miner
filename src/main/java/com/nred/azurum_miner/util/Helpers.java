@@ -12,9 +12,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.fluid.FluidTintSource;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import static com.nred.azurum_miner.config.ClientConfig.USE_BUCKETS;
+import static com.nred.azurum_miner.config.ClientConfig.USE_PERCENTAGE;
 
 public class Helpers {
     public static Identifier azLoc(String path) {
@@ -35,21 +37,21 @@ public class Helpers {
     }
 
     public static NumberFormat numberFormater = NumberFormat.getInstance();
-    public static NumberFormat decimalFormater = makeDecimalFormater();
-
-    private static NumberFormat makeDecimalFormater() {
-        NumberFormat numberFormat = NumberFormat.getInstance();
-        numberFormat.setMinimumFractionDigits(1);
-        numberFormat.setMaximumFractionDigits(2);
-        return numberFormat;
-    }
+    public static NumberFormat decimalFormater = new DecimalFormat("0.0#");
 
     public static Component getFluidAmount(int amount) {
         if (USE_BUCKETS.get()) {
-
             return Component.literal(decimalFormater.format(amount / 1000) + " B").withStyle(ChatFormatting.WHITE);
         }
         return Component.literal(numberFormater.format(amount) + " mB").withStyle(ChatFormatting.WHITE);
+    }
+
+    public static Component getPercentage(double amount) {
+        if (USE_PERCENTAGE.get()) {
+            return Component.literal((amount >= 0 ? "+" : "") + decimalFormater.format((amount - 1) * 100) + "%").withStyle(ChatFormatting.WHITE);
+        } else {
+            return Component.literal((amount >= 0 ? "+" : "") + decimalFormater.format(amount) + "x").withStyle(ChatFormatting.WHITE);
+        }
     }
 
     public static Component getEnergyAmount(double amount) {

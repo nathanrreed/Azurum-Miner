@@ -1,0 +1,15 @@
+{
+  "values": {
+    "minecraft:empty": {
+      "max_heat": 64
+    },
+    "minecraft:lava": {
+      "energy": -0.5,
+      "max_heat": 16,
+      "speed": 4.0
+    },
+    "minecraft:water": {
+      "max_heat": 128
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "azurum_miner:upgrade"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_void_processor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "azurum_miner:void_processor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_void_processor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "azurum_miner:upgrade"
+    ]
+  }
+}

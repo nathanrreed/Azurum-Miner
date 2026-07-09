@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "A": "azurum_miner:azurum_gear",
     "G": "azurum_miner:galibium_gear",

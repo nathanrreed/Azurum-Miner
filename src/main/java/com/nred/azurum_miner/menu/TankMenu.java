@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import static com.nred.azurum_miner.registration.MenuRegistration.TANK_MENU;
 
-public class TankMenu extends BlockEntityMenu<TankBlockEntity> { // TODO is this needed?
+public class TankMenu extends BlockEntityMenu<TankBlockEntity> {
     public TankMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
         super(TANK_MENU.get(), SlotLookup.TANK, containerId, playerInventory, extraData);
     }

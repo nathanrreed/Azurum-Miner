@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "minecraft:crafting_table",
+    "G": "minecraft:glowstone_dust",
+    "I": "minecraft:iron_ingot",
+    "L": "minecraft:lapis_lazuli",
+    "R": "minecraft:redstone",
+    "U": "azurum_miner:simple_upgrade"
+  },
+  "pattern": [
+    "RGL",
+    "UCU",
+    "III"
+  ],
+  "result": {
+    "id": "azurum_miner:upgrade_table"
+  }
+}

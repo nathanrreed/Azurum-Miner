@@ -17,6 +17,7 @@
     "azurum_miner:raw_palestium_block",
     "azurum_miner:conglomerate_of_ore",
     "azurum_miner:conglomerate_of_ore_block",
-    "azurum_miner:energized_obsidian_block"
+    "azurum_miner:energized_obsidian_block",
+    "azurum_miner:upgrade_table"
   ]
 }

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "group": "galibium_ingot",
   "ingredients": [
     "azurum_miner:galibium_block"

@@ -25,7 +25,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 
 //        tag(Tags.Items.BUCKETS); TODO add
 
-        tag(Tags.Items.OBSIDIANS).add(ENERGIZED_OBSIDIAN.asItem());
+        tag(Tags.Items.OBSIDIANS).add(ENERGIZED_OBSIDIAN.asItem().builtInRegistryHolder().getKey());
 
         // TODO add miner tags
     }

@@ -1,0 +1,7 @@
+{
+  "parent": "azurum_miner:block/machine",
+  "textures": {
+    "all": "azurum_miner:block/upgrade_table",
+    "particle": "azurum_miner:block/upgrade_table"
+  }
+}

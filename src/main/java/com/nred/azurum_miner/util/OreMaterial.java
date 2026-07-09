@@ -64,29 +64,30 @@ public class OreMaterial {
         this.found_in_ground = found_in_ground;
     }
 
-    public void setItemTags(Function<TagKey<Item>, TagAppender<Item, Item>> itemTag) {
-        itemTag.apply(Tags.Items.ORES).add(ore.asItem(), deepslate_ore.asItem());
-        itemTag.apply(Tags.Items.ORE_RATES_SINGULAR).add(ore.asItem(), deepslate_ore.asItem());
+    public void setItemTags(Function<TagKey<Item>, TagAppender<Item>> itemTag) {
+        itemTag.apply(Tags.Items.ORES).add(ore.asItem().builtInRegistryHolder().getKey(), deepslate_ore.asItem().builtInRegistryHolder().getKey());
+        itemTag.apply(Tags.Items.ORE_RATES_SINGULAR).add(ore.asItem().builtInRegistryHolder().getKey(), deepslate_ore.asItem().builtInRegistryHolder().getKey());
 
         if (found_in_ground) {
-            itemTag.apply(Tags.Items.ORES_IN_GROUND_STONE).add(ore.asItem());
-            itemTag.apply(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(deepslate_ore.asItem());
+            itemTag.apply(Tags.Items.ORES_IN_GROUND_STONE).add(ore.asItem().builtInRegistryHolder().getKey());
+            itemTag.apply(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(deepslate_ore.asItem().builtInRegistryHolder().getKey());
         }
 
-        itemTag.apply(Tags.Items.STORAGE_BLOCKS).add(ingot_block.asItem());
-        itemTag.apply(block_tag).add(ore.asItem());
-        itemTag.apply(ore_tag).add(ore.asItem(), deepslate_ore.asItem());
+        itemTag.apply(Tags.Items.STORAGE_BLOCKS).add(ingot_block.asItem().builtInRegistryHolder().getKey());
+        itemTag.apply(block_tag).add(ore.asItem().builtInRegistryHolder().getKey());
+        itemTag.apply(ore_tag).add(ore.asItem().builtInRegistryHolder().getKey(), deepslate_ore.asItem().builtInRegistryHolder().getKey());
 
-        itemTag.apply(Tags.Items.INGOTS).add(ingot.get());
-        itemTag.apply(Tags.Items.NUGGETS).add(nugget.get());
-        itemTag.apply(ingot_tag).add(ingot.get());
-        itemTag.apply(nugget_tag).add(nugget.get());
+        itemTag.apply(Tags.Items.INGOTS).add(ingot.getKey());
+        itemTag.apply(Tags.Items.NUGGETS).add(nugget.getKey());
+        itemTag.apply(ingot_tag).add(ingot.getKey());
+        itemTag.apply(nugget_tag).add(nugget.getKey());
     }
 
-    public void setBlockTags(Function<TagKey<Block>, TagAppender<Block, Block>> blockTag) {
-        blockTag.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.get(), deepslate_ore.get(), ingot_block.get());
-        blockTag.apply(BlockTags.NEEDS_DIAMOND_TOOL).add(ore.get(), deepslate_ore.get());
-        blockTag.apply(BlockTags.NEEDS_IRON_TOOL).add(ingot_block.get());
+    @SuppressWarnings("unchecked")
+    public void setBlockTags(Function<TagKey<Block>, TagAppender<Block>> blockTag) {
+        blockTag.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(ore.getKey(), deepslate_ore.getKey(), ingot_block.getKey());
+        blockTag.apply(BlockTags.NEEDS_DIAMOND_TOOL).add(ore.getKey(), deepslate_ore.getKey());
+        blockTag.apply(BlockTags.NEEDS_IRON_TOOL).add(ingot_block.getKey());
     }
 
     public void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
@@ -123,11 +124,11 @@ public class OreMaterial {
         }
 
         @Override
-        public void setItemTags(Function<TagKey<Item>, TagAppender<Item, Item>> itemTag) {
+        public void setItemTags(Function<TagKey<Item>, TagAppender<Item>> itemTag) {
             super.setItemTags(itemTag);
 
-            itemTag.apply(ModTags.Items.SHARD).add(shard.get());
-            itemTag.apply(shard_tag).add(shard.get());
+            itemTag.apply(ModTags.Items.SHARD).add(shard.getKey());
+            itemTag.apply(shard_tag).add(shard.getKey());
         }
 
         @Override
@@ -165,20 +166,21 @@ public class OreMaterial {
         }
 
         @Override
-        public void setItemTags(Function<TagKey<Item>, TagAppender<Item, Item>> itemTag) {
+        public void setItemTags(Function<TagKey<Item>, TagAppender<Item>> itemTag) {
             super.setItemTags(itemTag);
 
-            itemTag.apply(Tags.Items.RAW_MATERIALS).add(raw.get());
-            itemTag.apply(Tags.Items.STORAGE_BLOCKS).add(raw_block.asItem());
-            itemTag.apply(raw_tag).add(raw.get());
-            itemTag.apply(raw_block_tag).add(raw_block.asItem());
+            itemTag.apply(Tags.Items.RAW_MATERIALS).add(raw.getKey());
+            itemTag.apply(Tags.Items.STORAGE_BLOCKS).add(raw_block.asItem().builtInRegistryHolder().getKey());
+            itemTag.apply(raw_tag).add(raw.getKey());
+            itemTag.apply(raw_block_tag).add(raw_block.asItem().builtInRegistryHolder().getKey());
         }
 
+
         @Override
-        public void setBlockTags(Function<TagKey<Block>, TagAppender<Block, Block>> blockTag) {
+        public void setBlockTags(Function<TagKey<Block>, TagAppender<Block>> blockTag) {
             super.setBlockTags(blockTag);
-            blockTag.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(raw_block.get());
-            blockTag.apply(BlockTags.NEEDS_IRON_TOOL).add(raw_block.get());
+            blockTag.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(raw_block.getKey());
+            blockTag.apply(BlockTags.NEEDS_IRON_TOOL).add(raw_block.getKey());
         }
 
         @Override

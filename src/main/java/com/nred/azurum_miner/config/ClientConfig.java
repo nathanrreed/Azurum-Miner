@@ -17,6 +17,14 @@ public class ClientConfig {
             .translation(MODID + ".configuration.energy_colour")
             .define("colours.energy_colour", CommonColors.YELLOW);
 
+    public static final ModConfigSpec.ConfigValue<Integer> COMPLEXITY_COLOUR = BUILDER
+            .translation(MODID + ".configuration.complexity_colour")
+            .define("colours.complexity_colour", CommonColors.COSMOS_PINK);
+
+    public static final ModConfigSpec.ConfigValue<Integer> HEAT_COLOUR = BUILDER
+            .translation(MODID + ".configuration.heat_colour")
+            .define("colours.heat_colour", CommonColors.SOFT_RED);
+
     public static final ModConfigSpec.ConfigValue<Integer> FLUID_COLOUR = BUILDER
             .translation(MODID + ".configuration.fluid_colour")
             .define("colours.fluid_colour", 0XFF4ED5ED);
@@ -30,6 +38,10 @@ public class ClientConfig {
     public static final ModConfigSpec.BooleanValue USE_BUCKETS = BUILDER
             .translation(MODID + ".configuration.use_buckets")
             .define("units.use_buckets", false);
+
+    public static final ModConfigSpec.BooleanValue USE_PERCENTAGE = BUILDER
+            .translation(MODID + ".configuration.use_percentage")
+            .define("units.use_percentage", false);
 
 
     public static final ModConfigSpec.BooleanValue USE_RIGHT_SIDE = BUILDER

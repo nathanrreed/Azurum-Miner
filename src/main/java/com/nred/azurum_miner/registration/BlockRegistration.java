@@ -1,6 +1,7 @@
 package com.nred.azurum_miner.registration;
 
 import com.nred.azurum_miner.block.TankBlock;
+import com.nred.azurum_miner.block.UpgradeSchematicTableBlock;
 import com.nred.azurum_miner.item.TankItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -24,6 +25,29 @@ public class BlockRegistration {
     public static final DeferredBlock<Block> CONGLOMERATE_OF_ORE_BLOCK = registerBlock("conglomerate_of_ore_block", p -> p.mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(5.0F, 1200.0F));
 
     public static final DeferredBlock<Block> TANK_BLOCK = registerBlock("tank", TankBlock::new, TankItem::new, p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_BLUE).strength(1F), p -> p.stacksTo(1));
+
+    public static final DeferredBlock<Block> UPGRADE_TABLE_BLOCK = registerBlock("upgrade_table", UpgradeSchematicTableBlock::new, p -> p);
+
+    /** Machines
+     * Simple Generator
+     * Infuser
+     * Liquifier
+     * Dimensional Transmogrifier
+     * Dimensional Siphon ????
+     * Crystallizer
+     * Miner
+     * Pump
+     *  - ? Requires Dimensional Focus to get outside of Atmospheric Condenser options
+     * Atmospheric Condenser
+     *  - Slow version of pump that only has 1 option per dimension
+     *  - Can be used to fill Dimensional Focus
+     * Portal Automater
+     * Upgrade Schematic Table
+     *  - Used to design upgrade
+     * Upgrade Assembler
+     *  - Used to create upgrade from design
+    */
+
 
     public static DeferredBlock<Block> registerBlock(String name, UnaryOperator<BlockBehaviour.Properties> properties) {
         DeferredBlock<Block> block = BLOCKS.registerSimpleBlock(name, properties);

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "group": "palestium_ingot",
   "ingredients": [
     "azurum_miner:palestium_block"

@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.InfiniteResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -76,7 +77,7 @@ public abstract class TickingBlock<T extends TickingBlockEntity> extends BaseEnt
                 ResourceHandler<FluidResource> fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
                 ResourceStack<FluidResource> rtn = ResourceHandlerUtil.moveFirst(pickup ? fluidHandler : creativeHandler, pickup ? creativeHandler : fluidHandler, _ -> true, Integer.MAX_VALUE, null);
                 if (rtn != null) {
-                    FluidUtil.triggerSoundAndGameEvent(rtn.resource(), level, pos.getCenter(), player, pickup);
+                    FluidUtil.triggerSoundAndGameEvent(rtn.resource(), level, Vec3.atCenterOf(pos), player, pickup);
                     return InteractionResult.SUCCESS;
                 } else {
                     return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
@@ -84,7 +85,7 @@ public abstract class TickingBlock<T extends TickingBlockEntity> extends BaseEnt
             }
         }
 
-        if (FluidUtil.interactWithFluidHandler(player, hand, level, pos, null)) { // TODO fix block fake placing
+        if (FluidUtil.interactWithFluidHandler(player, hand, level, pos, null, null)) { // TODO fix block fake placing
             return InteractionResult.SUCCESS;
         }
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);

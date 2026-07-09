@@ -1,0 +1,16 @@
+{
+  "values": {
+    "azurum_miner:complex_upgrade": {
+      "max_complexity": 256
+    },
+    "azurum_miner:elaborate_upgrade": {
+      "max_complexity": 64
+    },
+    "azurum_miner:simple_upgrade": {
+      "max_complexity": 8
+    },
+    "azurum_miner:upgrade": {
+      "max_complexity": 16
+    }
+  }
+}

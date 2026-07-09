@@ -14,6 +14,7 @@ import static net.minecraft.core.registries.Registries.*;
 public class Registries {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Entities ENTITY_TYPES = DeferredRegister.createEntities(MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(BLOCK_ENTITY_TYPE, MODID);
@@ -28,5 +29,6 @@ public class Registries {
         BlockEntityRegistration.register(modEventBus);
         MenuRegistration.register(modEventBus);
         DataComponentRegistration.register(modEventBus);
+        EntityTypeRegistration.register(modEventBus);
     }
 }

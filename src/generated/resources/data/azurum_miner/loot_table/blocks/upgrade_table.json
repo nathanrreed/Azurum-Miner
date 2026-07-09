@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "azurum_miner:upgrade_table"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "azurum_miner:blocks/upgrade_table"
+}

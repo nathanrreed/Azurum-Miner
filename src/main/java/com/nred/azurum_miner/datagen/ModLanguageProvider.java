@@ -33,7 +33,8 @@ public class ModLanguageProvider extends LanguageProvider {
         addBlock(CONGLOMERATE_OF_ORE, "Conglomerate of Ores");
         addBlock(CONGLOMERATE_OF_ORE_BLOCK, "Conglomerate of Ores Block");
         addBlock(ENERGIZED_OBSIDIAN, "Energized Obsidian");
-        addBlock(TANK_BLOCK, "Tank"); // TODO
+        addBlock(TANK_BLOCK, "Tank");
+        addBlock(UPGRADE_TABLE_BLOCK, "Upgrade Table");
     }
 
     private void items() {
@@ -41,6 +42,11 @@ public class ModLanguageProvider extends LanguageProvider {
         addItem(VOID_PROCESSOR, "Void Processor");
         addItem(ELABORATE_VOID_PROCESSOR, "Elaborate Void Processor");
         addItem(COMPLEX_VOID_PROCESSOR, "Complex Void Processor");
+
+        addItem(SIMPLE_UPGRADE, "Simple Machine Upgrade");
+        addItem(UPGRADE, "Circuit Machine Upgrade");
+        addItem(ELABORATE_UPGRADE, "Elaborate Machine Upgrade");
+        addItem(COMPLEX_UPGRADE, "Complex Machine Upgrade");
 
         addItem(PIPETTE, "Pipette");
 
@@ -84,10 +90,53 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".tooltip.side.none", "None");
         add(MODID + ".tooltip.side.edit", "Enter Batch Edit mode (Changes won't be applied until they are saved)");
         add(MODID + ".tooltip.side.save", "Save Changes");
+
+        upgrades();
+    }
+
+    private void upgrades() {
+        add(MODID + ".tooltip.upgrade.speed", "Speed: %s");
+        add(MODID + ".tooltip.upgrade.energy", "Energy: %s");
+        add(MODID + ".tooltip.upgrade.coolant", "Coolant: %s");
+        add(MODID + ".tooltip.upgrade.complexity", "Complexity: %s");
+        add(MODID + ".tooltip.upgrade.max_complexity", "Max Complexity: %s");
+        add(MODID + ".tooltip.upgrade.heat", "Heat: %s");
+        add(MODID + ".tooltip.upgrade.max_heat", "Max Heat: %s");
+
+        add(MODID + ".tooltip.upgrade.stat_speed", "S: %s");
+        add(MODID + ".tooltip.upgrade.stat_energy", "E: %s");
+        add(MODID + ".tooltip.upgrade.stat_complexity", "C: %s/%s");
+        add(MODID + ".tooltip.upgrade.stat_heat", "H: %s/%s");
+
+        add(MODID + ".tooltip.upgrade.speed.desc", "Speed: how much faster the machine using the upgrade will function");
+        add(MODID + ".tooltip.upgrade.energy.desc", "Energy: how much more energy the machine using the upgrade will need function");
+        add(MODID + ".tooltip.upgrade.heat.desc", "Heat: a constraint");
+        add(MODID + ".tooltip.upgrade.complexity.desc", "Complexity: a constraint as well as the multiple for what is needed to craft the upgrade");
+
+        add(MODID + ".tooltip.upgrade.card_type_data", "%s\n%s");
+        add(MODID + ".tooltip.upgrade.coolant_type_data", "%s\n%s\n%s\n%s");
+        add(MODID + ".tooltip.upgrade.modifier_type_data", "%s\n%s\n%s\n%s\n%s");
+
+        add(MODID + ".tooltip.upgrade.card_type", "Card Type");
+        add(MODID + ".tooltip.upgrade.card_type.desc", "Sets the complexity of the upgrade");
+        add(MODID + ".tooltip.upgrade.coolant_type", "Coolant Type");
+        add(MODID + ".tooltip.upgrade.coolant_type.desc", "Sets the type of coolant needed for a machine using this upgrade to run (Air is non)");
+        add(MODID + ".tooltip.upgrade.modifier_type", "Modifiers");
+        add(MODID + ".tooltip.upgrade.modifier_type.desc", "Modifier addons to improve the upgrade");
+
+        add(MODID + ".tooltip.upgrade_table_info", "Select the parts to use in the upgrade, each have their own pros and cons.\n\nThen Assemble and add the required items to create the upgrade");
+
+        add(MODID + ".tooltip.upgrade_table.assemble", "Assemble");
+        add(MODID + ".tooltip.upgrade_table.error.missing_items", "Missing items: ");
+        add(MODID + ".tooltip.upgrade_table.error.no_modifiers", "No modifiers selected, press next to see the available options");
+        add(MODID + ".tooltip.upgrade_table.error.no_space", "Output full");
+        add(MODID + ".tooltip.upgrade_table.error.too_much_heat", "Heat is higher than Max Heat");
+        add(MODID + ".tooltip.upgrade_table.error.too_much_complexity", "Complexity is higher than Max Complexity");
     }
 
     private void screens() {
         add(MODID + ".screen.tank", "Tank");
+        add(MODID + ".screen.upgrade_table", "Upgrade Table");
     }
 
     private void config() {
@@ -108,9 +157,15 @@ public class ModLanguageProvider extends LanguageProvider {
         add(MODID + ".configuration.use_buckets.tooltip", "Use Buckets instead of mB");
 
         add(MODID + ".configuration.side_bar", "Sidebar Settings");
-        add(MODID + ".configuration.allow_multiple_open", "Allows multiple sidebar elements to be open at the same time");
-        add(MODID + ".configuration.show_transfer_rates", "Adds Transfer Rates Element to the sidebar");
-        add(MODID + ".configuration.use_right_side", "Places the sidebar on the right side");
+        add(MODID + ".configuration.allow_multiple_open", "Allow Multiple Open");
+        add(MODID + ".configuration.allow_multiple_open.tooltip", "Allows multiple sidebar elements to be open at the same time");
+        add(MODID + ".configuration.show_transfer_rates", "Show Transfer Rates");
+        add(MODID + ".configuration.show_transfer_rates.tooltip", "Adds Transfer Rates Element to the sidebar");
+        add(MODID + ".configuration.use_right_side", "Right Sided Sidebar");
+        add(MODID + ".configuration.use_right_side.tooltip", "Places the sidebar on the right side");
 
+        add(MODID + ".configuration.upgrades", "Upgrade Settings");
+        add(MODID + ".configuration.coolant_mb_per_tick", "Coolant usage");
+        add(MODID + ".configuration.coolant_mb_per_tick.tooltip", "Amount of coolant in mB needed per tick to operate the machine with the upgrade");
     }
 }

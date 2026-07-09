@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:gold_ingot",
+    "G": "minecraft:glowstone_dust",
+    "P": "azurum_miner:elaborate_void_processor",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "GGG",
+    "PRP",
+    "BBB"
+  ],
+  "result": {
+    "id": "azurum_miner:elaborate_upgrade"
+  }
+}

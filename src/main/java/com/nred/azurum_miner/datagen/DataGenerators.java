@@ -69,7 +69,7 @@ public class DataGenerators {
         event.createProvider(ModModelProvider::new);
         event.createProvider(ModItemTagsProvider::new);
         event.createProvider(ModBlockTagsProvider::new);
-
+        event.createProvider(ModDataMapProvider::new);
 
         event.createProvider(((packOutput, lookupProvider) -> new LootTableProvider(
                 packOutput,

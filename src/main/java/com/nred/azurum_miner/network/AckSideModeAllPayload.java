@@ -27,7 +27,7 @@ public record AckSideModeAllPayload(SideModeType sideModeType) implements Custom
 
     public static void handleOnClient(final AckSideModeAllPayload data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (Minecraft.getInstance().screen instanceof TankScreen screen) {
+            if (Minecraft.getInstance().gui.screen() instanceof TankScreen screen) {
                 screen.renderables.stream().filter(renderable -> renderable instanceof SideModeWidget<?> widget && widget.type == data.sideModeType.getSideBarElementType()).forEach(
                         sideModeWidget -> ((SideModeWidget<?>) sideModeWidget).saveButton.editMode = false
                 );

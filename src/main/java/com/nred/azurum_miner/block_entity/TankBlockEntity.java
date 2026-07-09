@@ -130,7 +130,6 @@ public class TankBlockEntity extends SidedTickingBlockEntity implements IItemBlo
     public void serverTick() {
         super.serverTick();
 
-
         // Empty
         try (var tx = Transaction.openRoot()) {
             ResourceHandler<FluidResource> itemFluidHandler = ItemAccess.forHandlerIndexStrict(itemHandler, 0).getCapability(Capabilities.Fluid.ITEM);
@@ -183,5 +182,10 @@ public class TankBlockEntity extends SidedTickingBlockEntity implements IItemBlo
     @Override
     public Component getDisplayName() {
         return Component.translatable(MODID + ".screen.tank");
+    }
+
+    @Override
+    public Component getInfoText() {
+        return Component.translatable(MODID + ".tooltip.tank_info");
     }
 }

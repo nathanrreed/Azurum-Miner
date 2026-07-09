@@ -1,7 +1,10 @@
 package com.nred.azurum_miner.screen;
 
-import com.nred.azurum_miner.block_entity.*;
-import com.nred.azurum_miner.menu.BlockEntityMenu;
+import com.nred.azurum_miner.block_entity.IEnergyBlockEntity;
+import com.nred.azurum_miner.block_entity.IFluidBlockEntity;
+import com.nred.azurum_miner.block_entity.IInfoBlockEntity;
+import com.nred.azurum_miner.block_entity.IItemBlockEntity;
+import com.nred.azurum_miner.menu.BasicBlockEntityMenu;
 import com.nred.azurum_miner.menu.SlotLookup;
 import com.nred.azurum_miner.widget.FluidWidget;
 import com.nred.azurum_miner.widget.side_bar.*;
@@ -21,8 +24,8 @@ import javax.annotation.Nullable;
 import static com.nred.azurum_miner.config.ClientConfig.SHOW_TRANSFER_RATES;
 import static com.nred.azurum_miner.config.ClientConfig.USE_RIGHT_SIDE;
 
-public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends BlockEntityMenu<B>> extends AbstractContainerScreen<M> {
-    private final Identifier background;
+public class SidebarScreen<B extends BlockEntity, M extends BasicBlockEntityMenu<B>> extends AbstractContainerScreen<M> {
+    public final Identifier background;
     @Nullable
     private final SlotLookup fluidSlotLookup;
     public LinearLayout layout;
@@ -30,6 +33,12 @@ public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends 
 
     public SidebarScreen(M menu, Inventory inventory, Component title, Identifier background, @Nullable SlotLookup fluidSlot) {
         super(menu, inventory, title);
+        this.background = background;
+        this.fluidSlotLookup = fluidSlot;
+    }
+
+    public SidebarScreen(M menu, Inventory inventory, Component title, Identifier background, int width, int height, @Nullable SlotLookup fluidSlot) {
+        super(menu, inventory, title, width, height);
         this.background = background;
         this.fluidSlotLookup = fluidSlot;
     }
@@ -51,20 +60,20 @@ public class SidebarScreen<B extends BlockEntity & ISidedBlockEntity, M extends 
     public void create_sidebar() {
         layout = new LinearLayout(leftPos, topPos, LinearLayout.Orientation.VERTICAL).spacing(2);
 
-        if (rightSided) {
+        if (rightSided) { // TODO allow splitting between left and right?
             layout.defaultCellSetting().alignHorizontallyLeft();
         } else {
             layout.defaultCellSetting().alignHorizontallyRight();
         }
 
         if (menu.blockEntity instanceof IItemBlockEntity) {
-            addRenderableOnly(new SideModeWidget<>(menu.blockEntity, this, SideBarElementType.ITEM));
+            addRenderableOnly(new SideModeWidget<>((BlockEntity & IItemBlockEntity) menu.blockEntity, this, SideBarElementType.ITEM));
         }
         if (menu.blockEntity instanceof IFluidBlockEntity) {
-            addRenderableOnly(new SideModeWidget<>(menu.blockEntity, this, SideBarElementType.FLUID));
+            addRenderableOnly(new SideModeWidget<>((BlockEntity & IFluidBlockEntity) menu.blockEntity, this, SideBarElementType.FLUID));
         }
         if (menu.blockEntity instanceof IEnergyBlockEntity) {
-            addRenderableOnly(new SideModeWidget<>(menu.blockEntity, this, SideBarElementType.ENERGY));
+            addRenderableOnly(new SideModeWidget<>((BlockEntity & IEnergyBlockEntity) menu.blockEntity, this, SideBarElementType.ENERGY));
         }
 
         if (SHOW_TRANSFER_RATES.get() && !this.renderables.isEmpty()) {

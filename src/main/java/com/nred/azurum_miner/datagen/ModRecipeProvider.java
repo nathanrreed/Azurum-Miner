@@ -85,6 +85,25 @@ public class ModRecipeProvider extends RecipeProvider {
         this.shapeless(RecipeCategory.MISC, SEED_CRYSTAL, 4).requires(Azurum.shard, 2).requires(Ingredient.of(Items.DIAMOND, Items.EMERALD), 1).requires(Ingredient.of(Items.QUARTZ, Items.PRISMARINE_CRYSTALS), 1)
                 .unlockedBy(getHasName(Items.QUARTZ), has(Items.QUARTZ)).save(this.output);
 
+        this.shaped(RecipeCategory.MISC, SIMPLE_UPGRADE).pattern(" G ").pattern("RPR").pattern("BBB")
+                .define('B', Items.COPPER_INGOT).define('G', Items.GLOWSTONE_DUST).define('R', Items.REDSTONE).define('P', SIMPLE_VOID_PROCESSOR)
+                .unlockedBy(getHasName(SIMPLE_VOID_PROCESSOR), has(SIMPLE_VOID_PROCESSOR)).save(this.output);
+
+        this.shaped(RecipeCategory.MISC, UPGRADE).pattern(" G ").pattern("RPR").pattern("BBB")
+                .define('B', Items.IRON_INGOT).define('G', Items.GLOWSTONE_DUST).define('R', Items.REDSTONE).define('P', VOID_PROCESSOR)
+                .unlockedBy(getHasName(VOID_PROCESSOR), has(VOID_PROCESSOR)).save(this.output);
+
+        this.shaped(RecipeCategory.MISC, ELABORATE_UPGRADE).pattern("GGG").pattern("PRP").pattern("BBB")
+                .define('B', Items.GOLD_INGOT).define('G', Items.GLOWSTONE_DUST).define('R', Items.REDSTONE).define('P', ELABORATE_VOID_PROCESSOR)
+                .unlockedBy(getHasName(ELABORATE_VOID_PROCESSOR), has(ELABORATE_VOID_PROCESSOR)).save(this.output);
+
+        this.shaped(RecipeCategory.MISC, COMPLEX_UPGRADE).pattern(" G ").pattern("RPR").pattern("BBB")
+                .define('B', Items.NETHERITE_INGOT).define('G', Items.GLOWSTONE_DUST).define('R', Items.REDSTONE).define('P', COMPLEX_VOID_PROCESSOR)
+                .unlockedBy(getHasName(COMPLEX_UPGRADE), has(COMPLEX_VOID_PROCESSOR)).save(this.output);
+
+        this.shaped(RecipeCategory.MISC, UPGRADE_TABLE_BLOCK).pattern("RGL").pattern("UCU").pattern("III")
+                .define('C', Items.CRAFTING_TABLE).define('G', Items.GLOWSTONE_DUST).define('R', Items.REDSTONE).define('L', Items.LAPIS_LAZULI).define('U', SIMPLE_UPGRADE).define('I', Items.IRON_INGOT)
+                .unlockedBy(getHasName(SIMPLE_UPGRADE), has(SIMPLE_UPGRADE)).save(this.output);
     }
 
     public static class Runner extends RecipeProvider.Runner {

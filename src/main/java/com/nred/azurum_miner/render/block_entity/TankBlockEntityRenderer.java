@@ -106,7 +106,7 @@ public class TankBlockEntityRenderer implements BlockEntityRenderer<TankBlockEnt
             }
         }
 
-        submitNodeCollector.submitBlockModel(poseStack, Sheets.cutoutBlockSheet(), modelItemParts, BlockModelRenderState.EMPTY_TINTS, lightCoords, overlayCoords, 0);
+        submitNodeCollector.submitBlockModel(poseStack, Sheets.cutoutBlockItemSheet(), modelItemParts, BlockModelRenderState.EMPTY_TINTS, lightCoords, overlayCoords, 0);
 
         if (fluidContent == null || fluidContent.getAmount() == 0) return;
 
