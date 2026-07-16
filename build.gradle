@@ -91,11 +91,9 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
-    maven { // Jade
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
     }
     maven {
         url "https://maven.squiddev.cc"
@@ -115,9 +113,9 @@ dependencies {
 
     compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api")
     localRuntime("mcjty.theoneprobe:theoneprobe:${top_version}")
-    compileOnly("curse.maven:jade-api-324717:${jade_id}")
-    localRuntime("curse.maven:jade-324717:${jade_id}")
-    localRuntime("curse.maven:jade-addons-583345:${jade_addons_id}")
+
+    implementation "maven.modrinth:jade:${jade_version}+neoforge"
+    localRuntime "maven.modrinth:jade-addons-forge:${jade_addons_version}+neoforge"
 
     compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cctVersion}")
     runtimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cctVersion}")

@@ -1,1 +1,1 @@
-Recipe changes and bug fixes
+Fixed : not being allowed in miner filter

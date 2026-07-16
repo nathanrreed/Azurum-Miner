@@ -420,7 +420,14 @@ class FilterEditBox(width: Int, height: Int, val idx: Int, val menu: MinerMenu) 
             this.foundTags += ModItemTagProvider.oreTierTag[i]
         }
 
-        setFilter { s -> ResourceLocation.isValidPath(s) } // Fixes bad inputs
+        // Fixes bad inputs
+        setFilter { s ->
+            if (s.count({ c -> c == ':' }) > 1) {
+                return@setFilter false // Too many :
+            }
+            val parts = s.split(':')
+            return@setFilter !(!ResourceLocation.isValidNamespace(parts[0]) || (parts.size == 2 && !ResourceLocation.isValidPath(parts[1])))
+        }
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
